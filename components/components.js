@@ -4,8 +4,7 @@
    - Tự xử lý đường dẫn __BASE__ theo vị trí trang hiện tại
    - Các hành vi dùng chung: menu mobile, cart, toast,
      newsletter, wishlist, quick-add, add-routine
-   - [NEW] Floating Cart: nút giỏ hàng nổi khi scroll
-           (CSS được inject inline → hoạt động trên MỌI trang)
+   - [NEW] Floating Cart: nút giỏ hàng nổi LUÔN HIỂN THỊ
    ========================================================= */
 (function () {
   'use strict';
@@ -206,18 +205,13 @@
   }
 
   /* =======================================================
-     [NEW] FLOATING CART — Inject CSS + HTML
-     → Hoạt động trên MỌI trang load components.js
-     → Không phụ thuộc style.css
+     [UPDATED] FLOATING CART — Luôn hiển thị 100% thời gian
   ======================================================= */
   function initFloatingCart() {
-    // Không hiển thị trên trang admin
     if (window.location.pathname.indexOf('admin') !== -1) return;
-
-    // Tránh inject 2 lần nếu script load trùng
     if (document.querySelector('.floating-cart')) return;
 
-    /* --- 1. INJECT CSS (chỉ 1 lần) --- */
+    /* --- INJECT CSS --- */
     if (!document.getElementById('mocyen-floating-cart-style')) {
       var style = document.createElement('style');
       style.id = 'mocyen-floating-cart-style';
@@ -226,7 +220,7 @@
           position: fixed;
           left: 24px;
           bottom: 24px;
-          z-index: 9999;
+          z-index: 99999;
           width: 56px;
           height: 56px;
           display: flex;
@@ -237,19 +231,11 @@
           border-radius: 50%;
           box-shadow: 0 8px 24px rgba(38, 79, 64, 0.28),
                       0 2px 6px rgba(38, 79, 64, 0.15);
-          opacity: 0;
-          transform: translateY(20px) scale(0.85);
-          pointer-events: none;
-          transition: opacity 0.3s ease,
-                      transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-                      background 0.2s ease,
-                      box-shadow 0.2s ease;
+          transition: background 0.2s ease,
+                      box-shadow 0.2s ease,
+                      transform 0.2s ease;
           text-decoration: none;
-        }
-        .floating-cart.is-visible {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-          pointer-events: auto;
+          /* Bỏ opacity/transform ẩn, luôn hiện */
         }
         .floating-cart:hover {
           background: #183C31;
@@ -310,7 +296,7 @@
       document.head.appendChild(style);
     }
 
-    /* --- 2. INJECT HTML NÚT --- */
+    /* --- INJECT HTML NÚT (Không có class is-visible, CSS đã luôn hiện) --- */
     var btn = document.createElement('a');
     btn.href = basePath + '/pages/cart.html';
     btn.className = 'floating-cart';
@@ -322,7 +308,7 @@
 
     var countEl = btn.querySelector('.floating-cart-count');
 
-    /* --- 3. UPDATE BADGE --- */
+    /* --- UPDATE BADGE --- */
     function updateFloatCount() {
       var total = getCart().reduce(function (s, i) { return s + (i.qty || 1); }, 0);
       countEl.textContent = total > 99 ? '99+' : total;
@@ -331,17 +317,6 @@
     updateFloatCount();
     window.addEventListener('cart:updated', updateFloatCount);
     window.addEventListener('pageshow', updateFloatCount);
-
-    /* --- 4. HIỆN/ẨN THEO SCROLL --- */
-    function onScroll() {
-      if (window.scrollY > 300) {
-        btn.classList.add('is-visible');
-      } else {
-        btn.classList.remove('is-visible');
-      }
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
   }
 
   window.addToCart = addToCart;
@@ -359,7 +334,7 @@
     initQuickAdd();
     initAddRoutine();
     initNewsletter();
-    initFloatingCart();   // ← [FIX] Luôn chạy, CSS tự inject
+    initFloatingCart();   // Luôn chạy
 
     // Cập nhật tên user trên header
     const userJson = localStorage.getItem("mocyen_user");
