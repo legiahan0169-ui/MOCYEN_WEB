@@ -1,9 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // 1. KIỂM TRA QUYỀN ADMIN
   const userJson = localStorage.getItem("mocyen_user");
   if (userJson) {
     const user = JSON.parse(userJson);
     if (user.role !== "admin") {
-      alert("Bạn không có quyền truy cập!");
+      alert("Bạn không có quyền truy cập trang này!");
       window.location.href = "../index.html";
       return;
     }
@@ -12,11 +13,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  // Tự động nhận diện môi trường (Localhost vs Render)
   const API_BASE = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") 
-    ? "http://localhost:3000" : "https://mocyen-web.onrender.com";
+    ? "http://localhost:3000" 
+    : "https://mocyen-web.onrender.com";
 
   const formatPrice = (price) => `${Number(price).toLocaleString("vi-VN")}đ`;
 
+  // ĐĂNG XUẤT
   document.getElementById("btn-logout").addEventListener("click", (e) => {
     e.preventDefault();
     if (confirm("Bạn có chắc muốn đăng xuất?")) {
@@ -25,7 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // CHUYỂN TAB
+  // ==========================================
+  // 2. CHUYỂN TAB
+  // ==========================================
   const tabBtns = document.querySelectorAll(".tab-btn");
   const tabPanels = document.querySelectorAll(".admin-tab-panel");
   const pageTitle = document.getElementById("page-title-text");
@@ -35,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       tabBtns.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
+      
       tabPanels.forEach(p => p.classList.remove("active"));
       document.getElementById(btn.dataset.target).classList.add("active");
 
@@ -50,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 3. GỌI API ĐỔ DỮ LIỆU
   // ==========================================
 
+  // --- 3.1. Bảng Sản phẩm ---
   async function loadProducts() {
     const tbody = document.getElementById("admin-products-list");
     if (!tbody) return;
@@ -70,10 +78,12 @@ document.addEventListener("DOMContentLoaded", () => {
         `);
       });
     } catch (e) { 
+        console.error("Lỗi tải sản phẩm", e);
         tbody.innerHTML = `<tr><td colspan="6" style="color:red; text-align:center;">Lỗi tải dữ liệu</td></tr>`;
     }
   }
 
+  // --- 3.2. Bảng Khách hàng ---
   async function loadCustomers() {
     const tbody = document.getElementById("admin-customers-list");
     if (!tbody) return;
@@ -94,10 +104,12 @@ document.addEventListener("DOMContentLoaded", () => {
         `);
       });
     } catch (e) { 
+        console.error("Lỗi tải khách hàng", e);
         tbody.innerHTML = `<tr><td colspan="5" style="color:red; text-align:center;">Lỗi tải dữ liệu</td></tr>`;
     }
   }
 
+  // --- 3.3. Bảng Đơn hàng & Thống kê & BIỂU ĐỒ ---
   let allOrders = [];
   let currentOrderIdForModal = null;
 
@@ -108,14 +120,19 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch(`${API_BASE}/api/admin/orders`);
       allOrders = await res.json();
       
+      // Tính toán thống kê
       let totalRev = 0;
       allOrders.forEach(o => { totalRev += Number(o.total_amount); });
       document.getElementById("stat-revenue").textContent = formatPrice(totalRev);
-      document.getElementById("stat-aov").textContent = formatPrice(allOrders.length > 0 ? totalRev / allOrders.length : 0);
+      
+      const aov = allOrders.length > 0 ? totalRev / allOrders.length : 0;
+      document.getElementById("stat-aov").textContent = formatPrice(aov);
 
+      // Render bảng & Biểu đồ
       renderOrdersTable(allOrders);
       renderCharts(allOrders);
     } catch (e) { 
+        console.error("Lỗi tải đơn hàng", e);
         tbody.innerHTML = `<tr><td colspan="7" style="color:red; text-align:center;">Lỗi tải dữ liệu</td></tr>`;
     }
   }
@@ -123,8 +140,9 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderOrdersTable(ordersToRender) {
     const tbody = document.getElementById("admin-orders-list");
     tbody.innerHTML = "";
+    
     if (ordersToRender.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Không có đơn hàng.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Không có đơn hàng nào.</td></tr>`;
       return;
     }
 
@@ -146,7 +164,6 @@ document.addEventListener("DOMContentLoaded", () => {
           <td style="font-weight:600;">${formatPrice(o.total_amount)}</td>
           <td>${statusHTML}</td>
           <td>
-            <!-- NÚT XEM CHI TIẾT MỚI -->
             <button class="action-btn" onclick="openOrderModal(${o.id})" title="Xem chi tiết">
               <i class="fa-solid fa-eye" style="color:#1565C0"></i>
             </button>
@@ -156,20 +173,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Lọc kênh
+  // Lọc theo Kênh
   const filterBtns = document.querySelectorAll("#order-channel-filters .btn-filter");
   filterBtns.forEach(btn => {
     btn.addEventListener("click", () => {
       filterBtns.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
+      
       const channel = btn.dataset.channel;
-      if (channel === "all") renderOrdersTable(allOrders);
-      else renderOrdersTable(allOrders.filter(o => (o.channel || 'Website') === channel));
+      if (channel === "all") {
+        renderOrdersTable(allOrders);
+      } else {
+        const filtered = allOrders.filter(o => (o.channel || 'Website') === channel);
+        renderOrdersTable(filtered);
+      }
     });
   });
 
   // ==========================================
-  // MODAL CHI TIẾT ĐƠN HÀNG
+  // 4. MODAL CHI TIẾT ĐƠN HÀNG & ĐỔI TRẠNG THÁI
   // ==========================================
   const modal = document.getElementById("order-modal");
   const modalBody = document.getElementById("modal-order-body");
@@ -177,29 +199,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalStatusSelect = document.getElementById("modal-status-select");
   const modalSaveBtn = document.getElementById("modal-save-btn");
 
-    window.openOrderModal = async function(orderId) {
+  window.openOrderModal = async function(orderId) {
     currentOrderIdForModal = orderId;
-    modalBody.innerHTML = '<p style="text-align:center;">Đang tải dữ liệu...</p>';
+    modalBody.innerHTML = '<p style="text-align:center; padding:20px;">Đang tải dữ liệu...</p>';
     modal.classList.add("active");
 
     try {
       const res = await fetch(`${API_BASE}/api/admin/orders/${orderId}`);
-      
-      // Bắt lỗi API trả về (vd: 404, 500)
-      if (!res.ok) {
-        throw new Error(`Lỗi API: ${res.status} - Chưa cập nhật Backend hoặc lỗi SQL`);
-      }
+      if (!res.ok) throw new Error(`Lỗi API: ${res.status}`);
       
       const order = await res.json();
-      
       modalTitle.textContent = `Chi tiết đơn hàng #${order.id}`;
       modalStatusSelect.value = order.status;
 
-      // Render sản phẩm
+      // Render sản phẩm trong đơn
       let itemsHtml = "";
       if(order.items && order.items.length > 0) {
         order.items.forEach(item => {
-          // Dùng ảnh mặc định nếu Backend không trả về đường dẫn ảnh
+          // Fallback ảnh nếu API không trả về
           const imgSrc = item.image ? `../images/product/${item.image}` : '../images/banner/hero.png';
           itemsHtml += `
             <div class="modal-item">
@@ -236,14 +253,12 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
     } catch (e) {
-      console.error("Chi tiết lỗi:", e);
-      // Hiển thị thông báo lỗi cụ thể ra màn hình để dễ debug
+      console.error("Lỗi chi tiết:", e);
       modalBody.innerHTML = `
         <div style="color:#C4425B; text-align:center; padding: 20px;">
           <i class="fa-solid fa-triangle-exclamation" style="font-size: 30px; margin-bottom: 10px;"></i>
           <p style="font-weight: 600;">Không thể tải chi tiết đơn hàng!</p>
           <p style="font-size: 12px; margin-top: 5px;">${e.message || 'Vui lòng kiểm tra lại kết nối Server.'}</p>
-          <p style="font-size: 12px; color: #7C877D; margin-top: 10px;">(Mẹo: Bạn hãy chắc chắn đã lưu file server.js mới và khởi động lại Backend)</p>
         </div>
       `;
     }
@@ -253,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
     modal.classList.remove("active");
   });
 
-  // Lưu trạng thái mới
+  // Nút Lưu Trạng Thái
   modalSaveBtn.addEventListener("click", async () => {
     if (!currentOrderIdForModal) return;
     const newStatus = modalStatusSelect.value;
@@ -273,8 +288,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (res.ok) {
         alert(data.message || "Cập nhật thành công!");
         modal.classList.remove("active");
-        loadOrdersAndStats(); // Tải lại danh sách
-        loadProducts();        // Tải lại kho (vì có thể bị thay đổi)
+        loadOrdersAndStats(); // Tải lại danh sách đơn hàng
+        loadProducts();        // Tải lại danh sách sản phẩm (để cập nhật kho nếu có hủy đơn)
       } else {
         alert(data.error || "Có lỗi xảy ra!");
       }
@@ -286,9 +301,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // BIỂU ĐỒ
+  // ==========================================
+  // 5. BIỂU ĐỒ (CHART.JS)
+  // ==========================================
   function renderCharts(orders) {
     if (typeof Chart === 'undefined') return;
+
+    // Biểu đồ tỷ trọng kênh
     const ctxChannel = document.getElementById('channelChart').getContext('2d');
     const revByChannel = { Website: 0, Shopee: 0, Facebook: 0, TikTok: 0 };
     orders.forEach(o => {
@@ -300,29 +319,45 @@ document.addEventListener("DOMContentLoaded", () => {
       type: 'doughnut',
       data: {
         labels: ['Website', 'Shopee', 'Facebook', 'TikTok'],
-        datasets: [{ data: [revByChannel.Website, revByChannel.Shopee, revByChannel.Facebook, revByChannel.TikTok], backgroundColor: ['#2E7D32', '#E65100', '#1565C0', '#263238'], borderWidth: 0 }]
+        datasets: [{
+          data: [revByChannel.Website, revByChannel.Shopee, revByChannel.Facebook, revByChannel.TikTok],
+          backgroundColor: ['#2E7D32', '#E65100', '#1565C0', '#263238'],
+          borderWidth: 0
+        }]
       },
       options: { responsive: true, maintainAspectRatio: false, cutout: '70%' }
     });
 
+    // Biểu đồ doanh thu 7 ngày
     const ctxTraffic = document.getElementById('trafficChart').getContext('2d');
     new Chart(ctxTraffic, {
       type: 'bar',
       data: {
         labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'CN'],
-        datasets: [{ label: 'Doanh thu (VNĐ)', data: [1200000, 1900000, 3000000, 5000000, 2000000, 3000000, 4500000], backgroundColor: '#264F40', borderRadius: 6 }]
+        datasets: [{
+          label: 'Doanh thu (VNĐ)',
+          data: [1200000, 1900000, 3000000, 5000000, 2000000, 3000000, 4500000], 
+          backgroundColor: '#264F40',
+          borderRadius: 6
+        }]
       },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+      options: { 
+        responsive: true, 
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+      }
     });
   }
 
+  // KHỞI CHẠY DATA
   loadProducts();
   loadCustomers();
   loadOrdersAndStats();
 
 
   // ==========================================
-  // 4. CHAT
+  // 6. CHAT DÀNH CHO ADMIN (SOCKET.IO)
   // ==========================================
   let currentChatUserId = null;
   let adminSocket = null;
@@ -334,9 +369,12 @@ document.addEventListener("DOMContentLoaded", () => {
   adminSocketScript.onload = () => {
       adminSocket = io(API_BASE); 
       adminSocket.emit('admin_join');
+
       adminSocket.on('receive_message', (data) => {
           if (data.sender === 'customer') {
-              if (currentChatUserId == data.user_id) displayAdminMessage(data.message, 'customer');
+              if (currentChatUserId == data.user_id) {
+                  displayAdminMessage(data.message, 'customer');
+              }
               loadAdminChatList(); 
           }
       });
@@ -347,7 +385,10 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!body) return;
       const div = document.createElement("div");
       div.style.cssText = `max-width: 70%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; margin-bottom: 10px;
-        ${sender === 'admin' ? 'background: #264F40; color: white; align-self: flex-end; border-bottom-right-radius: 2px;' : 'background: #FFFDF8; color: #243A30; align-self: flex-start; border: 1px solid #E4E2D7; border-bottom-left-radius: 2px;'}`;
+        ${sender === 'admin' 
+          ? 'background: #264F40; color: white; align-self: flex-end; border-bottom-right-radius: 2px;' 
+          : 'background: #FFFDF8; color: #243A30; align-self: flex-start; border: 1px solid #E4E2D7; border-bottom-left-radius: 2px;'
+        }`;
       div.textContent = text; 
       body.appendChild(div);
       body.scrollTop = body.scrollHeight;
@@ -360,30 +401,41 @@ document.addEventListener("DOMContentLoaded", () => {
           const res = await fetch(`${API_BASE}/api/admin/chats`);
           const users = await res.json();
           listContainer.innerHTML = "";
-          if (users.length === 0) { listContainer.innerHTML = '<p style="padding: 20px; color: #7C877D; font-size: 13px;">Chưa có ai nhắn tin.</p>'; return; }
+          
+          if (users.length === 0) {
+              listContainer.innerHTML = '<p style="padding: 20px; color: #7C877D; font-size: 13px;">Chưa có khách hàng nào nhắn tin.</p>';
+              return;
+          }
 
           users.forEach(u => {
               const div = document.createElement("div");
               div.style.cssText = "padding: 15px 20px; border-bottom: 1px solid #EAEAEA; cursor: pointer; transition: 0.2s;";
               const displayName = u.customer_name || `Khách ID: ${u.user_id}`;
               div.innerHTML = `<strong>${displayName}</strong>`;
+              
               div.onmouseover = () => div.style.background = '#F4F6F3';
               div.onmouseout = () => div.style.background = 'transparent';
+
               div.onclick = () => openAdminChat(u.user_id, displayName);
               listContainer.appendChild(div);
           });
-      } catch (e) { console.error(e); }
+      } catch (e) {
+          console.error("Lỗi tải danh sách chat", e);
+      }
   }
 
   async function openAdminChat(userId, name) {
       currentChatUserId = userId;
       document.getElementById("admin-chat-header").textContent = `Đang chat với: ${name}`;
+      
       try {
           const res = await fetch(`${API_BASE}/api/messages/${userId}`);
           const msgs = await res.json();
           document.getElementById("admin-chat-body").innerHTML = "";
           msgs.forEach(m => displayAdminMessage(m.message, m.sender));
-      } catch(e) { console.error(e); }
+      } catch(e) {
+          console.error("Lỗi tải lịch sử chat", e);
+      }
   }
 
   const btnAdminSend = document.getElementById("admin-chat-send");
@@ -392,13 +444,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function sendAdminMessage() {
       const text = inputAdminChat.value.trim();
       if (!text || !currentChatUserId || !adminSocket) return;
+      
       inputAdminChat.value = "";
       adminSocket.emit('send_message', { user_id: currentChatUserId, sender: 'admin', message: text });
       displayAdminMessage(text, 'admin');
   }
 
   if (btnAdminSend) btnAdminSend.addEventListener("click", sendAdminMessage);
-  if (inputAdminChat) inputAdminChat.addEventListener("keypress", (e) => { if (e.key === "Enter") sendAdminMessage(); });
+  if (inputAdminChat) inputAdminChat.addEventListener("keypress", (e) => { 
+      if (e.key === "Enter") sendAdminMessage(); 
+  });
 
   const chatTabBtn = document.querySelector('.tab-btn[data-target="tab-messages"]');
   if (chatTabBtn) chatTabBtn.addEventListener('click', loadAdminChatList);
