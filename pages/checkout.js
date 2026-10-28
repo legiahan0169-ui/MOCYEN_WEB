@@ -206,34 +206,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
-  // ==========================================
+    // ==========================================
   // 8. XỬ LÝ HIỂN THỊ THÔNG TIN CHUYỂN KHOẢN
   // ==========================================
   const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
   
-  // LƯU Ý: Thay đổi thông tin ngân hàng của bạn ở đây
-  const bankId = "MB"; // Mã ngân hàng (MB, VCB, Techcombank, ACB...)
-  const accountNo = "0123456789"; // Số tài khoản
+  // CẤU HÌNH THÔNG TIN NGÂN HÀNG CỦA BẠN TẠI ĐÂY
+  const bankId = "VCB"; // Mã ngân hàng (Vietcombank là VCB, MB là MB...)
+  const accountNo = "0123456789"; // Số tài khoản của bạn
   const accountName = "CONG TY MOC YEN"; // Tên chủ tài khoản (Viết không dấu)
 
   paymentRadios.forEach(radio => {
     radio.addEventListener("change", (e) => {
       const method = e.target.value;
       
-      // Kiểm tra value của ô chuyển khoản trong HTML của bạn (VD: 'bank', 'transfer'...)
-      if (method === "bank" || method === "transfer") { 
+      // SỬA LẠI ĐIỀU KIỆN CHO KHỚP VỚI HTML: value="BANK_TRANSFER"
+      if (method === "BANK_TRANSFER") { 
         if (bankQrBox) {
           bankQrBox.style.display = "block";
           
-          const addInfo = `Thanh toan don hang ${currentUser.name || ''}`.trim(); // Nội dung chuyển khoản
+          const addInfo = `Thanh toan don hang ${currentUser.name || ''}`.trim(); 
           
-          // Tạo URL ảnh QR từ API của VietQR
+          // Tạo URL ảnh QR động từ API của VietQR (Tự động điền số tiền)
           const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-compact2.png?amount=${currentTotal}&addInfo=${encodeURIComponent(addInfo)}&accountName=${encodeURIComponent(accountName)}`;
           
-          // Cập nhật hình ảnh và thông tin vào khung bankQrBox
+          // Bơm mã QR động vào thay thế cho chữ (Mã QR Demo) trong HTML
           bankQrBox.innerHTML = `
-            <div style="text-align: center; margin-top: 15px; padding: 15px; border: 1px dashed #ccc; border-radius: 8px; background: #fff;">
-              <p style="margin-bottom: 10px; font-weight: bold; color: #2E7D32;">Quét mã QR để thanh toán</p>
+            <div style="text-align: center; padding: 15px; border: 1px dashed #2E7D32; border-radius: 8px; background: #fff; margin-top: 15px;">
+              <p style="margin-bottom: 10px; font-weight: bold; color: #2E7D32;">Quét mã QR để thanh toán nhanh</p>
               <img src="${qrUrl}" alt="QR Code" style="max-width: 250px; margin: 0 auto; display: block; border-radius: 8px;">
               <div style="margin-top: 15px; font-size: 14px; text-align: left; line-height: 1.6;">
                 <div><strong>Ngân hàng:</strong> ${bankId}</div>
