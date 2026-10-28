@@ -70,22 +70,24 @@
         </form>
 
         <!-- Form Đăng ký -->
+                <!-- Form Đăng ký -->
         <form id="register-form" class="auth-form">
           <h2 class="auth-title">Tạo tài khoản mới</h2>
           <p class="auth-subtitle">Trở thành thành viên của Mộc Yên.</p>
 
+          <!-- Ô HỌ VÀ TÊN BẮT BUỘC -->
           <div class="form-group">
-            <label for="reg-name">Họ và tên</label>
+            <label for="reg-name">Họ và tên <span style="color:red">*</span></label>
             <input type="text" id="reg-name" placeholder="Nhập họ tên của bạn" required>
           </div>
 
           <div class="form-group">
-            <label for="reg-email">Email</label>
+            <label for="reg-email">Email <span style="color:red">*</span></label>
             <input type="email" id="reg-email" placeholder="Nhập email của bạn" required>
           </div>
 
           <div class="form-group">
-            <label for="reg-password">Mật khẩu</label>
+            <label for="reg-password">Mật khẩu <span style="color:red">*</span></label>
             <div class="password-input-wrap">
               <input type="password" id="reg-password" placeholder="Tạo mật khẩu" minlength="6" required>
               <i class="fa-regular fa-eye toggle-password"></i>

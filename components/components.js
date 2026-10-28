@@ -255,9 +255,18 @@
         const user = JSON.parse(userJson);
         const accountLink = document.querySelector(".account-link");
         
-        if (accountLink) {
-          // Đổi icon user thành chữ cái đầu của tên
-          accountLink.innerHTML = `<span style="font-size: 12px; font-weight: bold; background: #264F40; color: white; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">${user.name.charAt(0).toUpperCase()}</span>`;
+        if (accountLink && user.name) {
+          // Lấy tên (VD: "Lê Gia Hân" -> lấy chữ "Hân")
+          const nameParts = user.name.trim().split(" ");
+          const mainName = nameParts[nameParts.length - 1];
+          // Lấy chữ cái đầu tiên của tên chính (VD: "H")
+          const avatarLetter = mainName.charAt(0).toUpperCase();
+
+          accountLink.innerHTML = `
+            <span style="font-size: 12px; font-weight: 600; background: #264F40; color: white; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+              ${avatarLetter}
+            </span>
+          `;
           accountLink.title = `Xin chào, ${user.name}`;
         }
       } catch (e) {

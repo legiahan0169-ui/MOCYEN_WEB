@@ -97,11 +97,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 4. Xử lý Đăng ký
+  // Xử lý Đăng ký
   const registerForm = document.getElementById("register-form");
   if (registerForm) {
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+      
+      // Lấy dữ liệu (đảm bảo lấy đúng id="reg-name")
       const name = document.getElementById("reg-name").value;
       const email = document.getElementById("reg-email").value;
       const password = document.getElementById("reg-password").value;
@@ -111,10 +113,19 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.textContent = "Đang xử lý...";
         btn.disabled = true;
 
-        await new Promise(r => setTimeout(r, 1000));
+        // Gửi API thật (Đảm bảo có biến name trong body)
+        const response = await fetch("https://mocyen-web.onrender.com/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password }) 
+        });
+        
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Lỗi đăng ký");
 
         showToast("Đăng ký thành công! Vui lòng đăng nhập.");
         
+        // Chuyển sang tab đăng nhập và điền sẵn email
         document.querySelector('.auth-tab[data-target="login-form"]').click();
         document.getElementById("login-email").value = email;
         document.getElementById("login-password").value = "";
