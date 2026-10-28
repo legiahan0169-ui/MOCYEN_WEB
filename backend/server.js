@@ -31,8 +31,17 @@ db.connect(err => {
 });
 
 // ==========================================
-// 2. CÁC API CƠ BẢN
+// 2. CÁC API CƠ BẢN (SẢN PHẨM)
 // ==========================================
+
+// [FIX LỖI]: Đưa API /group lên TRƯỚC API /:id để tránh bị nhầm lẫn route
+// Lấy tất cả các size của 1 nhóm sản phẩm
+app.get('/api/products/group/:group_id', (req, res) => {
+    db.query('SELECT * FROM products WHERE group_id = ?', [req.params.group_id], (err, results) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(results);
+    });
+});
 
 // Lấy tất cả sản phẩm (Gom nhóm theo group_id, Ưu tiên Best Seller)
 app.get('/api/products', (req, res) => {
@@ -50,21 +59,13 @@ app.get('/api/products', (req, res) => {
     });
 });
 
-// Lấy chi tiết 1 sản phẩm (theo ID)
+// Lấy chi tiết 1 sản phẩm (theo ID) - Phải đặt SAU các route cụ thể khác
 app.get('/api/products/:id', (req, res) => {
     const productId = req.params.id;
     db.query('SELECT * FROM products WHERE id = ?', [productId], (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         if (results.length === 0) return res.status(404).json({ error: 'Không tìm thấy sản phẩm' });
         res.json(results[0]);
-    });
-});
-
-// Lấy tất cả các size của 1 nhóm sản phẩm
-app.get('/api/products/group/:group_id', (req, res) => {
-    db.query('SELECT * FROM products WHERE group_id = ?', [req.params.group_id], (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(results);
     });
 });
 
@@ -84,7 +85,8 @@ app.post('/api/login', (req, res) => {
         
         res.json({ 
             message: 'Đăng nhập thành công',
-            user: { id: user.id, name: user.name, email: user.email, role: user.role }
+            // Trả về thêm phone để trang Account có thể hiển thị
+            user: { id: user.id, name: user.name, email: user.email, phone: user.phone, role: user.role }
         });
     });
 });
@@ -235,38 +237,47 @@ app.get('/api/posts/:id', (req, res) => {
     });
 });
 
-// Cập nhật API trong server.js
+// [CẬP NHẬT] API LẤY ĐƠN HÀNG KÈM SẢN PHẨM (Sửa lỗi không hiển thị sản phẩm)
 app.get('/api/orders/user/:user_id', (req, res) => {
-    const sql = `
-        SELECT o.*, 
-        (
-            SELECT JSON_ARRAYAGG(
-                JSON_OBJECT(
-                    'name', oi.product_name, 
-                    'qty', oi.quantity, 
-                    'price', oi.price,
-                    'image', p.image
-                )
-            ) 
-            FROM order_items oi 
-            LEFT JOIN products p ON oi.product_id = p.id 
-            WHERE oi.order_id = o.id
-        ) as items
-        FROM orders o 
-        WHERE o.user_id = ? 
-        ORDER BY o.created_at DESC
-    `;
+    const userId = req.params.user_id;
     
-    db.query(sql, [req.params.user_id], (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
+    // 1. Lấy tất cả đơn hàng
+    db.query('SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC', [userId], (err, orders) => {
+        if (err) {
+            console.error("LỖI LẤY ORDERS:", err);
+            return res.status(500).json({ error: err.message }); 
+        }
+        if (orders.length === 0) return res.json([]);
+
+        // 2. Lấy tất cả ID đơn hàng để query sản phẩm
+        const orderIds = orders.map(o => o.id);
         
-        // Parse chuỗi JSON từ MySQL thành mảng object thực sự
-        const parsedResults = results.map(order => ({
-            ...order,
-            items: typeof order.items === 'string' ? JSON.parse(order.items) : (order.items || [])
-        }));
+        // 3. Lấy danh sách sản phẩm của các đơn hàng này (JOIN với bảng products để lấy ảnh)
+        const sqlItems = `
+            SELECT oi.*, p.image 
+            FROM order_items oi
+            LEFT JOIN products p ON oi.product_id = p.id
+            WHERE oi.order_id IN (?)
+        `;
         
-        res.json(parsedResults);
+        db.query(sqlItems, [orderIds], (err, items) => {
+            if (err) {
+                console.error("LỖI LẤY ORDER_ITEMS:", err);
+                return res.status(500).json({ error: err.message });
+            }
+
+            // 4. Gắn mảng sản phẩm vào từng đơn hàng tương ứng
+            const ordersWithItems = orders.map(order => {
+                const orderItems = items.filter(item => item.order_id === order.id);
+                return { 
+                    ...order, 
+                    items: orderItems 
+                };
+            });
+
+            // 5. Trả về Frontend
+            res.json(ordersWithItems);
+        });
     });
 });
 
@@ -294,7 +305,7 @@ app.get('/api/admin/users', (req, res) => {
 // ==========================================
 // KHỞI CHẠY SERVER
 // ==========================================
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`🚀 Backend & Chat Server đang chạy tại http://localhost:${PORT}`);
 });
