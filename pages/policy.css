@@ -67,6 +67,7 @@
   text-decoration: none;
   transition: all 0.2s ease;
   border-left: 3px solid transparent;
+  cursor: pointer;
 }
 .policy-nav-item i {
   color: #AAB9A5;
@@ -80,13 +81,15 @@
   color: #264F40;
 }
 .policy-nav-item:hover i { color: #658354; }
-.policy-nav-item.active {
+.policy-nav-item.active,
+.policy-nav-item[aria-selected="true"] {
   background: #EBEFE5;
   color: #264F40;
   border-left-color: #264F40;
   font-weight: 600;
 }
-.policy-nav-item.active i { color: #264F40; }
+.policy-nav-item.active i,
+.policy-nav-item[aria-selected="true"] i { color: #264F40; }
 
 /* ==========================================
    CỘT PHẢI: NỘI DUNG CHÍNH
@@ -98,7 +101,17 @@
   padding: 40px 50px;
   box-shadow: 0 10px 30px rgba(68, 79, 36, 0.02);
   min-height: 600px;
-  animation: fadeIn 0.3s ease;
+  /* Cho phép scrollIntoView có offset tránh bị header dính che */
+  scroll-margin-top: 120px;
+}
+
+/* === [FIX] Ẩn tất cả tab, chỉ hiển thị tab active === */
+.policy-tab {
+  display: none;
+}
+.policy-tab.active {
+  display: block;
+  animation: fadeIn 0.35s ease;
 }
 
 /* Typography cho nội dung render từ JS */
@@ -165,7 +178,9 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive */
+/* ==========================================
+   RESPONSIVE
+========================================== */
 @media (max-width: 992px) {
   .policy-layout {
     grid-template-columns: 1fr;
@@ -188,13 +203,28 @@
     border-bottom: 3px solid transparent;
     padding: 15px 20px;
   }
-  .policy-nav-item.active {
+  .policy-nav-item.active,
+  .policy-nav-item[aria-selected="true"] {
     border-left-color: transparent;
     border-bottom-color: #264F40;
   }
   .policy-content-card {
     padding: 30px 20px;
     min-height: auto;
+    scroll-margin-top: 100px;
   }
   .policy-content-card h1 { font-size: 26px; }
+}
+
+@media (max-width: 768px) {
+  .policy-page { padding: 24px 0 60px; }
+  .policy-breadcrumb { margin-bottom: 20px; }
+  .policy-content-card { padding: 24px 16px; }
+  .policy-content-card h1 { font-size: 22px; }
+  .policy-content-card h2 { font-size: 15px; }
+  .policy-content-card p,
+  .policy-content-card li { font-size: 15px; line-height: 1.75; }
+  .policy-content-card table { font-size: 13px; }
+  .policy-content-card th,
+  .policy-content-card td { padding: 10px; }
 }

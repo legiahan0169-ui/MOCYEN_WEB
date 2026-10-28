@@ -1,195 +1,290 @@
+/* =========================================================
+   MOCYEN — PRODUCT DETAIL PAGE
+   - Fetch sản phẩm từ API (auto-detect local/prod)
+   - Render thông tin, gallery, size buttons
+   - Xử lý thêm giỏ hàng, tab, qty, back/forward
+========================================================= */
 document.addEventListener("DOMContentLoaded", () => {
+
+  /* ============ CẤU HÌNH ============ */
+  // Tự detect môi trường: local dev → backend local, còn lại → production
+  const API_BASE = (() => {
+    const h = window.location.hostname;
+    if (h === "localhost" || h === "127.0.0.1" || h === "" || h.endsWith(".local")) {
+      return "http://localhost:3000";
+    }
+    return "https://mocyen-web.onrender.com";
+  })();
+
+  /* ============ VALIDATE PRODUCT ID ============ */
   const params = new URLSearchParams(window.location.search);
-  const productId = params.get("id") || 1; 
+  const rawId = params.get("id");
+  const parsedId = parseInt(rawId, 10);
+  const productId = Number.isInteger(parsedId) && parsedId > 0 ? parsedId : 1;
 
-  const formatPrice = (price) => `${Number(price).toLocaleString("vi-VN")}đ`;
+  const formatPrice = (price) => {
+    const n = Number(price);
+    return Number.isFinite(n) && n > 0 ? n.toLocaleString("vi-VN") + "đ" : "—";
+  };
 
-  // Hàm cập nhật text (Tên, giá, sku, các tab)
+  /* ============ HELPER: Hiển thị lỗi ============ */
+  function showError(message) {
+    document.title = "Không tìm thấy sản phẩm | Mộc Yên";
+    document.getElementById("pd-breadcrumb-name").textContent = "Không tìm thấy";
+    document.getElementById("pd-name").textContent = "Không tìm thấy sản phẩm";
+    document.getElementById("pd-category").textContent = "—";
+    document.getElementById("pd-price").textContent = "—";
+    document.getElementById("pd-sku").textContent = "—";
+    document.getElementById("pd-short-desc").textContent = message;
+    document.getElementById("pd-rating").textContent = "—";
+    document.getElementById("pd-reviews").textContent = "(Chưa có đánh giá)";
+
+    const mainImg = document.getElementById("pd-img-main");
+    if (mainImg) mainImg.alt = "Không tìm thấy sản phẩm";
+
+    ["pd-desc-content", "pd-ingredients-content", "pd-benefits-content", "pd-usage-content"]
+      .forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = `<p>${message}</p>`;
+      });
+
+    const btn = document.getElementById("pd-add-to-cart");
+    if (btn) { btn.disabled = true; btn.textContent = "Sản phẩm không khả dụng"; }
+  }
+
+  /* ============ CẬP NHẬT THÔNG TIN ============ */
   function updateProductInfo(product) {
-    document.title = `${product.name} | Mộc Yên`;
-    document.getElementById("pd-breadcrumb-name").textContent = product.name;
-    document.getElementById("pd-name").textContent = product.name;
-    document.getElementById("pd-category").textContent = product.category;
-    document.getElementById("pd-price").textContent = formatPrice(product.sale_price || product.price);
-    document.getElementById("pd-short-desc").textContent = product.short_desc || product.description;
-    document.getElementById("pd-sku").textContent = product.sku;
+    document.title = `${product.name || "Sản phẩm"} | Mộc Yên`;
+    document.getElementById("pd-breadcrumb-name").textContent = product.name || "Sản phẩm";
+    document.getElementById("pd-name").textContent = product.name || "Sản phẩm";
+    document.getElementById("pd-category").textContent = product.category || "SẢN PHẨM";
+    document.getElementById("pd-price").textContent =
+      formatPrice(product.sale_price || product.price);
+    document.getElementById("pd-short-desc").textContent =
+      product.short_desc || product.description || "Đang cập nhật mô tả...";
+    document.getElementById("pd-sku").textContent = product.sku || "—";
 
-    // Hàm format text cho các tab
+    // Rating: nếu DB có dữ liệu thì show, không thì fallback
+    const ratingEl = document.getElementById("pd-rating");
+    const reviewsEl = document.getElementById("pd-reviews");
+    const rAvg = parseFloat(product.rating_avg);
+    const rCount = parseInt(product.rating_count, 10) || 0;
+    if (Number.isFinite(rAvg) && rAvg > 0) {
+      ratingEl.textContent = rAvg.toFixed(1);
+      reviewsEl.textContent = `(${rCount} đánh giá)`;
+    } else {
+      ratingEl.textContent = "—";
+      reviewsEl.textContent = "(Chưa có đánh giá)";
+    }
+
+    // Format nội dung tab (cho phép HTML từ admin, tự wrap <p> nếu là plain text)
     const formatText = (text) => {
-      if (!text) return "Đang cập nhật...";
-      if (/<(p|div|ul|ol|li|br|strong|span)[\s>]/i.test(text)) return text;
-      const paragraphs = text.split(/\n+/).filter(p => p.trim() !== "");
-      return paragraphs.map(p => `<p style="margin-bottom: 16px;">${p.trim()}</p>`).join('');
+      if (!text) return "<p>Đang cập nhật...</p>";
+      // Nếu chứa HTML hợp lệ → giữ nguyên (giả định nội dung do admin nhập)
+      if (/<(p|div|ul|ol|li|br|strong|em|span|h[1-6])[\s>]/i.test(text)) return text;
+      // Ngược lại → wrap từng đoạn bằng <p>
+      return text.split(/\n+/).filter(p => p.trim() !== "")
+        .map(p => `<p>${p.trim()}</p>`).join("");
     };
 
     document.getElementById("pd-desc-content").innerHTML = formatText(product.description);
     document.getElementById("pd-ingredients-content").innerHTML = formatText(product.ingredients);
     document.getElementById("pd-benefits-content").innerHTML = formatText(product.benefits);
     document.getElementById("pd-usage-content").innerHTML = formatText(product.usage);
-    
-    // Gắn ID cho nút thêm giỏ hàng
-    document.getElementById("pd-add-to-cart").dataset.productId = product.id;
+
+    // Lưu ID hiện tại cho nút thêm giỏ
+    const btn = document.getElementById("pd-add-to-cart");
+    btn.dataset.productId = product.id;
+    btn.disabled = false;
   }
 
-  // Hàm lấy TẤT CẢ ảnh duy nhất từ tất cả các size
+  /* ============ GALLERY ============ */
+  function parseImages(v) {
+    let imgs = [];
+    try {
+      imgs = typeof v.images === "string" ? JSON.parse(v.images) : v.images;
+    } catch (e) { imgs = [v.image]; }
+    if (!Array.isArray(imgs) || imgs.length === 0) imgs = [v.image];
+    return imgs.filter(Boolean);
+  }
+
   function getAllUniqueImages(variants) {
-    let allImgs = [];
-    variants.forEach(v => {
-      let imgs = [];
-      try { 
-        imgs = typeof v.images === 'string' ? JSON.parse(v.images) : v.images; 
-      } catch(e) { 
-        imgs = [v.image]; 
-      }
-      if (!Array.isArray(imgs) || imgs.length === 0) imgs = [v.image];
-      allImgs = allImgs.concat(imgs);
-    });
-    // Lọc trùng (giữ lại 1 ảnh nếu bị lặp)
-    return [...new Set(allImgs)].filter(img => img);
+    let all = [];
+    variants.forEach(v => { all = all.concat(parseImages(v)); });
+    return [...new Set(all)];
   }
 
-  // Hàm vẽ thư viện ảnh chung
   function renderGallery(variants) {
-    const mainImg = document.getElementById("pd-img-main");
     const thumbnailContainer = document.getElementById("pd-thumbnails");
     const allImages = getAllUniqueImages(variants);
-
     thumbnailContainer.innerHTML = "";
 
     allImages.forEach((imgName, index) => {
       const thumb = document.createElement("img");
       thumb.src = `../images/product/${imgName}`;
-      thumb.alt = `Ảnh ${index + 1}`;
-      
+      thumb.alt = `Ảnh sản phẩm ${index + 1}`;
+      thumb.loading = "lazy";
+      thumb.tabIndex = 0;
       thumb.addEventListener("click", () => {
-        mainImg.src = `../images/product/${imgName}`;
+        document.getElementById("pd-img-main").src = thumb.src;
         document.querySelectorAll(".pd-thumbnails img").forEach(t => t.classList.remove("active"));
         thumb.classList.add("active");
+      });
+      thumb.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); thumb.click(); }
       });
       thumbnailContainer.appendChild(thumb);
     });
   }
 
-    // Hàm đồng bộ ảnh chính và highlight thumbnail khi đổi Size
+  // Đồng bộ ảnh chính khi đổi size
+  // Quy ước DB: ảnh CUỐI trong mảng `images` là ảnh đại diện riêng của size đó
   function syncImageWithSize(product) {
     const mainImg = document.getElementById("pd-img-main");
-    let currentImages = [];
-    
-    try { 
-      currentImages = typeof product.images === 'string' ? JSON.parse(product.images) : product.images; 
-    } catch(e) { 
-      currentImages = [product.image]; 
-    }
-    if (!Array.isArray(currentImages) || currentImages.length === 0) currentImages = [product.image];
+    const currentImages = parseImages(product);
+    if (currentImages.length === 0) return;
 
-    // SỬA Ở ĐÂY: Lấy ảnh cuối cùng trong mảng (là ảnh chụp riêng của hũ 50ml hoặc 30ml)
     const mainImgName = currentImages[currentImages.length - 1];
     const mainImgSrc = `../images/product/${mainImgName}`;
-    
-    // Đổi ảnh lớn
     mainImg.src = mainImgSrc;
 
-    // Tìm và highlight thumbnail tương ứng
     document.querySelectorAll(".pd-thumbnails img").forEach(t => {
-      t.classList.remove("active");
-      if (t.getAttribute("src") === mainImgSrc) {
-        t.classList.add("active");
-      }
+      t.classList.toggle("active", t.getAttribute("src") === mainImgSrc);
     });
   }
 
-  // Hàm render nút chọn Size
+  /* ============ SIZE BUTTONS ============ */
   function renderSizeButtons(variants, currentId) {
     const attrContainer = document.getElementById("pd-attributes");
-    attrContainer.innerHTML = ""; 
+    attrContainer.innerHTML = "";
+    if (variants.length <= 1) return;
 
-    if (variants.length > 1) {
-      const groupDiv = document.createElement("div");
-      groupDiv.className = "pd-attr-group";
-      groupDiv.innerHTML = `<label>Chọn kích thước / dung tích:</label>`;
-      
-      const btnWrap = document.createElement("div");
-      btnWrap.className = "pd-size-buttons";
+    const groupDiv = document.createElement("div");
+    groupDiv.className = "pd-attr-group";
+    groupDiv.innerHTML = `<label>Chọn kích thước / dung tích:</label>`;
 
-      variants.forEach((variant) => {
-        const btn = document.createElement("button");
-        btn.className = "pd-size-btn";
-        btn.textContent = variant.size;
-        if (variant.id === currentId) btn.classList.add("active");
+    const btnWrap = document.createElement("div");
+    btnWrap.className = "pd-size-buttons";
+    btnWrap.setAttribute("role", "group");
 
-        btn.addEventListener("click", () => {
-          // 1. Đổi text, giá, sku
-          updateProductInfo(variant); 
-          
-          // 2. Đổi ảnh chính theo size mới
-          syncImageWithSize(variant); 
-          
-          // 3. Đổi trạng thái nút
-          document.querySelectorAll(".pd-size-btn").forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          
-          // 4. Đổi URL
-          window.history.replaceState(null, '', `?id=${variant.id}`);
+    variants.forEach((variant) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "pd-size-btn";
+      btn.textContent = variant.size || "—";
+      btn.setAttribute("aria-pressed", variant.id === currentId ? "true" : "false");
+      if (variant.id === currentId) btn.classList.add("active");
+
+      btn.addEventListener("click", () => {
+        updateProductInfo(variant);
+        syncImageWithSize(variant);
+        document.querySelectorAll(".pd-size-btn").forEach(b => {
+          b.classList.remove("active");
+          b.setAttribute("aria-pressed", "false");
         });
-        btnWrap.appendChild(btn);
+        btn.classList.add("active");
+        btn.setAttribute("aria-pressed", "true");
+        window.history.replaceState(null, "", `?id=${variant.id}`);
       });
-      groupDiv.appendChild(btnWrap);
-      attrContainer.appendChild(groupDiv);
-    }
+      btnWrap.appendChild(btn);
+    });
+
+    groupDiv.appendChild(btnWrap);
+    attrContainer.appendChild(groupDiv);
   }
 
-  // Gọi API lấy dữ liệu
+  /* ============ ADD TO CART (FIX BLOCKER) ============ */
+  document.getElementById("pd-add-to-cart").addEventListener("click", () => {
+    const btn = document.getElementById("pd-add-to-cart");
+    const id = btn.dataset.productId;
+    const qtyInput = document.getElementById("pd-qty-input");
+    const qty = Math.max(1, Math.min(99, parseInt(qtyInput.value, 10) || 1));
+
+    if (!id) {
+      if (typeof window.showToast === "function") {
+        window.showToast("Sản phẩm chưa sẵn sàng, vui lòng thử lại");
+      }
+      return;
+    }
+
+    if (typeof window.addToCart === "function") {
+      window.addToCart(id, qty);   // components.js tự toast + update cart count
+    } else {
+      console.error("[MOCYEN] window.addToCart chưa sẵn sàng — kiểm tra components.js");
+    }
+  });
+
+  /* ============ FETCH DỮ LIỆU ============ */
   async function fetchProduct() {
     try {
-      // 1. Lấy sản phẩm hiện tại
-      const res = await fetch(`https://mocyen-web.onrender.com/api/products/${productId}`);
+      const res = await fetch(`${API_BASE}/api/products/${productId}`);
+      if (!res.ok) {
+        if (res.status === 404) return showError("Sản phẩm không tồn tại hoặc đã ngừng kinh doanh.");
+        throw new Error(`HTTP ${res.status}`);
+      }
       const data = await res.json();
-      
+
       updateProductInfo(data);
 
-      // 2. Lấy TẤT CẢ các size của nhóm sản phẩm này
+      // Lấy tất cả size của nhóm
       if (data.group_id) {
-        const groupRes = await fetch(`https://mocyen-web.onrender.com/api/products/group/${data.group_id}`);
+        const groupRes = await fetch(`${API_BASE}/api/products/group/${data.group_id}`);
         if (groupRes.ok) {
           const variants = await groupRes.json();
-          
-          // 3. Vẽ thư viện ảnh chung từ tất cả các size
-          renderGallery(variants); 
-          
-          // 4. Vẽ nút chọn size
+          renderGallery(variants);
           renderSizeButtons(variants, data.id);
-          
-          // 5. Highlight đúng ảnh của size đang xem ban đầu
           syncImageWithSize(data);
         }
+      } else {
+        // Sản phẩm không có group → render gallery từ ảnh của chính nó
+        renderGallery([data]);
+        syncImageWithSize(data);
       }
     } catch (error) {
-      console.error("Lỗi tải sản phẩm:", error);
+      console.error("[MOCYEN] Lỗi tải sản phẩm:", error);
+      showError("Không thể tải thông tin sản phẩm. Vui lòng kiểm tra kết nối và thử lại.");
     }
   }
 
-  // Xử lý chuyển Tab
+  /* ============ TABS ============ */
   const tabBtns = document.querySelectorAll(".pd-tab-btn");
   tabBtns.forEach(btn => {
     btn.addEventListener("click", () => {
-      tabBtns.forEach(b => b.classList.remove("active"));
+      tabBtns.forEach(b => {
+        b.classList.remove("active");
+        b.setAttribute("aria-selected", "false");
+      });
       document.querySelectorAll(".pd-tab-panel").forEach(p => p.classList.remove("active"));
       btn.classList.add("active");
+      btn.setAttribute("aria-selected", "true");
       document.getElementById(`tab-${btn.dataset.tab}`).classList.add("active");
     });
   });
 
-  // Xử lý tăng/giảm số lượng
+  /* ============ QTY +/- ============ */
   const qtyInput = document.getElementById("pd-qty-input");
   document.getElementById("pd-qty-minus").addEventListener("click", () => {
-    let val = parseInt(qtyInput.value);
+    const val = parseInt(qtyInput.value, 10) || 1;
     if (val > 1) qtyInput.value = val - 1;
   });
   document.getElementById("pd-qty-plus").addEventListener("click", () => {
-    let val = parseInt(qtyInput.value);
+    const val = parseInt(qtyInput.value, 10) || 1;
     if (val < 99) qtyInput.value = val + 1;
   });
+  qtyInput.addEventListener("input", () => {
+    let v = parseInt(qtyInput.value, 10);
+    if (!Number.isFinite(v) || v < 1) qtyInput.value = 1;
+    else if (v > 99) qtyInput.value = 99;
+  });
 
-  // Khởi chạy
+  /* ============ POPSTATE (Back/Forward) ============ */
+  // Khi user bấm Back sau khi đổi size → reload để re-render đúng ID trong URL
+  window.addEventListener("popstate", () => {
+    const newId = parseInt(new URLSearchParams(window.location.search).get("id"), 10);
+    const validNewId = Number.isInteger(newId) && newId > 0 ? newId : 1;
+    if (validNewId !== productId) location.reload();
+  });
+
+  /* ============ KHỞI CHẠY ============ */
   fetchProduct();
 });

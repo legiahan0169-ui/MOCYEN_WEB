@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chi tiết sản phẩm | Mộc Yên</title>
   <meta name="description" content="Thông tin chi tiết sản phẩm Mộc Yên.">
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-  <!-- Link CSS chuẩn của trang sản phẩm -->
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../components/components.css">
   <link rel="stylesheet" href="product-detail.css">
@@ -22,88 +21,88 @@
 
   <main class="product-detail-page">
     <div class="container">
-      
-      <!-- Breadcrumb -->
-      <div class="pd-breadcrumb">
-        <a href="../index.html">Trang chủ</a>
-        <span>/</span>
-        <a href="shop.html">Sản phẩm</a>
-        <span>/</span>
-        <span id="pd-breadcrumb-name">Đang tải...</span>
-      </div>
 
-      <!-- KHU VỰC CHÍNH (ẢNH & THÔNG TIN) -->
+      <!-- Breadcrumb -->
+      <nav class="pd-breadcrumb" aria-label="Breadcrumb">
+        <a href="../index.html">Trang chủ</a>
+        <span aria-hidden="true">/</span>
+        <a href="shop.html">Sản phẩm</a>
+        <span aria-hidden="true">/</span>
+        <span id="pd-breadcrumb-name" aria-current="page">Đang tải...</span>
+      </nav>
+
+      <!-- KHU VỰC CHÍNH -->
       <div class="pd-main-layout">
-        
+
         <!-- Cột trái: Ảnh -->
         <div class="pd-gallery">
           <div class="pd-main-image">
-            <img id="pd-img-main" src="" alt="Đang tải ảnh...">
+            <img id="pd-img-main" src="" alt="Ảnh sản phẩm Mộc Yên đang tải">
           </div>
-          <div class="pd-thumbnails" id="pd-thumbnails"></div>
+          <div class="pd-thumbnails" id="pd-thumbnails" aria-label="Thư viện ảnh sản phẩm"></div>
         </div>
 
         <!-- Cột phải: Thông tin -->
         <div class="pd-info">
-          <p class="pd-category" id="pd-category">DANH MỤC</p>
-          <h1 class="pd-title" id="pd-name">Tên sản phẩm</h1>
-          
+          <p class="pd-category" id="pd-category">SẢN PHẨM</p>
+          <h1 class="pd-title" id="pd-name">Đang tải sản phẩm...</h1>
+
           <div class="pd-meta">
-            <div class="pd-rating">
-              <i class="fa-solid fa-star"></i>
-              <span id="pd-rating">0.0</span>
-              <span class="pd-reviews" id="pd-reviews">(0 đánh giá)</span>
+            <div class="pd-rating" aria-label="Đánh giá sản phẩm">
+              <i class="fa-solid fa-star" aria-hidden="true"></i>
+              <span id="pd-rating">—</span>
+              <span class="pd-reviews" id="pd-reviews">(Chưa có đánh giá)</span>
             </div>
-            <div class="pd-sku">SKU: <span id="pd-sku">---</span></div>
+            <div class="pd-sku">SKU: <span id="pd-sku">—</span></div>
           </div>
 
           <div class="pd-price-box">
-            <strong class="pd-price" id="pd-price">0đ</strong>
+            <strong class="pd-price" id="pd-price">—</strong>
           </div>
 
-          <p class="pd-short-desc" id="pd-short-desc">Mô tả ngắn đang tải...</p>
+          <p class="pd-short-desc" id="pd-short-desc">Đang tải mô tả...</p>
 
           <div class="pd-attributes" id="pd-attributes"></div>
 
           <!-- Hành động mua -->
           <div class="pd-actions">
-            <div class="pd-qty">
-              <button type="button" class="pd-qty-btn" id="pd-qty-minus">−</button>
-              <input type="number" id="pd-qty-input" value="1" min="1" max="99">
-              <button type="button" class="pd-qty-btn" id="pd-qty-plus">+</button>
+            <div class="pd-qty" role="group" aria-label="Chọn số lượng">
+              <button type="button" class="pd-qty-btn" id="pd-qty-minus" aria-label="Giảm số lượng">−</button>
+              <input type="number" id="pd-qty-input" value="1" min="1" max="99" aria-label="Số lượng">
+              <button type="button" class="pd-qty-btn" id="pd-qty-plus" aria-label="Tăng số lượng">+</button>
             </div>
-            <button class="btn btn-primary pd-btn-add" id="pd-add-to-cart">
-              <i class="fa-solid fa-bag-shopping"></i> Thêm vào giỏ
+            <button class="btn btn-primary pd-btn-add" id="pd-add-to-cart" type="button" disabled>
+              <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i> Thêm vào giỏ
             </button>
           </div>
 
           <div class="pd-promises">
-            <p><i class="fa-solid fa-leaf"></i> Thành phần chọn lọc, an toàn cho da</p>
-            <p><i class="fa-solid fa-truck-fast"></i> Miễn phí giao hàng từ 499.000đ</p>
+            <p><i class="fa-solid fa-leaf" aria-hidden="true"></i> Thành phần chọn lọc, an toàn cho da</p>
+            <p><i class="fa-solid fa-truck-fast" aria-hidden="true"></i> Miễn phí giao hàng từ 499.000đ</p>
           </div>
         </div>
       </div>
 
       <!-- TABS THÔNG TIN -->
       <div class="pd-tabs-section">
-        <div class="pd-tabs-header">
-          <button class="pd-tab-btn active" data-tab="desc">Mô tả</button>
-          <button class="pd-tab-btn" data-tab="ingredients">Thành phần</button>
-          <button class="pd-tab-btn" data-tab="benefits">Công dụng</button>
-          <button class="pd-tab-btn" data-tab="usage">Hướng dẫn sử dụng</button>
+        <div class="pd-tabs-header" role="tablist" aria-label="Thông tin sản phẩm">
+          <button class="pd-tab-btn active" data-tab="desc" role="tab" aria-selected="true">Mô tả</button>
+          <button class="pd-tab-btn" data-tab="ingredients" role="tab" aria-selected="false">Thành phần</button>
+          <button class="pd-tab-btn" data-tab="benefits" role="tab" aria-selected="false">Công dụng</button>
+          <button class="pd-tab-btn" data-tab="usage" role="tab" aria-selected="false">Hướng dẫn sử dụng</button>
         </div>
 
         <div class="pd-tabs-content">
-          <div class="pd-tab-panel active" id="tab-desc">
+          <div class="pd-tab-panel active" id="tab-desc" role="tabpanel">
             <div id="pd-desc-content">Đang tải...</div>
           </div>
-          <div class="pd-tab-panel" id="tab-ingredients">
+          <div class="pd-tab-panel" id="tab-ingredients" role="tabpanel">
             <div id="pd-ingredients-content">Đang tải...</div>
           </div>
-          <div class="pd-tab-panel" id="tab-benefits">
+          <div class="pd-tab-panel" id="tab-benefits" role="tabpanel">
             <div id="pd-benefits-content">Đang tải...</div>
           </div>
-          <div class="pd-tab-panel" id="tab-usage">
+          <div class="pd-tab-panel" id="tab-usage" role="tabpanel">
             <div id="pd-usage-content">Đang tải...</div>
           </div>
         </div>

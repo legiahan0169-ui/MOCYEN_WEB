@@ -1,50 +1,108 @@
+/* =========================================================
+   MOCYEN - POLICY PAGE SCRIPT
+   - Chuyển tab theo hash (#giao-hang, #doi-tra, ...)
+   - Đồng bộ URL khi click nav item
+   - Hỗ trợ back/forward, paste URL, mở link từ footer
+   - Fallback khi hash không hợp lệ
+========================================================= */
 document.addEventListener("DOMContentLoaded", () => {
   const navItems = document.querySelectorAll(".policy-nav-item");
   const tabPanels = document.querySelectorAll(".policy-tab");
+  const contentCard = document.querySelector(".policy-content-card");
+  const DEFAULT_TAB = "giao-hang";
 
-  // Hàm chuyển tab
-  function switchTab(targetId) {
-    // 1. Ẩn tất cả nội dung, bỏ active menu
+  /* ---------------------------------------------
+     Hàm chuyển tab
+     - targetId: id của policy-tab cần hiện
+     - scroll:   có cuộn về đầu content card không
+     - Trả về true/false (tìm thấy tab hay không)
+  --------------------------------------------- */
+  function switchTab(targetId, { scroll = false } = {}) {
     tabPanels.forEach(tab => tab.classList.remove("active"));
-    navItems.forEach(item => item.classList.remove("active"));
+    navItems.forEach(item => {
+      item.classList.remove("active");
+      item.removeAttribute("aria-selected");
+    });
 
-    // 2. Hiện nội dung được chọn và bôi đậm menu
     const targetTab = document.getElementById(targetId);
-    const targetNav = document.querySelector(`.policy-nav-item[data-target="${targetId}"]`);
-    
-    if (targetTab && targetNav) {
-      targetTab.classList.add("active");
-      targetNav.classList.add("active");
+    const targetNav = document.querySelector(
+      `.policy-nav-item[data-target="${targetId}"]`
+    );
+
+    if (!targetTab || !targetNav) return false;
+
+    targetTab.classList.add("active");
+    targetNav.classList.add("active");
+    targetNav.setAttribute("aria-selected", "true");
+
+    if (scroll && contentCard) {
+      // Dùng scrollIntoView + scroll-margin-top trong CSS để tránh header dính
+      contentCard.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+    return true;
   }
 
-  // Lắng nghe sự kiện click
+  /* ---------------------------------------------
+     Kích hoạt tab theo hash hiện tại
+     - Nếu hash không hợp lệ -> fallback DEFAULT_TAB
+  --------------------------------------------- */
+  function activateFromHash({ scroll = false } = {}) {
+    const hash = window.location.hash.replace("#", "");
+    if (hash && switchTab(hash, { scroll })) return true;
+
+    // Hash rỗng hoặc không hợp lệ -> về tab mặc định
+    switchTab(DEFAULT_TAB, { scroll });
+    if (hash !== DEFAULT_TAB) {
+      history.replaceState(null, "", `#${DEFAULT_TAB}`);
+    }
+    return false;
+  }
+
+  /* ---------------------------------------------
+     Click nav item -> đổi tab + cập nhật URL
+  --------------------------------------------- */
   navItems.forEach(item => {
     item.addEventListener("click", (e) => {
       e.preventDefault();
       const target = item.dataset.target;
-      
-      // Đổi hash URL
-      window.history.pushState(null, null, `#${target}`);
-      
-      // Chuyển tab
-      switchTab(target);
-      
-      // Cuộn lên đầu
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (!target) return;
+
+      // Cập nhật URL (không gây scroll tự động)
+      history.pushState(null, "", `#${target}`);
+
+      // Đổi tab + cuộn về đầu content
+      switchTab(target, { scroll: true });
     });
   });
 
-  // Xử lý khi load trang có sẵn hash (VD: policy.html#doi-tra)
-  const hash = window.location.hash.replace("#", "");
-  if (hash) {
-    switchTab(hash);
+  /* ---------------------------------------------
+     XỬ LÝ LẦN ĐẦU TẢI TRANG
+     - Nếu URL có hash (VD: policy.html#dieu-khoan) -> mở đúng tab đó
+     - Nếu không có hash -> tab mặc định (HTML đã set sẵn active)
+     - Ép scroll về top để tránh trình duyệt tự nhảy vào anchor đang ẩn
+  --------------------------------------------- */
+  const initialHash = window.location.hash.replace("#", "");
+
+  if (initialHash) {
+    const ok = switchTab(initialHash, { scroll: false });
+    if (!ok) {
+      switchTab(DEFAULT_TAB);
+      history.replaceState(null, "", `#${DEFAULT_TAB}`);
+    }
+    // Đảm bảo đầu trang (một số trình duyệt tự scroll đến anchor trước khi JS chạy)
+    window.scrollTo(0, 0);
+  } else {
+    // Không có hash -> chuẩn hoá URL thành #giao-hang (dễ share link)
+    history.replaceState(null, "", `#${DEFAULT_TAB}`);
   }
-  
-  // Xử lý nút Back/Forward
-  window.addEventListener("popstate", () => {
-    const currentHash = window.location.hash.replace("#", "");
-    if (currentHash) switchTab(currentHash);
-    else switchTab("giao-hang");
+
+  /* ---------------------------------------------
+     HASHCHANGE - xử lý:
+     - User paste URL có #hash khi đang ở trang
+     - Bấm Back/Forward trên trình duyệt
+     - Click anchor <a href="#..."> nội bộ (không qua navItems)
+  --------------------------------------------- */
+  window.addEventListener("hashchange", () => {
+    activateFromHash({ scroll: true });
   });
 });
