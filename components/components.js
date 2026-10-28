@@ -336,13 +336,16 @@
     initNewsletter();
     initFloatingCart();   // Luôn chạy
 
-    // Cập nhật tên user trên header
+        // =======================================================
+    // CẬP NHẬT TÊN USER VÀ NÚT ADMIN TRÊN HEADER
+    // =======================================================
     const userJson = localStorage.getItem("mocyen_user");
     if (userJson) {
       try {
         const user = JSON.parse(userJson);
         const accountLink = document.querySelector(".account-link");
         
+        // 1. Cập nhật Avatar chữ cái
         if (accountLink && user.name) {
           const nameParts = user.name.trim().split(" ");
           const mainName = nameParts[nameParts.length - 1];
@@ -355,6 +358,27 @@
           `;
           accountLink.title = `Xin chào, ${user.name}`;
         }
+
+        // 2. [MỚI] Tự động thêm nút "Quản trị viên" nếu là Admin
+        if (user.role === "admin") {
+          const headerActions = document.querySelector(".header-actions");
+          if (headerActions) {
+            // Tạo nút Admin (Dùng icon bánh răng hoặc biểu đồ)
+            const adminLink = document.createElement("a");
+            adminLink.href = basePath + "/pages/admin.html";
+            adminLink.title = "Trang Quản Trị Viên";
+            adminLink.innerHTML = '<i class="fa-solid fa-gear"></i>';
+            adminLink.style.cssText = "display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: #264F40; color: white; margin-right: 15px; transition: 0.2s;";
+            
+            // Hiệu ứng hover
+            adminLink.onmouseover = () => adminLink.style.background = "#183C31";
+            adminLink.onmouseout = () => adminLink.style.background = "#264F40";
+            
+            // Chèn vào đầu cụm action (bên trái icon Tìm kiếm)
+            headerActions.insertBefore(adminLink, headerActions.firstChild);
+          }
+        }
+
       } catch (e) {
         console.error("Lỗi đọc thông tin user", e);
       }
