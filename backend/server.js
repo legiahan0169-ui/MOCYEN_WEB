@@ -235,10 +235,38 @@ app.get('/api/posts/:id', (req, res) => {
     });
 });
 
+// Cập nhật API trong server.js
 app.get('/api/orders/user/:user_id', (req, res) => {
-    db.query('SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC', [req.params.user_id], (err, results) => {
+    const sql = `
+        SELECT o.*, 
+        (
+            SELECT JSON_ARRAYAGG(
+                JSON_OBJECT(
+                    'name', oi.product_name, 
+                    'qty', oi.quantity, 
+                    'price', oi.price,
+                    'image', p.image
+                )
+            ) 
+            FROM order_items oi 
+            LEFT JOIN products p ON oi.product_id = p.id 
+            WHERE oi.order_id = o.id
+        ) as items
+        FROM orders o 
+        WHERE o.user_id = ? 
+        ORDER BY o.created_at DESC
+    `;
+    
+    db.query(sql, [req.params.user_id], (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
-        res.json(results);
+        
+        // Parse chuỗi JSON từ MySQL thành mảng object thực sự
+        const parsedResults = results.map(order => ({
+            ...order,
+            items: typeof order.items === 'string' ? JSON.parse(order.items) : (order.items || [])
+        }));
+        
+        res.json(parsedResults);
     });
 });
 

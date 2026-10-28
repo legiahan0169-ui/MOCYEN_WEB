@@ -169,18 +169,34 @@
   color: #7C877D;
   margin-top: 4px;
 }
+
+/* Trạng thái Đơn hàng */
 .order-status {
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 11px;
   font-weight: 600;
 }
+.status-pending { background: #FFE8CC; color: #D9480F; } /* Chờ xử lý - Cam */
 .status-shipping { background: #FFF3CD; color: #856404; } /* Đang giao - Vàng */
 .status-completed { background: #D4EDDA; color: #155724; } /* Hoàn thành - Xanh lá */
 .status-cancelled { background: #F8D7DA; color: #721C24; } /* Đã hủy - Đỏ */
 
+/* Thông tin người nhận */
 .order-body {
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.order-info-text { font-size: 13px; color: #56635D; }
+.order-info-text strong { color: #243A30; }
+
+/* Danh sách sản phẩm trong đơn */
+.order-products-list {
+  margin-top: 15px;
+  border-top: 1px dashed #E4E2D7;
+  padding-top: 15px;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -197,6 +213,7 @@
   border: 1px solid #E4E2D7;
   object-fit: contain;
   padding: 5px;
+  background: #FFFEFA;
 }
 .order-product-info {
   flex: 1;
@@ -216,6 +233,7 @@
   color: #264F40;
   font-weight: 600;
 }
+
 .order-footer {
   display: flex;
   justify-content: space-between;
@@ -234,19 +252,21 @@
   font-weight: 600;
   margin-left: 10px;
 }
-.btn-reorder {
-  padding: 8px 15px;
-  border: 1px solid #264F40;
-  background: transparent;
-  color: #264F40;
-  border-radius: 100px;
-  font-size: 11px;
-  cursor: pointer;
-  transition: 0.2s;
+
+/* Empty State (Không có đơn hàng) */
+.empty-orders {
+  text-align: center;
+  padding: 40px 20px;
 }
-.btn-reorder:hover {
-  background: #264F40;
-  color: white;
+.empty-orders i {
+  font-size: 40px;
+  color: #D8DCCF;
+  margin-bottom: 15px;
+}
+.empty-orders p {
+  color: #7C877D;
+  margin-bottom: 20px;
+  font-size: 14px;
 }
 
 /* --- TAB THÔNG TIN CÁ NHÂN --- */
@@ -276,16 +296,6 @@
 }
 .acc-form .btn {
   margin-top: 10px;
-}
-
-/* --- TAB SỔ ĐỊA CHỈ --- */
-.address-box {
-  padding: 30px;
-  text-align: center;
-  border: 1px dashed #C6D1BD;
-  border-radius: 12px;
-  color: #7C877D;
-  font-size: 13px;
 }
 
 /* Responsive */
