@@ -709,7 +709,7 @@ p { font-size: 14px; }
 }
 
 /* =========================================================
-   RESPONSIVE HEADER & MENU MOBILE (FIXED TRIỆT ĐỂ)
+   RESPONSIVE HEADER - FULL SCREEN MENU
 ========================================================= */
 @media (max-width: 900px) {
     .menu-toggle {
@@ -722,64 +722,64 @@ p { font-size: 14px; }
         margin-right: 15px;
         padding: 0;
         cursor: pointer;
+        z-index: 10000;
     }
 
-    /* 1. ÉP MENU THÀNH KHỐI (BLOCK) ĐỂ KHÔNG BỊ GIÃN */
+    /* 1. BIẾN MENU THÀNH MÀN HÌNH TRẮNG PHỦ KÍN */
     .main-nav {
         position: fixed !important;
         top: 0 !important;
-        left: -100% !important;
-        width: 280px !important;
+        left: 0 !important;
+        width: 100vw !important;
         height: 100vh !important;
         background: #FFFEFA !important;
-        display: block !important; /* Cấm dùng flex để không bị giãn */
-        padding: 60px 0 20px !important;
-        box-shadow: 4px 0 15px rgba(0,0,0,0.1) !important;
-        transition: left 0.3s ease !important;
-        z-index: 9999999 !important; /* Luôn nổi lên trên cùng */
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        padding: 80px 20px 20px !important;
+        z-index: 9999999 !important;
+        transform: translateY(-100%); /* Ẩn lên trên */
+        transition: transform 0.3s ease !important;
         overflow-y: auto !important;
+        box-shadow: none !important;
     }
 
+    /* Khi mở menu, trượt từ trên xuống */
     .main-nav.is-open {
-        left: 0 !important;
+        transform: translateY(0);
     }
 
-    /* Nút X */
+    /* Nút X ở góc phải */
     .menu-close-btn {
         position: absolute !important;
-        top: 15px !important;
-        right: 15px !important;
-        font-size: 26px !important;
+        top: 20px !important;
+        right: 20px !important;
+        font-size: 32px !important;
         color: #243A30 !important;
         background: transparent !important;
         border: none !important;
         cursor: pointer !important;
-        z-index: 10000000 !important;
-        padding: 5px 15px;
+        padding: 0 10px;
     }
 
-    /* 2. CÁC MỤC MENU HIỂN THỊ DẠNG KHỐI, CÁCH ĐỀU NHAU */
+    /* 2. ĐỊNH DẠNG CÁC LINK TO RÕ, DỄ BẤM */
     .main-nav > a, 
     .main-nav .nav-dropdown > a {
-        display: block !important;
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
         width: 100% !important;
-        padding: 16px 25px !important;
-        border-bottom: 1px solid #F0EBDD !important;
-        font-size: 15px !important;
-        font-weight: 500 !important;
+        padding: 20px 0 !important;
+        border-bottom: 1px solid #EAEAEA !important;
+        font-size: 18px !important; /* Chữ to cho dễ đọc */
+        font-weight: 600 !important;
         color: #243A30 !important;
         text-decoration: none !important;
-        position: relative;
-        z-index: 10000000 !important; /* Đảm bảo click được */
+        background: transparent !important;
     }
 
-    /* Mũi tên chỉ xuống (dùng flex nhỏ cho mỗi thẻ a để đẩy mũi tên sang phải) */
-    .nav-dropdown > a {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-    }
-
+    /* Mũi tên chỉ xuống của mục Sản phẩm */
     .nav-dropdown-toggle::after {
         content: "\f107";
         font-family: "Font Awesome 6 Free";
@@ -790,15 +790,14 @@ p { font-size: 14px; }
         transform: rotate(180deg);
     }
 
-    /* 3. MENU CON XỔ XUỐNG */
+    /* 3. MENU CON XỔ XUỐNG (Dành cho mục Sản phẩm) */
     .dropdown-menu {
         position: static !important;
         display: none !important;
-        box-shadow: none !important;
-        border: none !important;
-        background: #F9F6EE !important;
+        background: #F7F3E9 !important; /* Nền xám nhẹ để dễ phân biệt */
         padding: 0 !important;
-        width: 100% !important;
+        border-radius: 10px;
+        margin-bottom: 10px;
     }
 
     .nav-dropdown.is-open .dropdown-menu {
@@ -807,35 +806,23 @@ p { font-size: 14px; }
 
     .dropdown-menu a {
         display: block !important;
-        padding: 12px 25px 12px 40px !important;
-        font-size: 14px !important;
+        padding: 16px 20px !important;
+        font-size: 15px !important;
         color: #56635D !important;
         border-bottom: 1px solid #EAEAEA !important;
-        text-decoration: none !important;
-        position: relative;
-        z-index: 10000000 !important;
     }
 
-    /* Lớp nền mờ nằm DƯỚI menu một bậc */
-    .menu-overlay {
-        position: fixed !important;
-        top: 0; left: 0; width: 100vw; height: 100vh;
-        background: rgba(0,0,0,0.5) !important;
-        z-index: 9999998 !important; /* Thấp hơn menu 1 bậc */
-        opacity: 0; pointer-events: none; transition: 0.3s;
-    }
-    .menu-overlay.is-active {
-        opacity: 1; pointer-events: auto;
+    .dropdown-menu a:last-child {
+        border-bottom: none !important;
     }
 
-    /* Ẩn Giỏ hàng & Chat khi mở Menu */
+    /* Ẩn Giỏ hàng & Chat khi mở Menu (Tránh bị đè) */
     body.menu-active .floating-cart,
     body.menu-active #chat-widget-container, 
     body.menu-active .chat-widget-btn {
         display: none !important;
     }
 }
-
     /* --- 3. FOOTER --- */
     .footer-grid {
         grid-template-columns: 1fr !important; /* Đưa toàn bộ footer về 1 cột dọc */

@@ -130,32 +130,28 @@
   }
 
   /* ---------- Header behaviors ---------- */
-     function initHeader() {
+       function initHeader() {
     var toggle = document.querySelector('.menu-toggle');
     var nav = document.querySelector('.main-nav');
 
     if (toggle && nav) {
+      // [QUAN TRỌNG] Bốc thẻ nav ra khỏi header và gắn vào body để không bị CSS cha đè
+      document.body.appendChild(nav);
+
       // 1. Tạo nút X
       var closeBtn = document.createElement('button');
       closeBtn.className = 'menu-close-btn';
       closeBtn.innerHTML = '&times;';
       nav.insertBefore(closeBtn, nav.firstChild);
 
-      // 2. Tạo lớp nền mờ
-      var overlay = document.createElement('div');
-      overlay.className = 'menu-overlay';
-      document.body.appendChild(overlay);
-
       function closeMenu() {
         nav.classList.remove('is-open');
-        overlay.classList.remove('is-active');
         document.body.classList.remove('menu-active');
         toggle.setAttribute('aria-expanded', 'false');
       }
 
       function openMenu() {
         nav.classList.add('is-open');
-        overlay.classList.add('is-active');
         document.body.classList.add('menu-active');
         toggle.setAttribute('aria-expanded', 'true');
       }
@@ -163,9 +159,8 @@
       // Bắt sự kiện click
       toggle.addEventListener('click', openMenu);
       closeBtn.addEventListener('click', closeMenu);
-      overlay.addEventListener('click', closeMenu);
 
-      // 3. XỬ LÝ MENU CON VÀ TỰ ĐỘNG ĐÓNG KHI BẤM LINK
+      // 3. XỬ LÝ MENU CON VÀ ĐÓNG MENU KHI BẤM LINK
       var navLinks = nav.querySelectorAll('a');
       navLinks.forEach(function(link) {
         link.addEventListener('click', function (e) {
