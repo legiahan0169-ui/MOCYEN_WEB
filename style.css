@@ -707,3 +707,118 @@ p { font-size: 14px; }
         z-index: 9999;
     }
 }
+
+/* =========================================================
+   RESPONSIVE HEADER & FOOTER CHO MOBILE
+========================================================= */
+@media (max-width: 900px) {
+    /* --- 1. TOPBAR (Thu nhỏ chữ hoặc ẩn đi) --- */
+    .topbar-inner p { font-size: 11px; text-align: center; }
+    
+    /* --- 2. HEADER CHÍNH --- */
+    .header-inner {
+        justify-content: space-between; /* Đẩy Logo qua trái, Icon qua phải */
+        padding: 15px 0;
+    }
+
+    /* Nút Hamburger (☰) */
+    .menu-toggle {
+        display: block !important; /* Hiển thị nút menu */
+        font-size: 24px;
+        color: var(--green);
+        background: transparent;
+        border: none;
+        order: -1; /* Đưa nút menu lên trước Logo (nằm bên trái cùng) */
+        margin-right: 15px;
+    }
+
+    /* Ẩn Menu ngang mặc định, chuyển thành Menu trượt (Drawer) */
+    .main-nav {
+        position: fixed;
+        top: 0;
+        left: -100%; /* Ẩn khỏi màn hình về bên trái */
+        width: 280px;
+        height: 100vh;
+        background: #FFFEFA;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 80px 20px 20px; /* Chừa chỗ cho nút X */
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        transition: left 0.3s ease;
+        z-index: 9999;
+        overflow-y: auto;
+    }
+
+    /* Khi menu được mở (JS thêm class is-open) */
+    .main-nav.is-open {
+        left: 0;
+    }
+
+    /* Nút X (Đóng menu) - Tạo tự động bằng CSS */
+    .main-nav::before {
+        content: "\f00d"; /* Mã icon X của FontAwesome */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 20px;
+        color: #243A30;
+        cursor: pointer;
+    }
+
+    /* Style lại các link bên trong menu mobile */
+    .main-nav > a, .nav-dropdown {
+        width: 100%;
+        padding: 15px 0;
+        border-bottom: 1px solid #EAEAEA;
+    }
+    
+    /* Xổ dọc dropdown "Sản phẩm" trên mobile */
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        padding: 10px 0 0 15px;
+        display: none;
+        background: transparent;
+    }
+    .nav-dropdown.is-open .dropdown-menu {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Icon Header (Search, Account, Cart) thu nhỏ và sát nhau hơn */
+    .header-actions {
+        gap: 12px;
+    }
+    .header-actions i { font-size: 18px; }
+    .cart-count { font-size: 10px; min-width: 16px; height: 16px; }
+
+    /* --- 3. FOOTER --- */
+    .footer-grid {
+        grid-template-columns: 1fr !important; /* Đưa toàn bộ footer về 1 cột dọc */
+        gap: 30px;
+        text-align: center; /* Căn giữa nội dung cho đẹp */
+    }
+    
+    .footer-brand { align-items: center; display: flex; flex-direction: column; }
+    .footer-contact-details { margin-top: 15px; text-align: center; }
+    
+    .footer-column {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .footer-bottom div {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+}
