@@ -226,16 +226,18 @@ app.get('/api/orders/user/:user_id', (req, res) => {
     });
 });
 
-// API Admin: Lấy chi tiết 1 đơn hàng
+// API Admin: Lấy chi tiết 1 đơn hàng (Đã bỏ JOIN để tránh lỗi thiếu cột ảnh)
 app.get('/api/admin/orders/:id', (req, res) => {
     const orderId = req.params.id;
     db.query('SELECT * FROM orders WHERE id = ?', [orderId], (err, orders) => {
         if (err) return res.status(500).json({ error: err.message });
-        if (orders.length === 0) return res.status(404).json({ error: 'Không tìm thấy đơn' });
+        if (orders.length === 0) return res.status(404).json({ error: 'Không tìm thấy đơn hàng' });
         
-        const sqlItems = `SELECT oi.*, p.image FROM order_items oi LEFT JOIN products p ON oi.product_id = p.id WHERE oi.order_id = ?`;
+        // Lấy thẳng từ bảng order_items
+        const sqlItems = `SELECT * FROM order_items WHERE order_id = ?`;
         db.query(sqlItems, [orderId], (err, items) => {
             if (err) return res.status(500).json({ error: err.message });
+            // Trả về thông tin đơn + danh sách sản phẩm
             res.json({ ...orders[0], items: items });
         });
     });

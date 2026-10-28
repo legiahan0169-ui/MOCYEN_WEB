@@ -177,13 +177,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const modalStatusSelect = document.getElementById("modal-status-select");
   const modalSaveBtn = document.getElementById("modal-save-btn");
 
-  window.openOrderModal = async function(orderId) {
+    window.openOrderModal = async function(orderId) {
     currentOrderIdForModal = orderId;
     modalBody.innerHTML = '<p style="text-align:center;">Đang tải dữ liệu...</p>';
     modal.classList.add("active");
 
     try {
       const res = await fetch(`${API_BASE}/api/admin/orders/${orderId}`);
+      
+      // Bắt lỗi API trả về (vd: 404, 500)
+      if (!res.ok) {
+        throw new Error(`Lỗi API: ${res.status} - Chưa cập nhật Backend hoặc lỗi SQL`);
+      }
+      
       const order = await res.json();
       
       modalTitle.textContent = `Chi tiết đơn hàng #${order.id}`;
@@ -193,6 +199,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let itemsHtml = "";
       if(order.items && order.items.length > 0) {
         order.items.forEach(item => {
+          // Dùng ảnh mặc định nếu Backend không trả về đường dẫn ảnh
           const imgSrc = item.image ? `../images/product/${item.image}` : '../images/banner/hero.png';
           itemsHtml += `
             <div class="modal-item">
@@ -229,7 +236,16 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
     } catch (e) {
-      modalBody.innerHTML = '<p style="color:red; text-align:center;">Lỗi tải chi tiết đơn hàng.</p>';
+      console.error("Chi tiết lỗi:", e);
+      // Hiển thị thông báo lỗi cụ thể ra màn hình để dễ debug
+      modalBody.innerHTML = `
+        <div style="color:#C4425B; text-align:center; padding: 20px;">
+          <i class="fa-solid fa-triangle-exclamation" style="font-size: 30px; margin-bottom: 10px;"></i>
+          <p style="font-weight: 600;">Không thể tải chi tiết đơn hàng!</p>
+          <p style="font-size: 12px; margin-top: 5px;">${e.message || 'Vui lòng kiểm tra lại kết nối Server.'}</p>
+          <p style="font-size: 12px; color: #7C877D; margin-top: 10px;">(Mẹo: Bạn hãy chắc chắn đã lưu file server.js mới và khởi động lại Backend)</p>
+        </div>
+      `;
     }
   };
 
