@@ -6,7 +6,9 @@
   <title>Góc Làn Da - Blog Chăm Sóc Da | Mộc Yên</title>
   <meta name="description" content="Chia sẻ kiến thức chăm sóc da, review mỹ phẩm và bí quyết sống xanh từ thương hiệu Mộc Yên.">
   
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
   <link rel="stylesheet" href="../style.css">
@@ -14,24 +16,38 @@
   <link rel="stylesheet" href="blog.css">
 </head>
 <body>
+  <!-- Header Inject -->
   <div id="site-header"></div>
 
   <main class="static-page">
     <div class="container">
+      
+      <!-- Page Header -->
       <div class="page-header">
         <p class="eyebrow">NHẬT KÝ MỘC YÊN</p>
         <h1>Góc làn da</h1>
         <p>Hiểu da hơn, thương mình hơn qua những bài viết chia sẻ kiến thức chăm sóc da.</p>
       </div>
 
-      <!-- Vùng chứa bài viết (JS sẽ tự động điền) -->
-      <div class="blog-grid" id="blog-list">
-        <p style="text-align: center; width: 100%; color: #7C877D;">Đang tải bài viết...</p>
+      <!-- Bộ lọc chủ đề (JS sẽ render các nút vào đây) -->
+      <div class="blog-filters" id="blog-filters">
+        <!-- Nút filter sẽ được chèn tự động -->
       </div>
+
+      <!-- Vùng chứa bài viết -->
+      <div class="blog-grid" id="blog-list">
+        <!-- Skeleton Loading (Hiển thị trước khi có dữ liệu) -->
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+      
     </div>
   </main>
 
+  <!-- Footer Inject -->
   <div id="site-footer"></div>
+  
   <script src="../components/components.js"></script>
   <script src="blog.js"></script>
 </body>
