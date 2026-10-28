@@ -301,18 +301,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ==========================================
-  // 5. BIỂU ĐỒ (CHART.JS)
+    // ==========================================
+  // 5. BIỂU ĐỒ (CHART.JS) - TÍNH TOÁN DỮ LIỆU THẬT
   // ==========================================
   function renderCharts(orders) {
     if (typeof Chart === 'undefined') return;
 
-    // Biểu đồ tỷ trọng kênh
+    // --- 1. BIỂU ĐỒ TRÒN: TỶ TRỌNG DOANH THU THEO KÊNH ---
     const ctxChannel = document.getElementById('channelChart').getContext('2d');
     const revByChannel = { Website: 0, Shopee: 0, Facebook: 0, TikTok: 0 };
+    
     orders.forEach(o => {
-      const ch = o.channel || 'Website';
-      if (revByChannel[ch] !== undefined) revByChannel[ch] += Number(o.total_amount);
+      const ch = o.channel || 'Website'; // Nếu null thì mặc định là Website
+      // Chuẩn hóa tên kênh (viết hoa chữ cái đầu để khớp key)
+      const normalizedCh = ch.charAt(0).toUpperCase() + ch.slice(1).toLowerCase();
+      if (revByChannel[normalizedCh] !== undefined) {
+        revByChannel[normalizedCh] += Number(o.total_amount);
+      }
     });
 
     new Chart(ctxChannel, {
@@ -325,27 +330,90 @@ document.addEventListener("DOMContentLoaded", () => {
           borderWidth: 0
         }]
       },
-      options: { responsive: true, maintainAspectRatio: false, cutout: '70%' }
+      options: { 
+        responsive: true, 
+        maintainAspectRatio: false, 
+        cutout: '70%',
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return ' ' + context.label + ': ' + formatPrice(context.raw);
+              }
+            }
+          }
+        }
+      }
     });
 
-    // Biểu đồ doanh thu 7 ngày
+    // --- 2. BIỂU ĐỒ CỘT: DOANH THU 7 NGÀY GẦN NHẤT ---
     const ctxTraffic = document.getElementById('trafficChart').getContext('2d');
+    
+    // Tạo mảng chứa 7 ngày gần nhất (từ 6 ngày trước đến hôm nay)
+    const last7Days = [];
+    const revenueByDay = [];
+    
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      
+      // Label hiển thị: "DD/MM"
+      const dateString = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}`;
+      last7Days.push(dateString);
+      revenueByDay.push(0); // Khởi tạo doanh thu = 0
+    }
+
+    // Duyệt qua danh sách đơn hàng để cộng dồn doanh thu vào đúng ngày
+    orders.forEach(o => {
+      const orderDate = new Date(o.created_at);
+      // Lấy ngày dạng DD/MM để so sánh
+      const orderDateString = `${orderDate.getDate().toString().padStart(2, '0')}/${(orderDate.getMonth() + 1).toString().padStart(2, '0')}`;
+      
+      const index = last7Days.indexOf(orderDateString);
+      if (index !== -1) {
+        // Nếu đơn hàng thuộc 7 ngày qua thì cộng doanh thu
+        revenueByDay[index] += Number(o.total_amount);
+      }
+    });
+
     new Chart(ctxTraffic, {
       type: 'bar',
       data: {
-        labels: ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'CN'],
+        labels: last7Days, // Trục X: 7 ngày gần nhất
         datasets: [{
-          label: 'Doanh thu (VNĐ)',
-          data: [1200000, 1900000, 3000000, 5000000, 2000000, 3000000, 4500000], 
+          label: 'Doanh thu',
+          data: revenueByDay, // Trục Y: Doanh thu thật
           backgroundColor: '#264F40',
-          borderRadius: 6
+          borderRadius: 6,
+          barPercentage: 0.6
         }]
       },
       options: { 
         responsive: true, 
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } }
+        plugins: { 
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return ' Doanh thu: ' + formatPrice(context.raw);
+              }
+            }
+          }
+        },
+        scales: { 
+          y: { 
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                // Rút gọn số trên trục Y cho đỡ dài (VD: 1000000 -> 1M)
+                if (value >= 1000000) return (value / 1000000) + 'Tr';
+                if (value >= 1000) return (value / 1000) + 'K';
+                return value;
+              }
+            }
+          } 
+        }
       }
     });
   }
