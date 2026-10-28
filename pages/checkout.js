@@ -198,9 +198,61 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (currentTotal < 0) currentTotal = 0;
 
     totalEl.textContent = formatPrice(currentTotal);
+
+    // NẾU ĐANG CHỌN CHUYỂN KHOẢN, CẬP NHẬT LẠI SỐ TIỀN TRÊN MÃ QR
+    const selectedPayment = document.querySelector('input[name="payment_method"]:checked');
+    if (selectedPayment && (selectedPayment.value === "bank" || selectedPayment.value === "transfer")) {
+      selectedPayment.dispatchEvent(new Event('change')); // Kích hoạt lại sự kiện change để vẽ lại QR
+    }
   }
 
-  // 8. Submit Form
+  // ==========================================
+  // 8. XỬ LÝ HIỂN THỊ THÔNG TIN CHUYỂN KHOẢN
+  // ==========================================
+  const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
+  
+  // LƯU Ý: Thay đổi thông tin ngân hàng của bạn ở đây
+  const bankId = "MB"; // Mã ngân hàng (MB, VCB, Techcombank, ACB...)
+  const accountNo = "0123456789"; // Số tài khoản
+  const accountName = "CONG TY MOC YEN"; // Tên chủ tài khoản (Viết không dấu)
+
+  paymentRadios.forEach(radio => {
+    radio.addEventListener("change", (e) => {
+      const method = e.target.value;
+      
+      // Kiểm tra value của ô chuyển khoản trong HTML của bạn (VD: 'bank', 'transfer'...)
+      if (method === "bank" || method === "transfer") { 
+        if (bankQrBox) {
+          bankQrBox.style.display = "block";
+          
+          const addInfo = `Thanh toan don hang ${currentUser.name || ''}`.trim(); // Nội dung chuyển khoản
+          
+          // Tạo URL ảnh QR từ API của VietQR
+          const qrUrl = `https://img.vietqr.io/image/${bankId}-${accountNo}-compact2.png?amount=${currentTotal}&addInfo=${encodeURIComponent(addInfo)}&accountName=${encodeURIComponent(accountName)}`;
+          
+          // Cập nhật hình ảnh và thông tin vào khung bankQrBox
+          bankQrBox.innerHTML = `
+            <div style="text-align: center; margin-top: 15px; padding: 15px; border: 1px dashed #ccc; border-radius: 8px; background: #fff;">
+              <p style="margin-bottom: 10px; font-weight: bold; color: #2E7D32;">Quét mã QR để thanh toán</p>
+              <img src="${qrUrl}" alt="QR Code" style="max-width: 250px; margin: 0 auto; display: block; border-radius: 8px;">
+              <div style="margin-top: 15px; font-size: 14px; text-align: left; line-height: 1.6;">
+                <div><strong>Ngân hàng:</strong> ${bankId}</div>
+                <div><strong>Số TK:</strong> ${accountNo}</div>
+                <div><strong>Chủ TK:</strong> ${accountName}</div>
+                <div><strong>Số tiền:</strong> <span style="color: #C4425B; font-weight: bold;">${formatPrice(currentTotal)}</span></div>
+                <div><strong>Nội dung:</strong> ${addInfo}</div>
+              </div>
+            </div>
+          `;
+        }
+      } else {
+        // Nếu chọn COD thì ẩn khung QR đi
+        if (bankQrBox) bankQrBox.style.display = "none";
+      }
+    });
+  });
+
+  // 9. Submit Form
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     
@@ -245,13 +297,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!response.ok) throw new Error("Lỗi khi đặt hàng");
 
       localStorage.removeItem(CART_KEY);
+      
+      // Thông báo thành công
       if (typeof window.showToast === "function") {
         window.showToast("Đặt hàng thành công!");
       } else {
-        alert("Đặt hàng thành công!");
+        alert("Đặt hàng thành công! Bạn sẽ được chuyển về trang chủ.");
       }
       
-      setTimeout(() => window.location.href = "../index.html", 1500);
+      // Tăng thời gian chờ lên 3 giây để khách kịp nhìn thấy thông báo
+      setTimeout(() => window.location.href = "../index.html", 3000);
       
     } catch (error) {
       console.error(error);
