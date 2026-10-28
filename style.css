@@ -447,57 +447,66 @@ p { font-size: 14px; }
 
 
 /* =========================================================
-   14. JOURNAL / BLOG (Đã nâng cấp)
+   14. JOURNAL / BLOG (Nâng cấp toàn diện)
 ========================================================= */
 .journal-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px; /* Tăng khoảng cách giữa các bài viết */
+    /* Tự động chia cột: Nếu màn hình rộng, tự chia 3, nếu có 2 bài thì tự chia 2 cho đẹp */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px; /* Khoảng cách rộng rãi hơn */
 }
 
 .journal-card {
     display: flex;
     flex-direction: column;
+    background: transparent;
+    transition: transform 0.3s ease;
 }
 
-/* Khung chứa ảnh (để tạo hiệu ứng zoom) */
+/* Hiệu ứng nổi lên nhẹ khi rê chuột vào thẻ bài viết */
+.journal-card:hover {
+    transform: translateY(-8px);
+}
+
+/* Khung chứa ảnh */
 .journal-card > a:first-child {
     display: block;
     overflow: hidden;
-    border-radius: 24px; /* Bo góc to hơn cho mềm mại */
-    margin-bottom: 20px;
-    position: relative;
+    border-radius: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); /* Đổ bóng nhẹ cho ảnh */
 }
 
 .journal-card img {
     width: 100%;
-    aspect-ratio: 4/3; /* Cố định tỷ lệ ảnh để các thẻ không bị so le */
+    aspect-ratio: 4/3; 
     object-fit: cover;
-    transition: transform 0.5s ease;
+    transition: transform 0.6s ease;
 }
 
-/* Hiệu ứng zoom ảnh khi rê chuột */
+/* Rê chuột vào ảnh sẽ zoom nhẹ */
 .journal-card:hover img {
-    transform: scale(1.06);
+    transform: scale(1.05);
 }
 
 /* Nhãn danh mục (CHĂM DA CƠ BẢN...) */
 .journal-card small {
     color: var(--green);
-    font-size: 11px; /* Tăng từ 8px lên 11px */
+    font-size: 12px; /* Tăng lên 12px cho dễ đọc */
     font-weight: 600;
     letter-spacing: 1.5px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     display: block;
+    text-transform: uppercase;
 }
 
-/* Tiêu đề bài viết */
+/* Tiêu đề bài viết (TO RÕ RÀNG) */
 .journal-card h3 {
-    margin: 0 0 15px 0;
-    font-family: "Cormorant Garamond", serif; /* Dùng font Serif cho sang trọng */
-    font-size: 22px; /* Tăng từ 18px lên 22px */
+    margin: 0 0 20px 0;
+    font-family: "Cormorant Garamond", serif; 
+    font-size: 26px; /* Tăng vọt lên 26px để át đi khoảng trống */
     font-weight: 600;
-    line-height: 1.4;
+    line-height: 1.35;
     color: #243A30;
 }
 
@@ -513,22 +522,22 @@ p { font-size: 14px; }
 /* Nút "Đọc bài viết" */
 .journal-card > a:last-child {
     color: var(--green);
-    font-size: 13px; /* Tăng từ 10px lên 13px */
+    font-size: 14px; /* Tăng lên 14px */
     font-weight: 600;
     margin-top: auto;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    transition: gap 0.2s ease, color 0.2s;
+    gap: 8px;
+    transition: gap 0.3s ease, color 0.2s;
+    padding-bottom: 4px;
+    border-bottom: 1px solid transparent;
 }
 
-/* Hiệu ứng mũi tên chạy nhẹ khi hover */
 .journal-card > a:last-child:hover {
-    gap: 10px; 
+    gap: 12px; 
     color: var(--green-dark);
+    border-bottom: 1px solid var(--green-dark);
 }
-
-
 /* =========================================================
    17. NEWSLETTER (Đã bỏ ảnh, căn giữa)
 ========================================================= */
