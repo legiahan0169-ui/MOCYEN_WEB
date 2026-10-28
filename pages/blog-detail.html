@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Đang tải... | Mộc Yên</title>
+  <meta name="description" content="Bài viết chia sẻ kiến thức chăm sóc da từ Mộc Yên.">
   
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
   <link rel="stylesheet" href="../style.css">
@@ -18,7 +21,18 @@
   <main class="article-page">
     <div class="container article-container">
       
-      <article class="article-content">
+      <!-- SKELETON LOADING -->
+      <div id="article-skeleton" class="skeleton-wrapper">
+        <div class="skeleton sk-title"></div>
+        <div class="skeleton sk-meta"></div>
+        <div class="skeleton sk-img"></div>
+        <div class="skeleton sk-text"></div>
+        <div class="skeleton sk-text"></div>
+        <div class="skeleton sk-text" style="width: 80%;"></div>
+      </div>
+
+      <!-- NỘI DUNG BÀI VIẾT (Ẩn lúc đầu) -->
+      <article class="article-content" id="article-content" style="display: none;">
         <div class="article-header">
           <span class="category" id="post-category">DANH MỤC</span>
           <h1 id="post-title">Đang tải tiêu đề...</h1>
@@ -28,17 +42,22 @@
           </div>
         </div>
 
-        <img src="" alt="" id="post-image" class="article-hero-img">
+        <img src="" alt="" id="post-image" class="article-hero-img" onerror="this.src='../images/banner/hero.png'">
         
         <!-- Vùng nội dung bài viết -->
-        <div class="article-body" id="post-body">
-          Đang tải nội dung...
-        </div>
+        <div class="article-body" id="post-body"></div>
         
         <div class="article-footer">
           <a href="blog.html" class="back-to-blog"><i class="fa-solid fa-arrow-left"></i> Quay lại Góc làn da</a>
         </div>
       </article>
+
+      <!-- BÁO LỖI (Ẩn lúc đầu) -->
+      <div id="article-error" style="display: none; text-align: center; padding: 50px 0;">
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 32px; color: #C4425B; margin-bottom: 15px;">Ôi, không tìm thấy bài viết!</h2>
+        <p style="color: #56635D; margin-bottom: 30px;">Bài viết có thể đã bị xóa hoặc đường dẫn không đúng.</p>
+        <a href="blog.html" class="btn btn-primary">Quay lại Góc làn da</a>
+      </div>
 
     </div>
   </main>
