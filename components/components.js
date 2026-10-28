@@ -4,6 +4,7 @@
    - Tự xử lý đường dẫn __BASE__ theo vị trí trang hiện tại
    - Các hành vi dùng chung: menu mobile, cart, toast,
      newsletter, wishlist, quick-add, add-routine
+   - [NEW] Floating Cart: nút giỏ hàng nổi khi scroll
    ========================================================= */
 (function () {
   'use strict';
@@ -230,6 +231,55 @@
     });
   }
 
+  /* =======================================================
+     [NEW] FLOATING CART — Nút giỏ hàng nổi khi scroll
+     - Tự inject vào mọi trang (trừ trang admin)
+     - Hiện khi user scroll xuống > 300px
+     - Badge đỏ cập nhật real-time khi thêm/xóa sản phẩm
+  ======================================================= */
+  function initFloatingCart() {
+    // Không hiển thị trên trang admin
+    if (window.location.pathname.indexOf('admin') !== -1) return;
+
+    // Tạo nút <a> trỏ thẳng tới cart.html
+    var btn = document.createElement('a');
+    btn.href = basePath + '/pages/cart.html';
+    btn.className = 'floating-cart';
+    btn.setAttribute('aria-label', 'Đi đến giỏ hàng');
+    btn.innerHTML =
+      '<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>' +
+      '<span class="floating-cart-count" aria-live="polite"></span>';
+    document.body.appendChild(btn);
+
+    var countEl = btn.querySelector('.floating-cart-count');
+
+    /* Cập nhật số lượng hiển thị trên badge */
+    function updateFloatCount() {
+      var total = getCart().reduce(function (s, i) { return s + (i.qty || 1); }, 0);
+      countEl.textContent = total > 99 ? '99+' : total;
+      countEl.style.display = total > 0 ? 'flex' : 'none';
+    }
+
+    updateFloatCount();
+
+    // Đồng bộ khi cart thay đổi (thêm/xóa/sửa từ bất kỳ nguồn nào)
+    window.addEventListener('cart:updated', updateFloatCount);
+
+    // Đồng bộ khi user quay lại tab từ trang khác
+    window.addEventListener('pageshow', updateFloatCount);
+
+    /* Hiện/ẩn nút theo scroll — tránh che hero banner lúc mới vào trang */
+    function onScroll() {
+      if (window.scrollY > 300) {
+        btn.classList.add('is-visible');
+      } else {
+        btn.classList.remove('is-visible');
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll(); // check ngay lần đầu (tránh trường hợp load với hash scroll)
+  }
+
   window.addToCart = addToCart;
   window.showToast = toast;
 
@@ -245,6 +295,7 @@
     initQuickAdd();
     initAddRoutine();
     initNewsletter();
+    initFloatingCart();   // ← [NEW] Nút giỏ hàng nổi
 
     // =======================================================
     // CẬP NHẬT TÊN USER TRÊN HEADER SAU KHI ĐĂNG NHẬP

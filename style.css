@@ -692,3 +692,103 @@ p { font-size: 14px; }
     .newsletter-form { flex-direction: column; }
     .newsletter-form button { min-height: 44px; }
 }
+
+
+/* =========================================================
+   [NEW] 19. FLOATING CART (Nút giỏ hàng nổi khi scroll)
+   - Inject tự động từ components.js trên mọi trang (trừ admin)
+   - Vị trí: góc phải dưới, nằm TRÊN chat widget
+   - Hiện khi scroll > 300px, ẩn khi về đầu trang
+========================================================= */
+.floating-cart {
+    position: fixed;
+    right: 24px;
+    bottom: 92px;               /* cao hơn chat widget (chat ~20px + 56px height) */
+    z-index: 998;               /* dưới page-transition (9999), dưới chat widget (999) */
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--green);
+    color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 8px 24px rgba(38, 79, 64, 0.28),
+                0 2px 6px rgba(38, 79, 64, 0.15);
+    opacity: 0;
+    transform: translateY(20px) scale(0.85);
+    pointer-events: none;
+    transition: opacity 0.3s ease,
+                transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                background 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+.floating-cart.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.floating-cart:hover {
+    background: var(--green-dark);
+    box-shadow: 0 12px 30px rgba(38, 79, 64, 0.35);
+    transform: translateY(-3px) scale(1.05);
+}
+
+.floating-cart:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 3px;
+}
+
+.floating-cart i {
+    font-size: 20px;
+    transition: transform 0.2s ease;
+}
+.floating-cart:hover i {
+    transform: rotate(-8deg) scale(1.05);
+}
+
+/* Badge số lượng (chỉ hiện khi có sản phẩm) */
+.floating-cart-count {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    display: none;              /* JS sẽ bật flex khi total > 0 */
+    align-items: center;
+    justify-content: center;
+    background: #C4425B;
+    color: #fff;
+    border-radius: 100px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    border: 2px solid #F7F3E9;
+    animation: cartBump 0.4s ease;
+}
+
+@keyframes cartBump {
+    0%   { transform: scale(0.6); }
+    60%  { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+/* Mobile: nhỏ hơn, sát mép hơn, vẫn trên chat widget */
+@media (max-width: 768px) {
+    .floating-cart {
+        width: 50px;
+        height: 50px;
+        right: 16px;
+        bottom: 84px;
+    }
+    .floating-cart i { font-size: 18px; }
+    .floating-cart-count {
+        min-width: 20px;
+        height: 20px;
+        font-size: 10px;
+    }
+}
