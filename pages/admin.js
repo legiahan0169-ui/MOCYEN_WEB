@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Lấy danh sách khách đã chat
-  async function loadAdminChatList() {
+    async function loadAdminChatList() {
       const listContainer = document.getElementById("admin-chat-list");
       if (!listContainer) return;
       try {
@@ -216,7 +216,9 @@ document.addEventListener("DOMContentLoaded", () => {
           users.forEach(u => {
               const div = document.createElement("div");
               div.style.cssText = "padding: 15px 20px; border-bottom: 1px solid #EAEAEA; cursor: pointer; transition: 0.2s;";
-              div.innerHTML = `<strong>Khách: ${u.user_id}</strong>`;
+              // Hiển thị Tên (nếu có), nếu không có thì hiện ID
+              const displayName = u.customer_name || `Khách ID: ${u.user_id}`;
+              div.innerHTML = `<strong>${displayName}</strong>`;
               
               div.onmouseover = () => div.style.background = '#F4F6F3';
               div.onmouseout = () => div.style.background = 'transparent';
@@ -228,7 +230,6 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error("Lỗi tải danh sách chat", e);
       }
   }
-
   // Mở khung chat của 1 khách cụ thể
   async function openAdminChat(userId) {
       currentChatUserId = userId;

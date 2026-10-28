@@ -1,11 +1,38 @@
 /* =========================================================
-   MOCYEN — CART.JS
-   Xử lý hiển thị, cập nhật số lượng và tính tiền giỏ hàng
+   MOCYEN — CART.JS (Đã tối ưu cho Giỏ hàng riêng của từng User)
 ========================================================= */
 document.addEventListener("DOMContentLoaded", async () => {
-  const CART_KEY = "mocyen_cart";
   
-  // 1. Lấy dữ liệu giỏ hàng từ localStorage
+  // 1. Hàm lấy Key giỏ hàng riêng theo User (Giống hệt bên components.js)
+  function getCartKey() {
+    const userJson = localStorage.getItem("mocyen_user");
+    if (userJson) {
+      try {
+        const user = JSON.parse(userJson);
+        return "mocyen_cart_user_" + user.id; // Giỏ riêng của user này
+      } catch (e) {
+        return "mocyen_cart_guest";
+      }
+    }
+    return "mocyen_cart_guest"; // Giỏ của khách chưa đăng nhập
+  }
+
+  const CART_KEY = getCartKey();
+
+  // 2. Xử lý nút Thanh toán (ĐƯA LÊN TRÊN ĐỂ KHÔNG BỊ LỖI KHI GIỎ TRỐNG)
+  const btnCheckout = document.getElementById("btn-checkout");
+  if (btnCheckout) {
+    btnCheckout.addEventListener("click", function(e) {
+      const userJson = localStorage.getItem("mocyen_user");
+      if (!userJson) {
+        e.preventDefault(); // Chặn chuyển trang
+        alert("Vui lòng đăng nhập để tiến hành thanh toán!");
+        window.location.href = "login.html?redirect=checkout.html";
+      }
+    });
+  }
+
+  // 3. Lấy dữ liệu giỏ hàng từ localStorage
   let cart = [];
   try {
     cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
@@ -27,26 +54,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-    // Kiểm tra đăng nhập trước khi cho thanh toán
-  const btnCheckout = document.getElementById("btn-checkout");
-  if (btnCheckout) {
-    // Đổi thẻ <a> thành sự kiện click nếu cần
-    btnCheckout.addEventListener("click", function(e) {
-      const userJson = localStorage.getItem("mocyen_user");
-      if (!userJson) {
-        e.preventDefault(); // Chặn chuyển trang
-        alert("Vui lòng đăng nhập để tiến hành thanh toán!");
-        window.location.href = "login.html?redirect=checkout.html";
-      }
-    });
-  }
-
-  // 2. Gọi API lấy thông tin sản phẩm thật từ Database
+  // 4. Gọi API lấy thông tin sản phẩm thật từ Database
   let productsDB = {};
   try {
     const res = await fetch('https://mocyen-web.onrender.com/api/products');
     const products = await res.json();
-    // Tạo dictionary để tra cứu nhanh theo ID
     products.forEach(p => { productsDB[p.id] = p; });
   } catch (error) {
     console.error("Lỗi tải sản phẩm:", error);
@@ -56,7 +68,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const formatPrice = (price) => `${Number(price).toLocaleString("vi-VN")}đ`;
 
-  // 3. Hàm Render Giỏ Hàng
+  // 5. Hàm Render Giỏ Hàng
   function renderCart() {
     if (cart.length === 0) {
       if (emptyState) emptyState.hidden = false;
@@ -67,12 +79,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (emptyState) emptyState.hidden = true;
     if (contentState) contentState.hidden = false;
     
-    itemsContainer.innerHTML = ""; // Xóa cũ
+    itemsContainer.innerHTML = ""; 
     let subtotal = 0;
 
     cart.forEach((item, index) => {
       const product = productsDB[item.id];
-      if (!product) return; // Bỏ qua nếu sản phẩm đã bị xóa khỏi DB
+      if (!product) return; 
 
       const price = product.sale_price || product.price;
       const itemTotal = price * item.qty;
@@ -107,7 +119,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       itemsContainer.insertAdjacentHTML("beforeend", itemHTML);
     });
 
-    // 4. Tính toán Tổng tiền
+    // Tính toán Tổng tiền
     subtotalEl.textContent = formatPrice(subtotal);
     
     let shippingFee = 0;
@@ -126,11 +138,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     totalEl.textContent = formatPrice(subtotal + shippingFee);
 
-    // Cập nhật lại icon giỏ hàng trên Header
     if (typeof window.updateCartCount === "function") window.updateCartCount();
   }
 
-  // 5. Xử lý sự kiện Tăng/Giảm/Xóa
+  // 6. Xử lý sự kiện Tăng/Giảm/Xóa
   itemsContainer.addEventListener("click", (e) => {
     if (e.target.closest(".btn-plus")) {
       const index = e.target.closest(".btn-plus").dataset.index;
@@ -154,6 +165,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
+  // Hàm lưu giỏ hàng (Dùng Key động)
   function saveAndRender() {
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
     renderCart();

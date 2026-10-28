@@ -125,13 +125,18 @@ app.get('/api/messages/:user_id', (req, res) => {
 });
 
 // Lấy danh sách những khách hàng đã từng chat
+// Lấy danh sách những khách hàng đã từng chat (Lấy kèm Tên)
 app.get('/api/admin/chats', (req, res) => {
-    db.query('SELECT DISTINCT user_id FROM messages', (err, results) => {
+    const sql = `
+        SELECT DISTINCT m.user_id, u.name as customer_name 
+        FROM messages m
+        LEFT JOIN users u ON m.user_id = u.id
+    `;
+    db.query(sql, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(results);
     });
 });
-
 // ==========================================
 // 4. XỬ LÝ CHAT REAL-TIME (SOCKET.IO)
 // ==========================================
