@@ -5,6 +5,7 @@
    - Các hành vi dùng chung: menu mobile, cart, toast,
      newsletter, wishlist, quick-add, add-routine
    - [NEW] Floating Cart: nút giỏ hàng nổi khi scroll
+           (CSS được inject inline → hoạt động trên MỌI trang)
    ========================================================= */
 (function () {
   'use strict';
@@ -12,11 +13,9 @@
     /* ==========================================
      HIỆU ỨNG CHUYỂN TRANG (PAGE TRANSITION)
   ========================================== */
-  // 1. Tạo lớp phủ (overlay) và gắn vào body
   var pageTransition = document.createElement('div');
   pageTransition.id = 'page-transition';
   
-  // Đảm bảo body đã tồn tại mới chèn (vì components.js nằm ở cuối body)
   if (document.body) {
       document.body.appendChild(pageTransition);
   } else {
@@ -25,21 +24,16 @@
       });
   }
 
-  // 2. Hiệu ứng Fade In khi trang vừa tải xong
   window.addEventListener('pageshow', function (event) {
-      // pageshow xử lý cả trường hợp bấm nút Back/Forward của trình duyệt
       pageTransition.classList.remove('is-active');
   });
 
-  // 3. Hiệu ứng Fade Out khi click chuyển trang
   document.addEventListener('click', function (e) {
-      // Tìm thẻ <a> gần nhất được click
       var link = e.target.closest('a');
       if (!link) return;
 
       var href = link.getAttribute('href');
       
-      // Bỏ qua các link không phải chuyển trang (link neo #, mở tab mới, tel, mailto...)
       if (!href || 
           href.startsWith('#') || 
           href.startsWith('javascript') || 
@@ -50,18 +44,14 @@
           return;
       }
 
-      // Nếu là link nội bộ (chuyển trang) -> Kích hoạt hiệu ứng mờ dần
       e.preventDefault();
-      
       pageTransition.classList.add('is-active');
 
-      // Đợi 400ms (khớp với thời gian transition trong CSS) rồi mới chuyển trang
       setTimeout(function () {
           window.location.href = href;
       }, 400);
   });
 
-  /* Xác định base path: trang trong /pages/ → '..', trang root → '.' */
   var basePath = window.location.pathname.indexOf('/pages/') !== -1 ? '..' : '.';
 
   /* ---------- Load component ---------- */
@@ -74,7 +64,6 @@
       if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
 
       var html = await res.text();
-      /* Thay token __BASE__ bằng đường dẫn tương đối đúng */
       html = html.replace(/__BASE__/g, basePath);
       mount.innerHTML = html;
       mount.dispatchEvent(new CustomEvent('component:loaded', { bubbles: true, detail: { file: fileName } }));
@@ -85,18 +74,17 @@
   }
 
   /* ---------- Cart (localStorage) ---------- */
-  // Hàm lấy tên key giỏ hàng riêng cho từng user
   function getCartKey() {
     const userJson = localStorage.getItem("mocyen_user");
     if (userJson) {
       try {
         const user = JSON.parse(userJson);
-        return "mocyen_cart_user_" + user.id; // Giỏ riêng của user này
+        return "mocyen_cart_user_" + user.id;
       } catch (e) {
         return "mocyen_cart_guest";
       }
     }
-    return "mocyen_cart_guest"; // Giỏ của khách chưa đăng nhập
+    return "mocyen_cart_guest";
   }
 
   function getCart() {
@@ -116,21 +104,15 @@
   }
 
   /* ---------- Toast ---------- */
-  /* ---------- Toast (Thông báo) ---------- */
   function toast(msg) {
     var el = document.querySelector('.toast');
-    // Nếu chưa có thẻ div toast thì tạo mới
     if (!el) {
       el = document.createElement('div');
       el.className = 'toast';
       document.body.appendChild(el);
     }
     el.textContent = msg;
-    
-    // Hiển thị lên
     el.classList.add('is-visible');
-    
-    // Tự động ẩn sau 2.5s
     clearTimeout(el._t);
     el._t = setTimeout(function () { 
         el.classList.remove('is-visible'); 
@@ -145,7 +127,7 @@
     if (found) found.qty = (found.qty || 1) + qty;
     else cart.push({ id: String(id), qty: qty });
     saveCart(cart);
-    toast('Đã thêm sản phẩm vào giỏ hàng!'); // <-- GỌI HIỂN THỊ THÔNG BÁO Ở ĐÂY
+    toast('Đã thêm sản phẩm vào giỏ hàng!');
   }
 
   /* ---------- Header behaviors ---------- */
@@ -160,7 +142,6 @@
       });
     }
 
-    /* Mobile: bấm "Sản phẩm" mở dropdown thay vì điều hướng */
     document.querySelectorAll('.nav-dropdown-toggle').forEach(function (link) {
       link.addEventListener('click', function (e) {
         if (window.matchMedia('(max-width: 900px)').matches) {
@@ -170,7 +151,6 @@
       });
     });
 
-    /* Nút tìm kiếm */
     var searchBtn = document.querySelector('.search-btn');
     if (searchBtn) {
       searchBtn.addEventListener('click', function () {
@@ -195,16 +175,10 @@
   }
 
   function initQuickAdd() {
-    // Sử dụng Event Delegation: Gắn sự kiện vào document thay vì từng nút
     document.addEventListener('click', function(e) {
       var btn = e.target.closest('.quick-add[data-product-id]');
-      
-      // Nếu click không trúng nút + thì bỏ qua
       if (!btn) return;
-      
       e.preventDefault();
-      
-      // Lấy ID và thêm vào giỏ
       addToCart(btn.dataset.productId);
       toast('Đã thêm vào giỏ hàng');
     });
@@ -232,16 +206,111 @@
   }
 
   /* =======================================================
-     [NEW] FLOATING CART — Nút giỏ hàng nổi khi scroll
-     - Tự inject vào mọi trang (trừ trang admin)
-     - Hiện khi user scroll xuống > 300px
-     - Badge đỏ cập nhật real-time khi thêm/xóa sản phẩm
+     [NEW] FLOATING CART — Inject CSS + HTML
+     → Hoạt động trên MỌI trang load components.js
+     → Không phụ thuộc style.css
   ======================================================= */
   function initFloatingCart() {
     // Không hiển thị trên trang admin
     if (window.location.pathname.indexOf('admin') !== -1) return;
 
-    // Tạo nút <a> trỏ thẳng tới cart.html
+    // Tránh inject 2 lần nếu script load trùng
+    if (document.querySelector('.floating-cart')) return;
+
+    /* --- 1. INJECT CSS (chỉ 1 lần) --- */
+    if (!document.getElementById('mocyen-floating-cart-style')) {
+      var style = document.createElement('style');
+      style.id = 'mocyen-floating-cart-style';
+      style.textContent = `
+        .floating-cart {
+          position: fixed;
+          left: 24px;
+          bottom: 24px;
+          z-index: 9999;
+          width: 56px;
+          height: 56px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #264F40;
+          color: #fff;
+          border-radius: 50%;
+          box-shadow: 0 8px 24px rgba(38, 79, 64, 0.28),
+                      0 2px 6px rgba(38, 79, 64, 0.15);
+          opacity: 0;
+          transform: translateY(20px) scale(0.85);
+          pointer-events: none;
+          transition: opacity 0.3s ease,
+                      transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                      background 0.2s ease,
+                      box-shadow 0.2s ease;
+          text-decoration: none;
+        }
+        .floating-cart.is-visible {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          pointer-events: auto;
+        }
+        .floating-cart:hover {
+          background: #183C31;
+          box-shadow: 0 12px 30px rgba(38, 79, 64, 0.35);
+          transform: translateY(-3px) scale(1.05);
+        }
+        .floating-cart:focus-visible {
+          outline: 2px solid #264F40;
+          outline-offset: 3px;
+        }
+        .floating-cart i {
+          font-size: 20px;
+          transition: transform 0.2s ease;
+        }
+        .floating-cart:hover i {
+          transform: rotate(-8deg) scale(1.05);
+        }
+        .floating-cart-count {
+          position: absolute;
+          top: -4px;
+          right: -4px;
+          min-width: 22px;
+          height: 22px;
+          padding: 0 6px;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          background: #C4425B;
+          color: #fff;
+          border-radius: 100px;
+          font-family: "Montserrat", sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          line-height: 1;
+          border: 2px solid #F7F3E9;
+          animation: mocyenCartBump 0.4s ease;
+        }
+        @keyframes mocyenCartBump {
+          0%   { transform: scale(0.6); }
+          60%  { transform: scale(1.15); }
+          100% { transform: scale(1); }
+        }
+        @media (max-width: 768px) {
+          .floating-cart {
+            width: 50px;
+            height: 50px;
+            left: 16px;
+            bottom: 20px;
+          }
+          .floating-cart i { font-size: 18px; }
+          .floating-cart-count {
+            min-width: 20px;
+            height: 20px;
+            font-size: 10px;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    /* --- 2. INJECT HTML NÚT --- */
     var btn = document.createElement('a');
     btn.href = basePath + '/pages/cart.html';
     btn.className = 'floating-cart';
@@ -253,22 +322,17 @@
 
     var countEl = btn.querySelector('.floating-cart-count');
 
-    /* Cập nhật số lượng hiển thị trên badge */
+    /* --- 3. UPDATE BADGE --- */
     function updateFloatCount() {
       var total = getCart().reduce(function (s, i) { return s + (i.qty || 1); }, 0);
       countEl.textContent = total > 99 ? '99+' : total;
       countEl.style.display = total > 0 ? 'flex' : 'none';
     }
-
     updateFloatCount();
-
-    // Đồng bộ khi cart thay đổi (thêm/xóa/sửa từ bất kỳ nguồn nào)
     window.addEventListener('cart:updated', updateFloatCount);
-
-    // Đồng bộ khi user quay lại tab từ trang khác
     window.addEventListener('pageshow', updateFloatCount);
 
-    /* Hiện/ẩn nút theo scroll — tránh che hero banner lúc mới vào trang */
+    /* --- 4. HIỆN/ẨN THEO SCROLL --- */
     function onScroll() {
       if (window.scrollY > 300) {
         btn.classList.add('is-visible');
@@ -277,7 +341,7 @@
       }
     }
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll(); // check ngay lần đầu (tránh trường hợp load với hash scroll)
+    onScroll();
   }
 
   window.addToCart = addToCart;
@@ -295,11 +359,9 @@
     initQuickAdd();
     initAddRoutine();
     initNewsletter();
-    initFloatingCart();   // ← [NEW] Nút giỏ hàng nổi
+    initFloatingCart();   // ← [FIX] Luôn chạy, CSS tự inject
 
-    // =======================================================
-    // CẬP NHẬT TÊN USER TRÊN HEADER SAU KHI ĐĂNG NHẬP
-    // =======================================================
+    // Cập nhật tên user trên header
     const userJson = localStorage.getItem("mocyen_user");
     if (userJson) {
       try {
@@ -307,10 +369,8 @@
         const accountLink = document.querySelector(".account-link");
         
         if (accountLink && user.name) {
-          // Lấy tên (VD: "Lê Gia Hân" -> lấy chữ "Hân")
           const nameParts = user.name.trim().split(" ");
           const mainName = nameParts[nameParts.length - 1];
-          // Lấy chữ cái đầu tiên của tên chính (VD: "H")
           const avatarLetter = mainName.charAt(0).toUpperCase();
 
           accountLink.innerHTML = `
@@ -328,7 +388,7 @@
 
   /* Đồng bộ cart khi mở nhiều tab */
   window.addEventListener('storage', function (e) {
-    if (e.key === CART_KEY) updateCartCount();
+    if (e.key && e.key.indexOf('mocyen_cart_') === 0) updateCartCount();
   });
 
 })();
