@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
   /* ==========================================
      1. GỌI API 1 LẦN DUY NHẤT CHO CẢ TRANG
   ========================================== */
-  fetch('http://localhost:3000/api/products')
+  fetch('https://mocyen-web.onrender.com/api/products')
     .then(res => res.json())
     .then(products => {
       globalProducts = products;

@@ -88,10 +88,14 @@ app.post('/api/login', (req, res) => {
 
 // API Tạo Đơn Hàng
 app.post('/api/orders', (req, res) => {
+    // 1. Nhận thêm 2 biến coupon_code và discount_amount
     const { user_id, customer_name, phone, address, total_amount, payment_method, items, channel, coupon_code, discount_amount } = req.body;
     
+    // 2. Câu lệnh SQL phải có đủ 9 dấu hỏi chấm (?) cho 9 cột
     const sqlOrder = `INSERT INTO orders (user_id, customer_name, phone, address, total_amount, payment_method, channel, coupon_code, discount_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-     db.query(sqlOrder, [user_id || null, customer_name, phone, address, total_amount, payment_method, channel, coupon_code || null, discount_amount || 0], (err, result) => {
+    
+    // 3. Mảng truyền vào phải có đủ 9 phần tử
+    db.query(sqlOrder, [user_id || null, customer_name, phone, address, total_amount, payment_method, channel, coupon_code || null, discount_amount || 0], (err, result) => {
         if (err) return res.status(500).json({ error: err.message });
         
         const orderId = result.insertId;
