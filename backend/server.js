@@ -64,7 +64,7 @@ app.get('/api/products/:id', (req, res) => {
 });
 
 // ==========================================
-// 3. API ĐĂNG NHẬP & ĐĂNG KÝ & ĐẶT HÀNG
+// 3. API ĐĂNG NHẬP & ĐẶT HÀNG (CẬP NHẬT TRỪ KHO)
 // ==========================================
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
@@ -90,7 +90,6 @@ app.post('/api/register', (req, res) => {
     });
 });
 
-// [NÂNG CẤP] API Tạo Đơn Hàng - Có xử lý Transaction và Trừ Tồn Kho
 app.post('/api/orders', (req, res) => {
     const { user_id, customer_name, phone, address, total_amount, payment_method, items, channel, coupon_code, discount_amount } = req.body;
     
@@ -99,7 +98,7 @@ app.post('/api/orders', (req, res) => {
 
         const sqlOrder = `INSERT INTO orders (user_id, customer_name, phone, address, total_amount, payment_method, channel, coupon_code, discount_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
         
-        db.query(sqlOrder, [user_id || null, customer_name, phone, address, total_amount, payment_method, channel, coupon_code || null, discount_amount || 0], (err, result) => {
+        db.query(sqlOrder, [user_id || null, customer_name, phone, address, total_amount, payment_method, channel || 'Website', coupon_code || null, discount_amount || 0], (err, result) => {
             if (err) return db.rollback(() => res.status(500).json({ error: err.message }));
             
             const orderId = result.insertId;
@@ -109,28 +108,34 @@ app.post('/api/orders', (req, res) => {
             db.query(sqlItems, [orderItemsData], (err) => {
                 if (err) return db.rollback(() => res.status(500).json({ error: err.message }));
 
-                // Cập nhật tồn kho (Trừ đi số lượng khách mua)
-                let stockUpdatePromises = items.map(item => {
-                    return new Promise((resolve, reject) => {
-                        // Điều kiện stock >= item.qty để đảm bảo không bán âm kho
-                        db.query('UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?', [item.qty, item.id, item.qty], (err, result) => {
-                            if (err) return reject(err);
-                            if (result.affectedRows === 0) return reject(new Error(`Sản phẩm "${item.name}" đã hết hàng hoặc không đủ tồn kho!`));
-                            resolve();
-                        });
+                // Trừ kho tuần tự (An toàn tuyệt đối)
+                let errorOccurred = false;
+                let processed = 0;
+                if (items.length === 0) {
+                    return db.commit(() => res.json({ message: 'Đặt hàng thành công', orderId }));
+                }
+
+                items.forEach(item => {
+                    if (errorOccurred) return;
+                    db.query('UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?', [item.qty, item.id, item.qty], (err, result) => {
+                        if (err) {
+                            errorOccurred = true;
+                            return db.rollback(() => res.status(500).json({ error: err.message }));
+                        }
+                        if (result.affectedRows === 0) {
+                            errorOccurred = true;
+                            return db.rollback(() => res.status(400).json({ error: `Sản phẩm "${item.name}" đã hết hàng hoặc không đủ tồn kho!` }));
+                        }
+                        
+                        processed++;
+                        if (processed === items.length && !errorOccurred) {
+                            db.commit((err) => {
+                                if (err) return db.rollback(() => res.status(500).json({ error: err.message }));
+                                res.json({ message: 'Đặt hàng thành công', orderId });
+                            });
+                        }
                     });
                 });
-
-                Promise.all(stockUpdatePromises)
-                    .then(() => {
-                        db.commit((err) => {
-                            if (err) return db.rollback(() => res.status(500).json({ error: err.message }));
-                            res.json({ message: 'Đặt hàng thành công', orderId });
-                        });
-                    })
-                    .catch(err => {
-                        db.rollback(() => res.status(400).json({ error: err.message }));
-                    });
             });
         });
     });
@@ -145,21 +150,17 @@ app.post('/api/check-coupon', (req, res) => {
         if (results.length === 0) return res.status(404).json({ error: "Mã giảm giá không tồn tại hoặc đã ngừng áp dụng." });
         const coupon = results[0];
         if (coupon.expiry_date) {
-            const today = new Date();
-            const expiry = new Date(coupon.expiry_date);
-            if (today > expiry) return res.status(400).json({ error: "Mã giảm giá đã hết hạn sử dụng." });
+            if (new Date() > new Date(coupon.expiry_date)) return res.status(400).json({ error: "Mã giảm giá đã hết hạn sử dụng." });
         }
         if (total_amount < coupon.min_order_value) return res.status(400).json({ error: `Đơn hàng phải từ ${Number(coupon.min_order_value).toLocaleString('vi-VN')}đ để dùng mã này.` });
-        let discountAmount = 0;
-        if (coupon.discount_type === 'percent') discountAmount = (total_amount * coupon.discount_value) / 100;
-        else discountAmount = Number(coupon.discount_value);
+        let discountAmount = coupon.discount_type === 'percent' ? (total_amount * coupon.discount_value) / 100 : Number(coupon.discount_value);
         if (discountAmount > total_amount) discountAmount = total_amount;
         res.json({ message: "Áp dụng mã thành công", code: coupon.code, discountAmount: discountAmount });
     });
 });
 
 // ==========================================
-// 4. API DÀNH CHO CHAT
+// 4. API CHAT
 // ==========================================
 app.get('/api/messages/:user_id', (req, res) => {
     db.query('SELECT * FROM messages WHERE user_id = ? ORDER BY created_at ASC', [req.params.user_id], (err, results) => {
@@ -191,7 +192,7 @@ io.on('connection', (socket) => {
 });
 
 // ==========================================
-// 5. API DÀNH CHO BLOG & ADMIN
+// 5. API BLOG & ADMIN
 // ==========================================
 app.get('/api/posts', (req, res) => {
     db.query('SELECT id, title, category, image, excerpt, author, created_at FROM posts ORDER BY created_at DESC', (err, results) => {
@@ -226,24 +227,20 @@ app.get('/api/orders/user/:user_id', (req, res) => {
     });
 });
 
-// API Admin: Lấy chi tiết 1 đơn hàng (Đã bỏ JOIN để tránh lỗi thiếu cột ảnh)
+// API Admin: Xem chi tiết đơn
 app.get('/api/admin/orders/:id', (req, res) => {
-    const orderId = req.params.id;
-    db.query('SELECT * FROM orders WHERE id = ?', [orderId], (err, orders) => {
+    db.query('SELECT * FROM orders WHERE id = ?', [req.params.id], (err, orders) => {
         if (err) return res.status(500).json({ error: err.message });
         if (orders.length === 0) return res.status(404).json({ error: 'Không tìm thấy đơn hàng' });
         
-        // Lấy thẳng từ bảng order_items
-        const sqlItems = `SELECT * FROM order_items WHERE order_id = ?`;
-        db.query(sqlItems, [orderId], (err, items) => {
+        db.query('SELECT * FROM order_items WHERE order_id = ?', [req.params.id], (err, items) => {
             if (err) return res.status(500).json({ error: err.message });
-            // Trả về thông tin đơn + danh sách sản phẩm
             res.json({ ...orders[0], items: items });
         });
     });
 });
 
-// API Admin: Cập nhật trạng thái đơn hàng (Tự động hoàn kho nếu Hủy)
+// API Admin: Cập nhật trạng thái (Hoàn kho nếu Hủy)
 app.put('/api/admin/orders/:id/status', (req, res) => {
     const orderId = req.params.id;
     const { status } = req.body;
@@ -258,18 +255,18 @@ app.put('/api/admin/orders/:id/status', (req, res) => {
         db.query('UPDATE orders SET status = ? WHERE id = ?', [status, orderId], (err) => {
             if (err) return res.status(500).json({ error: err.message });
             
-            // Nếu chuyển sang Hủy -> Hoàn lại số lượng vào kho
             if (status === 'cancelled' && currentStatus !== 'cancelled') {
                 db.query('SELECT * FROM order_items WHERE order_id = ?', [orderId], (err, items) => {
                     if (!err && items.length > 0) {
-                        const updatePromises = items.map(item => new Promise((resolve, reject) => {
-                            db.query('UPDATE products SET stock = stock + ? WHERE id = ?', [item.quantity, item.product_id], (err) => {
-                                if (err) reject(err); else resolve();
+                        let processed = 0;
+                        items.forEach(item => {
+                            db.query('UPDATE products SET stock = stock + ? WHERE id = ?', [item.quantity, item.product_id], () => {
+                                processed++;
+                                if (processed === items.length) res.json({ message: 'Đã hủy đơn & hoàn kho' });
                             });
-                        }));
-                        Promise.all(updatePromises).then(() => res.json({ message: 'Cập nhật thành công & đã hoàn kho' }));
+                        });
                     } else {
-                        res.json({ message: 'Cập nhật thành công' });
+                        res.json({ message: 'Đã hủy đơn hàng' });
                     }
                 });
             } else {
@@ -302,5 +299,5 @@ app.get('/api/admin/users', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`🚀 Backend & Chat Server đang chạy tại http://localhost:${PORT}`);
+    console.log(`🚀 Backend đang chạy tại http://localhost:${PORT}`);
 });
