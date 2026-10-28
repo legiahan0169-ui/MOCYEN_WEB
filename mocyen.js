@@ -138,13 +138,25 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
     `;
 
-    // Xử lý nút thêm cả bộ vào giỏ
+        // Xử lý nút thêm cả bộ vào giỏ
     document.getElementById("add-custom-routine").addEventListener("click", () => {
       if (typeof window.addToCart === "function") {
-        comboProducts.forEach(p => window.addToCart(p.id));
-        window.showToast(`Đã thêm bộ sản phẩm vào giỏ hàng!`);
-      } else {
-        alert("Đã thêm cả bộ vào giỏ hàng");
+        // Tìm ID của sản phẩm Combo (SKU là COMBO-01)
+        // Vì Backend đã trả về danh sách products, ta cần gọi thêm 1 lần nữa hoặc truyền ID trực tiếp.
+        // Cách đơn giản nhất: Gọi API để lấy ID của combo (hoặc bạn có thể fix cứng ID nếu biết chắc).
+        
+        fetch('https://mocyen-web.onrender.com/api/products')
+          .then(res => res.json())
+          .then(allProducts => {
+            const comboProduct = allProducts.find(p => p.sku === 'COMBO-01');
+            if (comboProduct) {
+              // Chỉ thêm 1 sản phẩm Combo vào giỏ
+              window.addToCart(comboProduct.id);
+              window.showToast(`Đã thêm Combo Chăm Da Cơ Bản vào giỏ hàng!`);
+            } else {
+              alert("Chưa có sản phẩm combo trong Database!");
+            }
+          });
       }
     });
   }
