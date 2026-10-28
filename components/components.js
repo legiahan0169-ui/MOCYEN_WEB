@@ -130,26 +130,53 @@
   }
 
   /* ---------- Header behaviors ---------- */
-  function initHeader() {
+   function initHeader() {
     var toggle = document.querySelector('.menu-toggle');
     var nav = document.querySelector('.main-nav');
 
     if (toggle && nav) {
-      toggle.addEventListener('click', function () {
-        nav.classList.toggle('is-open');
-        toggle.setAttribute('aria-expanded', nav.classList.contains('is-open'));
+      // 1. Tự động tạo nút X (Close) chèn vào trong Menu
+      var closeBtn = document.createElement('button');
+      closeBtn.className = 'menu-close-btn';
+      closeBtn.innerHTML = '&times;'; // Dấu X
+      nav.insertBefore(closeBtn, nav.firstChild);
+
+      // 2. Tạo lớp nền mờ
+      var overlay = document.createElement('div');
+      overlay.className = 'menu-overlay';
+      document.body.appendChild(overlay);
+
+      function closeMenu() {
+        nav.classList.remove('is-open');
+        overlay.classList.remove('is-active');
+        document.body.classList.remove('menu-active');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+
+      function openMenu() {
+        nav.classList.add('is-open');
+        overlay.classList.add('is-active');
+        document.body.classList.add('menu-active');
+        toggle.setAttribute('aria-expanded', 'true');
+      }
+
+      // Sự kiện click
+      toggle.addEventListener('click', openMenu);
+      closeBtn.addEventListener('click', closeMenu);
+      overlay.addEventListener('click', closeMenu);
+
+      // 3. XỬ LÝ MENU CON (Sản phẩm) TRÊN MOBILE
+      document.querySelectorAll('.nav-dropdown-toggle').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+          if (window.matchMedia('(max-width: 900px)').matches) {
+            e.preventDefault(); // Ngăn chặn chuyển trang
+            link.parentElement.classList.toggle('is-open'); // Bật/tắt xổ xuống
+          }
+        });
       });
     }
 
-    document.querySelectorAll('.nav-dropdown-toggle').forEach(function (link) {
-      link.addEventListener('click', function (e) {
-        if (window.matchMedia('(max-width: 900px)').matches) {
-          e.preventDefault();
-          link.parentElement.classList.toggle('is-open');
-        }
-      });
-    });
-
+    /* Nút tìm kiếm */
     var searchBtn = document.querySelector('.search-btn');
     if (searchBtn) {
       searchBtn.addEventListener('click', function () {
