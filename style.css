@@ -641,3 +641,69 @@ p { font-size: 14px; }
     .newsletter-form { flex-direction: column; }
     .newsletter-form button { min-height: 44px; }
 }
+
+/* =========================================================
+   GLOBAL MOBILE HOTFIX (Dán vào cuối file style.css)
+========================================================= */
+@media (max-width: 768px) {
+    /* 1. Chống tràn viền ngang (Nguyên nhân chính gây lung tung) */
+    html, body {
+        overflow-x: hidden !important;
+        width: 100%;
+    }
+    img, video, iframe {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    /* 2. Căn lại lề Container cho đều và rộng rãi hơn */
+    .container {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+        width: 100% !important;
+    }
+
+    /* 3. Thu gọn Font chữ để không bị vỡ layout */
+    h1 { font-size: 32px !important; line-height: 1.2 !important; }
+    h2 { font-size: 26px !important; line-height: 1.3 !important; }
+    .hero-title-line1, .hero-title-line2 { font-size: 36px !important; }
+    
+    /* 4. Ép tất cả các khối Grid (Sản phẩm, Blog, Account...) về 1 cột dọc */
+    .product-grid, .category-grid, .journal-grid, .blog-grid, 
+    .review-grid, .benefit-grid, .story-grid, .routine-grid, 
+    .hero-grid, .pd-main-layout, .account-layout, .policy-layout {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    /* 5. Thu nhỏ ảnh Hero và Story để không chiếm hết màn hình */
+    .hero-visual img, .story-image img, .routine-visual img {
+        height: auto !important;
+        max-height: 350px !important;
+        width: 100% !important;
+        object-fit: cover;
+    }
+
+    /* 6. Bảng biểu (Policy, Admin) cho phép vuốt ngang thay vì bóp méo */
+    .table-responsive, .policy-content-card table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* 7. Nút bấm to hơn cho dễ chạm (Chuẩn Mobile UX) */
+    .btn, button, .quick-add, .wish {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* 8. Giỏ hàng nổi và Chat không đè lên nhau */
+    .floating-cart {
+        left: 15px !important;
+        bottom: 15px !important;
+        width: 50px !important;
+        height: 50px !important;
+        z-index: 9999;
+    }
+}
