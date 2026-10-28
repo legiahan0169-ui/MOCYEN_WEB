@@ -447,13 +447,86 @@ p { font-size: 14px; }
 
 
 /* =========================================================
-   14. JOURNAL / BLOG
+   14. JOURNAL / BLOG (Đã nâng cấp)
 ========================================================= */
-.journal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-.journal-card img { height: 270px; margin-bottom: 16px; border-radius: 18px; }
-.journal-card small { color: var(--green); font-size: 8px; letter-spacing: 1px; }
-.journal-card h3 { margin: 8px 0 12px; font-size: 18px; }
-.journal-card a { color: var(--green); font-size: 10px; }
+.journal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px; /* Tăng khoảng cách giữa các bài viết */
+}
+
+.journal-card {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Khung chứa ảnh (để tạo hiệu ứng zoom) */
+.journal-card > a:first-child {
+    display: block;
+    overflow: hidden;
+    border-radius: 24px; /* Bo góc to hơn cho mềm mại */
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.journal-card img {
+    width: 100%;
+    aspect-ratio: 4/3; /* Cố định tỷ lệ ảnh để các thẻ không bị so le */
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+/* Hiệu ứng zoom ảnh khi rê chuột */
+.journal-card:hover img {
+    transform: scale(1.06);
+}
+
+/* Nhãn danh mục (CHĂM DA CƠ BẢN...) */
+.journal-card small {
+    color: var(--green);
+    font-size: 11px; /* Tăng từ 8px lên 11px */
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    display: block;
+}
+
+/* Tiêu đề bài viết */
+.journal-card h3 {
+    margin: 0 0 15px 0;
+    font-family: "Cormorant Garamond", serif; /* Dùng font Serif cho sang trọng */
+    font-size: 22px; /* Tăng từ 18px lên 22px */
+    font-weight: 600;
+    line-height: 1.4;
+    color: #243A30;
+}
+
+.journal-card h3 a {
+    color: inherit;
+    transition: color 0.2s;
+}
+
+.journal-card h3 a:hover {
+    color: var(--green);
+}
+
+/* Nút "Đọc bài viết" */
+.journal-card > a:last-child {
+    color: var(--green);
+    font-size: 13px; /* Tăng từ 10px lên 13px */
+    font-weight: 600;
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.2s ease, color 0.2s;
+}
+
+/* Hiệu ứng mũi tên chạy nhẹ khi hover */
+.journal-card > a:last-child:hover {
+    gap: 10px; 
+    color: var(--green-dark);
+}
 
 
 /* =========================================================
