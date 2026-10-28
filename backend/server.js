@@ -68,20 +68,16 @@ app.get('/api/products/group/:group_id', (req, res) => {
         res.json(results);
     });
 });
-
-// API Đăng nhập
-app.post('/api/login', (req, res) => {
-    const { email, password } = req.body;
+//API Tạo tài khoản mới
+app.post('/api/register', (req, res) => {
+    const { name, email, password, phone } = req.body;
     db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
-        if (results.length === 0) return res.status(401).json({ error: 'Email không tồn tại' });
-        
-        const user = results[0];
-        if (password !== user.password) return res.status(401).json({ error: 'Sai mật khẩu' });
-        
-        res.json({ 
-            message: 'Đăng nhập thành công',
-            user: { id: user.id, name: user.name, email: user.email, role: user.role }
+        if (results.length > 0) return res.status(400).json({ error: 'Email này đã được sử dụng' });
+        const sql = `INSERT INTO users (name, email, password, phone, role) VALUES (?, ?, ?, ?, 'customer')`;
+        db.query(sql, [name, email, password, phone || null], (err, result) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ message: 'Đăng ký thành công' });
         });
     });
 });
@@ -124,7 +120,6 @@ app.get('/api/messages/:user_id', (req, res) => {
     });
 });
 
-// Lấy danh sách những khách hàng đã từng chat
 // Lấy danh sách những khách hàng đã từng chat (Lấy kèm Tên)
 app.get('/api/admin/chats', (req, res) => {
     const sql = `
