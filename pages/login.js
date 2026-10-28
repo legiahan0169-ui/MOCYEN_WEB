@@ -53,8 +53,20 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.textContent = "Đang xử lý...";
         btn.disabled = true;
 
-        // Giả lập chờ API
-        await new Promise(r => setTimeout(r, 1000));
+              // Lấy tham số redirect trên URL (nếu có)
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectUrl = urlParams.get("redirect");
+
+      setTimeout(() => {
+        if (data.user.role === "admin") {
+          window.location.href = "admin.html";
+        } else if (redirectUrl) {
+          // Quay lại trang khách đang dở (ví dụ checkout.html)
+          window.location.href = redirectUrl;
+        } else {
+          window.location.href = "../index.html";
+        }
+      }, 1000);
 
         // KIỂM TRA TÀI KHOẢN ADMIN
         const isAdmin = email === "admin@mocyen.com";

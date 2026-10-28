@@ -84,15 +84,27 @@
   }
 
   /* ---------- Cart (localStorage) ---------- */
-  var CART_KEY = 'mocyen_cart';
+  // Hàm lấy tên key giỏ hàng riêng cho từng user
+  function getCartKey() {
+    const userJson = localStorage.getItem("mocyen_user");
+    if (userJson) {
+      try {
+        const user = JSON.parse(userJson);
+        return "mocyen_cart_user_" + user.id; // Giỏ riêng của user này
+      } catch (e) {
+        return "mocyen_cart_guest";
+      }
+    }
+    return "mocyen_cart_guest"; // Giỏ của khách chưa đăng nhập
+  }
 
   function getCart() {
-    try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
+    try { return JSON.parse(localStorage.getItem(getCartKey()) || '[]'); }
     catch (e) { return []; }
   }
 
   function saveCart(cart) {
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    localStorage.setItem(getCartKey(), JSON.stringify(cart));
     updateCartCount();
     window.dispatchEvent(new CustomEvent('cart:updated'));
   }
@@ -100,15 +112,6 @@
   function updateCartCount() {
     var total = getCart().reduce(function (s, i) { return s + (i.qty || 1); }, 0);
     document.querySelectorAll('.cart-count').forEach(function (el) { el.textContent = total; });
-  }
-
-  function addToCart(id, qty) {
-    qty = qty || 1;
-    var cart = getCart();
-    var found = cart.find(function (i) { return i.id === String(id); });
-    if (found) found.qty = (found.qty || 1) + qty;
-    else cart.push({ id: String(id), qty: qty });
-    saveCart(cart);
   }
 
   /* ---------- Toast ---------- */

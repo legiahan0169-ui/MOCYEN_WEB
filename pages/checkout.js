@@ -2,6 +2,20 @@
    MOCYEN — CHECKOUT.JS
    Xử lý logic thanh toán, API tỉnh thành và tạo đơn hàng
 ========================================================= */
+  // KIỂM TRA ĐĂNG NHẬP
+  const userJson = localStorage.getItem("mocyen_user");
+  if (!userJson) {
+    alert("Vui lòng đăng nhập để thanh toán!");
+    window.location.href = "login.html?redirect=checkout.html";
+    return;
+  }
+  const currentUser = JSON.parse(userJson);
+
+  // Tự động điền thông tin
+  document.getElementById("fullname").value = currentUser.name || "";
+  document.getElementById("email").value = currentUser.email || "";
+  if (currentUser.phone) document.getElementById("phone").value = currentUser.phone;
+
 document.addEventListener("DOMContentLoaded", async () => {
   const CART_KEY = "mocyen_cart";
 
@@ -207,7 +221,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let userId = currentUser ? currentUser.id : null;
 
     const orderData = {
-      user_id: userId,
+      user_id: currentUser.id,
       customer_name: data.fullname,
       phone: data.phone,
       address: `${data.address}, ${wardName}, ${cityName}`,

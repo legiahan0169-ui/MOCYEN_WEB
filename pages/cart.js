@@ -27,6 +27,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+    // Kiểm tra đăng nhập trước khi cho thanh toán
+  const btnCheckout = document.getElementById("btn-checkout");
+  if (btnCheckout) {
+    // Đổi thẻ <a> thành sự kiện click nếu cần
+    btnCheckout.addEventListener("click", function(e) {
+      const userJson = localStorage.getItem("mocyen_user");
+      if (!userJson) {
+        e.preventDefault(); // Chặn chuyển trang
+        alert("Vui lòng đăng nhập để tiến hành thanh toán!");
+        window.location.href = "login.html?redirect=checkout.html";
+      }
+    });
+  }
+
   // 2. Gọi API lấy thông tin sản phẩm thật từ Database
   let productsDB = {};
   try {
