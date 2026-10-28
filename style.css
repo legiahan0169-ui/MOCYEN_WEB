@@ -1,7 +1,5 @@
 /* =========================================================
    MỘC YÊN - STYLE CHÍNH (global + homepage)
-   Dùng cho: index.html, và load kèm ở các trang khác
-   (pages/*.html cũng load file này để có style chung)
 ========================================================= */
 
 
@@ -148,7 +146,6 @@ p { font-size: 14px; }
     flex-direction: column;
     gap: 4px;
     margin-bottom: 28px;
-    /* FIX: đổi "Libre Caslon Condensed" → "Cormorant Garamond" vì HTML không load font này */
     font-family: "Cormorant Garamond", serif;
     font-weight: 500;
     line-height: 1.05;
@@ -235,7 +232,7 @@ p { font-size: 14px; }
 
 
 /* =========================================================
-   9. PRODUCT GRID  (dùng chung cho index + shop)
+   9. PRODUCT GRID
 ========================================================= */
 .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
 
@@ -447,13 +444,12 @@ p { font-size: 14px; }
 
 
 /* =========================================================
-   14. JOURNAL / BLOG (Nâng cấp toàn diện)
+   14. JOURNAL / BLOG
 ========================================================= */
 .journal-grid {
     display: grid;
-    /* Tự động chia cột: Nếu màn hình rộng, tự chia 3, nếu có 2 bài thì tự chia 2 cho đẹp */
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 40px; /* Khoảng cách rộng rãi hơn */
+    gap: 40px;
 }
 
 .journal-card {
@@ -462,37 +458,27 @@ p { font-size: 14px; }
     background: transparent;
     transition: transform 0.3s ease;
 }
+.journal-card:hover { transform: translateY(-8px); }
 
-/* Hiệu ứng nổi lên nhẹ khi rê chuột vào thẻ bài viết */
-.journal-card:hover {
-    transform: translateY(-8px);
-}
-
-/* Khung chứa ảnh */
 .journal-card > a:first-child {
     display: block;
     overflow: hidden;
     border-radius: 20px;
     margin-bottom: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); /* Đổ bóng nhẹ cho ảnh */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
 .journal-card img {
     width: 100%;
-    aspect-ratio: 4/3; 
+    aspect-ratio: 4/3;
     object-fit: cover;
     transition: transform 0.6s ease;
 }
+.journal-card:hover img { transform: scale(1.05); }
 
-/* Rê chuột vào ảnh sẽ zoom nhẹ */
-.journal-card:hover img {
-    transform: scale(1.05);
-}
-
-/* Nhãn danh mục (CHĂM DA CƠ BẢN...) */
 .journal-card small {
     color: var(--green);
-    font-size: 12px; /* Tăng lên 12px cho dễ đọc */
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: 1.5px;
     margin-bottom: 14px;
@@ -500,29 +486,20 @@ p { font-size: 14px; }
     text-transform: uppercase;
 }
 
-/* Tiêu đề bài viết (TO RÕ RÀNG) */
 .journal-card h3 {
     margin: 0 0 20px 0;
-    font-family: "Cormorant Garamond", serif; 
-    font-size: 26px; /* Tăng vọt lên 26px để át đi khoảng trống */
+    font-family: "Cormorant Garamond", serif;
+    font-size: 26px;
     font-weight: 600;
     line-height: 1.35;
     color: #243A30;
 }
+.journal-card h3 a { color: inherit; transition: color 0.2s; }
+.journal-card h3 a:hover { color: var(--green); }
 
-.journal-card h3 a {
-    color: inherit;
-    transition: color 0.2s;
-}
-
-.journal-card h3 a:hover {
-    color: var(--green);
-}
-
-/* Nút "Đọc bài viết" */
 .journal-card > a:last-child {
     color: var(--green);
-    font-size: 14px; /* Tăng lên 14px */
+    font-size: 14px;
     font-weight: 600;
     margin-top: auto;
     display: inline-flex;
@@ -532,26 +509,26 @@ p { font-size: 14px; }
     padding-bottom: 4px;
     border-bottom: 1px solid transparent;
 }
-
 .journal-card > a:last-child:hover {
-    gap: 12px; 
+    gap: 12px;
     color: var(--green-dark);
     border-bottom: 1px solid var(--green-dark);
 }
+
+
 /* =========================================================
-   17. NEWSLETTER (Đã bỏ ảnh, căn giữa)
+   17. NEWSLETTER
 ========================================================= */
 .newsletter {
     background: #EDE7DA;
     padding: 80px 0;
-    text-align: center; /* Căn giữa toàn bộ nội dung */
+    text-align: center;
 }
 
 .newsletter-content-centered {
     max-width: 600px;
     margin: 0 auto;
 }
-
 .newsletter-content-centered p:not(.eyebrow) {
     margin-top: 16px;
     color: var(--text-soft);
@@ -564,7 +541,6 @@ p { font-size: 14px; }
     display: flex;
     gap: 10px;
 }
-
 .newsletter-form input {
     flex: 1;
     min-height: 50px;
@@ -575,11 +551,7 @@ p { font-size: 14px; }
     outline: none;
     font-size: 14px;
 }
-
-.newsletter-form input:focus {
-    border-color: var(--green);
-}
-
+.newsletter-form input:focus { border-color: var(--green); }
 .newsletter-form button {
     min-width: 120px;
     border: none;
@@ -592,13 +564,11 @@ p { font-size: 14px; }
     cursor: pointer;
     transition: background 0.2s;
 }
+.newsletter-form button:hover { background: var(--green-dark); }
 
-.newsletter-form button:hover {
-    background: var(--green-dark);
-}
 
 /* =========================================================
-   16. TABLET RESPONSIVE (page content)
+   16. TABLET RESPONSIVE
 ========================================================= */
 @media (max-width: 1024px) {
     .container { width: calc(100% - 48px); }
@@ -613,7 +583,7 @@ p { font-size: 14px; }
 
 
 /* =========================================================
-   17. MOBILE RESPONSIVE (page content)
+   17. MOBILE RESPONSIVE
 ========================================================= */
 @media (max-width: 768px) {
     .container { width: calc(100% - 28px); }
@@ -621,90 +591,81 @@ p { font-size: 14px; }
     h1 { font-size: 44px; }
     h2 { font-size: 34px; }
 
-    /* Hero */
     .hero { padding: 55px 0 65px; }
     .hero-grid { grid-template-columns: 1fr; }
     .hero-copy { max-width: 100%; }
     .hero-visual img { height: 400px; }
 
-    /* Section head */
     .section-head { align-items: flex-start; }
-
-    /* Category */
     .category-grid { grid-template-columns: repeat(2, 1fr); }
     .category-card img { height: 220px; }
-
-    /* Products */
     .product-grid { grid-template-columns: repeat(2, 1fr); }
     .product-image img { height: 260px; }
 
-    /* Story */
     .story-grid { grid-template-columns: 1fr; }
     .story-image img { height: 420px; }
     .story-tag { right: 15px; }
 
-    /* Routine */
     .routine-grid { grid-template-columns: 1fr; }
-
-    /* Reviews */
     .review-grid { grid-template-columns: 1fr; }
-
-    /* Journal */
     .journal-grid { grid-template-columns: 1fr; }
     .journal-card img { height: 320px; }
 
-    /* Newsletter */
     .newsletter-grid { grid-template-columns: 1fr; }
     .newsletter-grid > div:first-child { padding: 50px 0; }
 }
 
 
 /* =========================================================
-   18. SMALL MOBILE (page content)
+   18. SMALL MOBILE
 ========================================================= */
 @media (max-width: 520px) {
     h1 { font-size: 38px; letter-spacing: -1px; }
     h2 { font-size: 30px; }
 
-    /* Hero */
     .hero-actions { flex-direction: column; align-items: stretch; }
     .hero-note { flex-direction: column; gap: 8px; }
     .hero-visual img { height: 350px; border-radius: 28px 28px 90px 28px; }
 
-    /* Section head */
     .section-head { flex-direction: column; gap: 14px; }
 
-    /* Categories */
     .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
     .category-card img { height: 170px; }
 
-    /* Products */
     .product-grid { grid-template-columns: 1fr; }
     .product-image img { height: 390px; }
 
-    /* Benefits */
     .benefit-grid { grid-template-columns: 1fr; }
-
-    /* Routine total */
     .routine-total { flex-direction: column; align-items: stretch; }
 
-    /* Newsletter */
     .newsletter-form { flex-direction: column; }
     .newsletter-form button { min-height: 44px; }
 }
 
 
 /* =========================================================
-   [NEW] 19. FLOATING CART (Nút giỏ hàng nổi khi scroll)
-   - Inject tự động từ components.js trên mọi trang (trừ admin)
-   - Vị trí: góc phải dưới, nằm TRÊN chat widget
-   - Hiện khi scroll > 300px, ẩn khi về đầu trang
+   [FIXED] 19. FLOATING CART — Đặt BOTTOM-LEFT để tránh chat widget
+   - Chat widget thường ở bottom-right với z-index cao
+   - Cart đặt bottom-left → KHÔNG BAO GIỜ chồng lên chat
+   - Z-index 9999 (dự phòng nếu có element khác)
+   - Nếu bạn muốn quay lại RIGHT: xem comment bên dưới
 ========================================================= */
 .floating-cart {
     position: fixed;
+    /* ⬇️ ĐANG ĐẶT BÊN TRÁI — an toàn, không chồng chat widget */
+    left: 24px;
+    right: auto;
+    bottom: 24px;
+
+    /* ⬆️ Nếu muốn đặt lại BÊN PHẢI (và chat widget đã được chỉnh cao hơn):
+       - Comment 3 dòng trên (left, right, bottom)
+       - Uncomment 3 dòng dưới:
+    left: auto;
     right: 24px;
-    bottom: 92px;               /* cao hơn chat widget (chat ~20px + 56px height) */
-    z-index: 998;               /* dưới page-transition (9999), dưới chat widget (999) */
+    bottom: 160px;
+    */
+
+    z-index: 9999;
     width: 56px;
     height: 56px;
     display: flex;
@@ -749,7 +710,7 @@ p { font-size: 14px; }
     transform: rotate(-8deg) scale(1.05);
 }
 
-/* Badge số lượng (chỉ hiện khi có sản phẩm) */
+/* Badge số lượng */
 .floating-cart-count {
     position: absolute;
     top: -4px;
@@ -757,7 +718,7 @@ p { font-size: 14px; }
     min-width: 22px;
     height: 22px;
     padding: 0 6px;
-    display: none;              /* JS sẽ bật flex khi total > 0 */
+    display: none;
     align-items: center;
     justify-content: center;
     background: #C4425B;
@@ -777,13 +738,18 @@ p { font-size: 14px; }
     100% { transform: scale(1); }
 }
 
-/* Mobile: nhỏ hơn, sát mép hơn, vẫn trên chat widget */
+/* Mobile */
 @media (max-width: 768px) {
     .floating-cart {
         width: 50px;
         height: 50px;
-        right: 16px;
-        bottom: 84px;
+        left: 16px;
+        bottom: 20px;
+        /* Nếu chuyển sang RIGHT, đổi thành:
+           left: auto;
+           right: 16px;
+           bottom: 140px;
+        */
     }
     .floating-cart i { font-size: 18px; }
     .floating-cart-count {
