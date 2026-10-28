@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const blogList = document.getElementById("blog-list");
   if (!blogList) return;
 
-  fetch('http://localhost:3000/api/posts')
+  fetch('https://mocyen-web.onrender.com/api/posts')
     .then(res => res.json())
     .then(posts => {
       if (posts.length === 0) {

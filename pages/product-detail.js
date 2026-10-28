@@ -142,14 +142,14 @@ document.addEventListener("DOMContentLoaded", () => {
   async function fetchProduct() {
     try {
       // 1. Lấy sản phẩm hiện tại
-      const res = await fetch(`http://localhost:3000/api/products/${productId}`);
+      const res = await fetch(`https://mocyen-web.onrender.com/api/products/${productId}`);
       const data = await res.json();
       
       updateProductInfo(data);
 
       // 2. Lấy TẤT CẢ các size của nhóm sản phẩm này
       if (data.group_id) {
-        const groupRes = await fetch(`http://localhost:3000/api/products/group/${data.group_id}`);
+        const groupRes = await fetch(`https://mocyen-web.onrender.com/api/products/group/${data.group_id}`);
         if (groupRes.ok) {
           const variants = await groupRes.json();
           

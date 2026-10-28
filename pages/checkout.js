@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function fetchData() {
     try {
       // Fetch Products
-      const resProd = await fetch('http://localhost:3000/api/products');
+      const resProd = await fetch('https://mocyen-web.onrender.com/api/products');
       const products = await resProd.json();
       products.forEach(p => productsDB[p.id] = p);
 
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       try {
         // Gọi API kiểm tra mã (Gửi tổng tiền TẠM TÍNH, chưa cộng ship)
-        const res = await fetch("http://localhost:3000/api/check-coupon", {
+        const res = await fetch("https://mocyen-web.onrender.com/api/check-coupon", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ code: code, total_amount: currentSubTotal })
@@ -227,7 +227,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       btnSubmit.textContent = "Đang xử lý...";
       btnSubmit.disabled = true;
 
-      const response = await fetch("http://localhost:3000/api/orders", {
+      const response = await fetch("https://mocyen-web.onrender.com/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderData)

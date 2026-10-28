@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   
+  <!-- THƯ VIỆN BIỂU ĐỒ CHART.JS -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <link rel="stylesheet" href="../style.css">
@@ -25,12 +26,11 @@
     </div>
     
     <nav class="admin-nav">
-      <!-- Thêm class tab-btn và data-target -->
-       <a href="#" class="admin-nav-item tab-btn" data-target="tab-messages"><i class="fa-solid fa-comments"></i> Hỗ trợ Chat</a>
       <a href="#" class="admin-nav-item tab-btn active" data-target="tab-dashboard"><i class="fa-solid fa-chart-pie"></i> Tổng quan</a>
       <a href="#" class="admin-nav-item tab-btn" data-target="tab-orders"><i class="fa-solid fa-box"></i> Đơn hàng</a>
       <a href="#" class="admin-nav-item tab-btn" data-target="tab-products"><i class="fa-solid fa-leaf"></i> Sản phẩm</a>
       <a href="#" class="admin-nav-item tab-btn" data-target="tab-customers"><i class="fa-solid fa-users"></i> Khách hàng</a>
+      <a href="#" class="admin-nav-item tab-btn" data-target="tab-messages"><i class="fa-solid fa-comments"></i> Hỗ trợ Chat</a>
     </nav>
 
     <div class="admin-sidebar-bottom">
@@ -114,7 +114,9 @@
                   <th>Thao tác</th>
                 </tr>
               </thead>
-              <tbody id="admin-orders-list"></tbody>
+              <tbody id="admin-orders-list">
+                <!-- JS render -->
+              </tbody>
             </table>
           </div>
         </div>
@@ -141,7 +143,9 @@
                   <th>Thao tác</th>
                 </tr>
               </thead>
-              <tbody id="admin-products-list"></tbody>
+              <tbody id="admin-products-list">
+                <!-- JS render -->
+              </tbody>
             </table>
           </div>
         </div>
@@ -166,43 +170,45 @@
                   <th>Ngày tham gia</th>
                 </tr>
               </thead>
-              <tbody id="admin-customers-list"></tbody>
+              <tbody id="admin-customers-list">
+                <!-- JS render -->
+              </tbody>
             </table>
           </div>
         </div>
       </div>
 
-    </div>
-  </main>
-
-        <!-- ============================================== -->
+      <!-- ============================================== -->
       <!-- TAB 5: HỖ TRỢ CHAT -->
       <!-- ============================================== -->
       <div class="admin-tab-panel" id="tab-messages">
-        <div class="table-card" style="display: flex; height: 650px; padding: 0;">
-          <!-- Cột trái: Danh sách khách hàng -->
-          <div style="width: 300px; border-right: 1px solid #EAEAEA; overflow-y: auto; background: #F9FAF8;">
-            <h3 style="padding: 20px; font-size: 16px; border-bottom: 1px solid #EAEAEA; margin: 0;">Hộp thư đến</h3>
+        <div class="chat-layout">
+          <!-- Cột trái: Danh sách khách -->
+          <div class="chat-sidebar">
+            <h3>Hộp thư đến</h3>
             <div id="admin-chat-list">
               <p style="padding: 20px; color: #7C877D; font-size: 13px;">Đang tải...</p>
             </div>
           </div>
           
           <!-- Cột phải: Khung chat -->
-          <div style="flex: 1; display: flex; flex-direction: column;">
-            <div id="admin-chat-header" style="padding: 20px; border-bottom: 1px solid #EAEAEA; font-weight: 600; background: #FFF;">Chọn một khách hàng để xem tin nhắn</div>
+          <div class="chat-main">
+            <div class="chat-main-header" id="admin-chat-header">Chọn một khách hàng để xem tin nhắn</div>
             
-            <div id="admin-chat-body" style="flex: 1; padding: 20px; overflow-y: auto; background: #F4F6F3; display: flex; flex-direction: column; gap: 10px;">
+            <div class="chat-main-body" id="admin-chat-body">
               <!-- Tin nhắn hiển thị ở đây -->
             </div>
             
-            <div style="padding: 15px; background: white; border-top: 1px solid #EAEAEA; display: flex; gap: 10px;">
-              <input type="text" id="admin-chat-input" placeholder="Nhập tin nhắn trả lời..." style="flex: 1; padding: 12px; border: 1px solid #D8DCCF; border-radius: 8px; outline: none;">
-              <button id="admin-chat-send" style="background: #264F40; color: white; border: none; padding: 0 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">Gửi</button>
+            <div class="chat-main-footer">
+              <input type="text" id="admin-chat-input" placeholder="Nhập tin nhắn trả lời...">
+              <button id="admin-chat-send">Gửi</button>
             </div>
           </div>
         </div>
       </div>
+
+    </div>
+  </main>
 
   <script src="admin.js"></script>
 </body>

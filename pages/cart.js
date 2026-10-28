@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 2. Gọi API lấy thông tin sản phẩm thật từ Database
   let productsDB = {};
   try {
-    const res = await fetch('http://localhost:3000/api/products');
+    const res = await fetch('https://mocyen-web.onrender.com/api/products');
     const products = await res.json();
     // Tạo dictionary để tra cứu nhanh theo ID
     products.forEach(p => { productsDB[p.id] = p; });

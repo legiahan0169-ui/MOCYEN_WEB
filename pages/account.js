@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const formatPrice = (price) => `${Number(price).toLocaleString("vi-VN")}đ`;
 
   try {
-    const res = await fetch(`http://localhost:3000/api/orders/user/${user.id}`);
+    const res = await fetch(`https://mocyen-web.onrender.com/api/orders/user/${user.id}`);
     const orders = await res.json();
 
     if (orders.length === 0) {

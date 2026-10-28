@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // GỌI API LẤY DỮ LIỆU TỪ DATABASE
   try {
     grid.innerHTML = '<p style="text-align:center;width:100%;">Đang tải sản phẩm...</p>';
-    const response = await fetch('http://localhost:3000/api/products');
+    const response = await fetch('https://mocyen-web.onrender.com/api/products');
     allProducts = await response.json();
     grid.innerHTML = "";
 

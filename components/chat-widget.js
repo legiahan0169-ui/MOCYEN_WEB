@@ -124,7 +124,7 @@
             const chatBody = document.getElementById("chat-body");
 
             // Khởi tạo Socket kết nối tới Backend
-            const socket = io("http://localhost:3000");
+            const socket = io("https://mocyen-web.onrender.com");
             
             let currentUser = null;
             try {
@@ -135,7 +135,7 @@
             socket.emit('customer_join', userId);
 
             // Tải lịch sử tin nhắn
-            fetch(`http://localhost:3000/api/messages/${userId}`)
+            fetch(`https://mocyen-web.onrender.com/api/messages/${userId}`)
                 .then(res => res.json())
                 .then(msgs => {
                     if (msgs.length > 0) {

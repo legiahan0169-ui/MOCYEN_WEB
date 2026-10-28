@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  fetch(`http://localhost:3000/api/posts/${postId}`)
+  fetch(`https://mocyen-web.onrender.com/api/posts/${postId}`)
     .then(res => {
       if (!res.ok) throw new Error("Lỗi API");
       return res.json();

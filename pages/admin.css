@@ -145,11 +145,6 @@
   font-size: 22px;
   color: #243A30;
 }
-.stat-info small {
-  font-size: 10px;
-  display: block;
-  margin-top: 4px;
-}
 
 /* CHARTS */
 .charts-grid {
@@ -262,6 +257,97 @@
 .status-completed { background: #D4EDDA; color: #155724; }
 .status-shipping { background: #CCE5FF; color: #004085; }
 
+.action-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 15px;
+  color: #7C877D;
+  transition: 0.2s;
+}
+.action-btn:hover { color: #264F40; }
+
+/* TAB PANEL (Ẩn/Hiện) */
+.admin-tab-panel { display: none; animation: fadeIn 0.3s ease; }
+.admin-tab-panel.active { display: block; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================
+   GIAO DIỆN CHAT ADMIN
+========================================== */
+.chat-layout {
+  display: flex;
+  height: 650px;
+  background: #FFF;
+  border-radius: 12px;
+  border: 1px solid #EAEAEA;
+  overflow: hidden;
+}
+.chat-sidebar {
+  width: 300px;
+  border-right: 1px solid #EAEAEA;
+  overflow-y: auto;
+  background: #F9FAF8;
+}
+.chat-sidebar h3 {
+  padding: 20px;
+  font-size: 16px;
+  border-bottom: 1px solid #EAEAEA;
+  margin: 0;
+  color: #243A30;
+}
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.chat-main-header {
+  padding: 20px;
+  border-bottom: 1px solid #EAEAEA;
+  font-weight: 600;
+  background: #FFF;
+  color: #243A30;
+}
+.chat-main-body {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background: #F4F6F3;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.chat-main-footer {
+  padding: 15px;
+  background: #FFF;
+  border-top: 1px solid #EAEAEA;
+  display: flex;
+  gap: 10px;
+}
+.chat-main-footer input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #D8DCCF;
+  border-radius: 8px;
+  outline: none;
+  font-family: inherit;
+}
+.chat-main-footer button {
+  background: #264F40;
+  color: #FFF;
+  border: none;
+  padding: 0 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.chat-main-footer button:hover {
+  background: #183C31;
+}
+
 /* RESPONSIVE */
 @media (max-width: 1200px) {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -276,17 +362,6 @@
 }
 @media (max-width: 768px) {
   .stats-grid { grid-template-columns: 1fr; }
-}
-
-/* THÊM MỚI: Hiệu ứng chuyển Tab */
-.admin-tab-panel {
-  display: none;
-  animation: fadeIn 0.3s ease;
-}
-.admin-tab-panel.active {
-  display: block;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  .chat-layout { flex-direction: column; }
+  .chat-sidebar { width: 100%; height: 200px; border-right: none; border-bottom: 1px solid #EAEAEA; }
 }
