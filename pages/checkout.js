@@ -53,8 +53,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
 
     } catch (error) {
-      console.error("Lỗi tải dữ liệu:", error);
-      itemsContainer.innerHTML = '<p style="color:red; text-align:center;">Lỗi kết nối dữ liệu. Vui lòng bật Node.js!</p>';
+       console.error(error);
+      // Sửa dòng dưới đây để nó hiện lỗi thật của Database
+      alert("Lỗi đặt hàng: " + (error.message || "Vui lòng thử lại!")); 
+      btnSubmit.textContent = "Hoàn tất đặt hàng";
+      btnSubmit.disabled = false;
     }
   }
 

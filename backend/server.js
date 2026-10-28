@@ -88,22 +88,25 @@ app.post('/api/login', (req, res) => {
 
 // API Tạo Đơn Hàng
 app.post('/api/orders', (req, res) => {
-    // 1. Nhận thêm 2 biến coupon_code và discount_amount
     const { user_id, customer_name, phone, address, total_amount, payment_method, items, channel, coupon_code, discount_amount } = req.body;
     
-    // 2. Câu lệnh SQL phải có đủ 9 dấu hỏi chấm (?) cho 9 cột
     const sqlOrder = `INSERT INTO orders (user_id, customer_name, phone, address, total_amount, payment_method, channel, coupon_code, discount_amount) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
     
-    // 3. Mảng truyền vào phải có đủ 9 phần tử
     db.query(sqlOrder, [user_id || null, customer_name, phone, address, total_amount, payment_method, channel, coupon_code || null, discount_amount || 0], (err, result) => {
-        if (err) return res.status(500).json({ error: err.message });
+        if (err) {
+            console.error("LỖI INSERT ORDERS:", err); // In ra màn hình Render để dễ sửa
+            return res.status(500).json({ error: err.message }); 
+        }
         
         const orderId = result.insertId;
-        const orderItemsData = items.map(item => [orderId, item.id, item.name, item.qty, item.price]);
+        const orderItemsData = items.map(item => [orderId, item.id, item.name || "Sản phẩm", item.qty, item.price]);
         const sqlItems = `INSERT INTO order_items (order_id, product_id, product_name, quantity, price) VALUES ?`;
         
         db.query(sqlItems, [orderItemsData], (err) => {
-            if (err) return res.status(500).json({ error: err.message });
+            if (err) {
+                console.error("LỖI INSERT ORDER_ITEMS:", err);
+                return res.status(500).json({ error: err.message });
+            }
             res.json({ message: 'Đặt hàng thành công', orderId });
         });
     });
