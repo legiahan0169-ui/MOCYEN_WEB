@@ -457,44 +457,63 @@ p { font-size: 14px; }
 
 
 /* =========================================================
-   15. NEWSLETTER
+   17. NEWSLETTER (Đã bỏ ảnh, căn giữa)
 ========================================================= */
-.newsletter { background: #EDE7DA; }
-.newsletter-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-height: 360px;
+.newsletter {
+    background: #EDE7DA;
+    padding: 80px 0;
+    text-align: center; /* Căn giữa toàn bộ nội dung */
 }
-.newsletter-grid > div:first-child {
-    padding: 60px 70px 60px 0;
-    align-self: center;
+
+.newsletter-content-centered {
+    max-width: 600px;
+    margin: 0 auto;
 }
-.newsletter-grid p:not(.eyebrow) {
+
+.newsletter-content-centered p:not(.eyebrow) {
     margin-top: 16px;
     color: var(--text-soft);
-    font-size: 12px;
+    font-size: 14px;
 }
-.newsletter-form { max-width: 520px; margin-top: 24px; display: flex; gap: 8px; }
+
+.newsletter-form {
+    max-width: 500px;
+    margin: 30px auto 0;
+    display: flex;
+    gap: 10px;
+}
+
 .newsletter-form input {
     flex: 1;
-    min-height: 44px;
-    padding: 0 18px;
+    min-height: 50px;
+    padding: 0 20px;
     border: 1px solid #CBC6B9;
     border-radius: 100px;
     background: rgba(255, 255, 255, 0.75);
     outline: none;
+    font-size: 14px;
 }
-.newsletter-form input:focus { border-color: var(--green); }
+
+.newsletter-form input:focus {
+    border-color: var(--green);
+}
+
 .newsletter-form button {
-    min-width: 100px;
+    min-width: 120px;
     border: none;
     border-radius: 100px;
     background: var(--green);
     color: white;
-    padding: 0 22px;
+    padding: 0 25px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
 }
-.newsletter-image img { height: 100%; min-height: 360px; }
 
+.newsletter-form button:hover {
+    background: var(--green-dark);
+}
 
 /* =========================================================
    16. TABLET RESPONSIVE (page content)

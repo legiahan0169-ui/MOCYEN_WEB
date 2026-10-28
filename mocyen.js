@@ -1,5 +1,5 @@
 /* =========================================================
-   MOCYEN.JS - Logic tương tác chính (Đã tối ưu)
+   MOCYEN.JS - Logic tương tác chính (Trang chủ)
 ========================================================= */
 document.addEventListener("DOMContentLoaded", function () {
   
@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let globalProducts = [];
 
   /* ==========================================
-     1. GỌI API 1 LẦN DUY NHẤT CHO CẢ TRANG
+     1. GỌI API SẢN PHẨM (CHO BEST SELLER & COMBO)
   ========================================== */
   fetch('https://mocyen-web.onrender.com/api/products')
     .then(res => res.json())
@@ -21,8 +21,11 @@ document.addEventListener("DOMContentLoaded", function () {
       renderComboRoutine(products);
     })
     .catch(err => {
-      console.error("Lỗi kết nối API:", err);
-      document.getElementById("home-best-sellers").innerHTML = '<p style="width: 100%; text-align: center; color: red;">Không thể tải sản phẩm. Vui lòng bật Server Node.js!</p>';
+      console.error("Lỗi kết nối API Sản phẩm:", err);
+      const bestSellerGrid = document.getElementById("home-best-sellers");
+      if (bestSellerGrid) {
+        bestSellerGrid.innerHTML = '<p style="width: 100%; text-align: center; color: red;">Không thể tải sản phẩm. Vui lòng kiểm tra Server!</p>';
+      }
     });
 
 
@@ -34,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!homeGrid) return;
 
     homeGrid.innerHTML = ""; 
-    const top4 = products.slice(0, 4); // Lấy 4 sản phẩm
+    const top4 = products.slice(0, 4); // Lấy 4 sản phẩm đầu tiên
     
     top4.forEach(product => {
       const formatPrice = (price) => `${Number(price).toLocaleString("vi-VN")}đ`;
@@ -70,7 +73,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const routineContainer = document.getElementById("routine-box-container");
     if (!routineContainer) return;
 
-    const comboSkus = ['SRM-ND-150', 'TONER-RDC-500', 'SERUM-RM-30', 'KEM-ND-30'];
+    // Các mã SKU tạo nên combo này (Đã sửa lại cho khớp với Database)
+    const comboSkus = ['SRM-ND-150', 'TONER-RDC-500', 'SERUM-RM-30', 'CREAM-ALOE-30'];
     const discountPercent = 15;
 
     const comboProducts = comboSkus.map(sku => products.find(p => p.sku === sku)).filter(p => p !== undefined);
@@ -85,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let step = 1;
 
     comboProducts.forEach(product => {
-      // QUAN TRỌNG: Ép kiểu Number để tránh lỗi NaN
+      // Ép kiểu Number để tránh lỗi NaN
       const price = Number(product.sale_price || product.price);
       totalOriginalPrice += price;
       
@@ -112,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
       step++;
     });
 
-    // Ép kiểu Number cho phép tính cuối cùng
+    // Tính giá Combo sau khi giảm (Đã sửa công thức chia 100)
     const finalPrice = Math.round((Number(totalOriginalPrice) * (100 - discountPercent) / 100) / 1000) * 1000;
     const formatPrice = (price) => `${Number(price).toLocaleString("vi-VN")}đ`;
 
@@ -134,6 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
     `;
 
+    // Xử lý nút thêm cả bộ vào giỏ
     document.getElementById("add-custom-routine").addEventListener("click", () => {
       if (typeof window.addToCart === "function") {
         comboProducts.forEach(p => window.addToCart(p.id));
@@ -146,9 +151,48 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
   /* ==========================================
-     2. HIỆU ỨNG SCROLL REVEAL
+     2. TỰ ĐỘNG LẤY BÀI VIẾT MỚI NHẤT (NHẬT KÝ MỘC YÊN)
   ========================================== */
-  // Đặt trong setTimeout để đợi DOM render xong
+  const homeJournal = document.getElementById("home-journal");
+  if (homeJournal) {
+    fetch('https://mocyen-web.onrender.com/api/posts')
+      .then(res => res.json())
+      .then(posts => {
+        homeJournal.innerHTML = ""; 
+        
+        if (posts.length === 0) {
+          homeJournal.innerHTML = '<p style="text-align: center; width: 100%; color: #7C877D;">Chưa có bài viết nào.</p>';
+          return;
+        }
+
+        // Lấy 3 bài viết mới nhất
+        const latestPosts = posts.slice(0, 3);
+
+        latestPosts.forEach(post => {
+          const card = document.createElement("article");
+          card.className = "journal-card";
+          
+          card.innerHTML = `
+            <a href="pages/blog-detail.html?id=${post.id}">
+              <img src="images/blog/${post.image}" alt="${post.title}" loading="lazy">
+            </a>
+            <small>${post.category}</small>
+            <h3><a href="pages/blog-detail.html?id=${post.id}" style="color: inherit; text-decoration: none;">${post.title}</a></h3>
+            <a href="pages/blog-detail.html?id=${post.id}">Đọc bài viết →</a>
+          `;
+          homeJournal.appendChild(card);
+        });
+      })
+      .catch(err => {
+        console.error("Lỗi tải bài viết:", err);
+        homeJournal.innerHTML = '<p style="color:red; text-align:center; width: 100%;">Không thể tải bài viết.</p>';
+      });
+  }
+
+
+  /* ==========================================
+     3. HIỆU ỨNG SCROLL REVEAL (Xuất hiện khi cuộn)
+  ========================================== */
   setTimeout(() => {
     const revealElements = document.querySelectorAll(
       '.story-copy, .story-image, .routine-visual, .routine-box, .review-card, .journal-card, .benefit-grid article'
@@ -164,31 +208,41 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         });
       }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
       revealElements.forEach(el => revealObserver.observe(el));
     } else {
       revealElements.forEach(el => el.classList.add('is-visible'));
     }
   }, 500); 
 
+
   /* ==========================================
-     3. STICKY HEADER & NEWSLETTER
+     4. STICKY HEADER
   ========================================== */
   const header = document.querySelector('.site-header');
   if (header) {
     window.addEventListener('scroll', () => {
-      header.classList.toggle('is-scrolled', window.scrollY > 50);
+      if (window.scrollY > 50) {
+        header.classList.add('is-scrolled');
+      } else {
+        header.classList.remove('is-scrolled');
+      }
     });
   }
 
+
+  /* ==========================================
+     5. FORM ĐĂNG KÝ NEWSLETTER
+  ========================================== */
   const newsletterForm = document.getElementById('newsletter-form');
   if (newsletterForm) {
     newsletterForm.addEventListener('submit', function (e) {
       e.preventDefault();
       const email = this.querySelector('input[type="email"]').value;
       if (typeof window.showToast === 'function') {
-        window.showToast('Cảm ơn bạn! Đã đăng ký nhận tin.');
+        window.showToast('Cảm ơn bạn! Đã đăng ký nhận tin từ ' + email);
       } else {
-        alert('Cảm ơn bạn! Đã đăng ký nhận tin.');
+        alert('Cảm ơn bạn! Đã đăng ký nhận tin từ ' + email);
       }
       this.reset();
     });
