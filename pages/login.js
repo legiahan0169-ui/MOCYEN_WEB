@@ -1,6 +1,5 @@
 /* =========================================================
-   MOCYEN — LOGIN/REGISTER.JS
-   Xử lý chuyển tab, hiện mật khẩu và giả lập đăng nhập
+   MOCYEN — LOGIN/REGISTER.JS (Bản chuẩn API)
 ========================================================= */
 document.addEventListener("DOMContentLoaded", () => {
   // 1. Chuyển đổi Tab Đăng nhập / Đăng ký
@@ -40,7 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
     else alert(msg);
   };
 
-  // 3. Xử lý Đăng nhập (Đã cập nhật nhận diện Admin)
+  // ==========================================
+  // 3. XỬ LÝ ĐĂNG NHẬP THẬT (GỌI API RENDER)
+  // ==========================================
   const loginForm = document.getElementById("login-form");
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
@@ -53,39 +54,34 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.textContent = "Đang xử lý...";
         btn.disabled = true;
 
-              // Lấy tham số redirect trên URL (nếu có)
-      const urlParams = new URLSearchParams(window.location.search);
-      const redirectUrl = urlParams.get("redirect");
-
-      setTimeout(() => {
-        if (data.user.role === "admin") {
-          window.location.href = "admin.html";
-        } else if (redirectUrl) {
-          // Quay lại trang khách đang dở (ví dụ checkout.html)
-          window.location.href = redirectUrl;
-        } else {
-          window.location.href = "../index.html";
-        }
-      }, 1000);
-
-        // KIỂM TRA TÀI KHOẢN ADMIN
-        const isAdmin = email === "admin@mocyen.com";
+        // GỌI API LÊN RENDER
+        const response = await fetch("https://mocyen-web.onrender.com/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password })
+        });
         
-        const mockUser = { 
-          id: isAdmin ? 99 : 1, 
-          name: isAdmin ? "Quản trị viên" : "Khách Hàng Mộc Yên", 
-          email: email,
-          role: isAdmin ? "admin" : "customer"
-        };
-        localStorage.setItem("mocyen_user", JSON.stringify(mockUser));
-
-        showToast(isAdmin ? "Đăng nhập Admin thành công!" : "Đăng nhập thành công!");
+        const data = await response.json();
         
+        // Nếu server báo lỗi (sai pass, không có email...)
+        if (!response.ok) throw new Error(data.error || "Lỗi đăng nhập");
+
+        // Lưu thông tin thật vào bộ nhớ
+        localStorage.setItem("mocyen_user", JSON.stringify(data.user));
+        showToast("Đăng nhập thành công!");
+        
+        // Lấy tham số redirect (nếu bị chặn từ trang thanh toán)
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get("redirect");
+
+        // Chuyển trang dựa vào Role
         setTimeout(() => {
-          if (isAdmin) {
-            window.location.href = "admin.html"; // Bay vào Dashboard
+          if (data.user.role === "admin") {
+            window.location.href = "admin.html";
+          } else if (redirectUrl) {
+            window.location.href = redirectUrl;
           } else {
-            window.location.href = "../index.html"; // Về trang chủ
+            window.location.href = "../index.html";
           }
         }, 1000);
 
@@ -97,13 +93,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Xử lý Đăng ký
+  // ==========================================
+  // 4. XỬ LÝ ĐĂNG KÝ THẬT (GỌI API RENDER)
+  // ==========================================
   const registerForm = document.getElementById("register-form");
   if (registerForm) {
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       
-      // Lấy dữ liệu (đảm bảo lấy đúng id="reg-name")
       const name = document.getElementById("reg-name").value;
       const email = document.getElementById("reg-email").value;
       const password = document.getElementById("reg-password").value;
@@ -113,7 +110,6 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.textContent = "Đang xử lý...";
         btn.disabled = true;
 
-        // Gửi API thật (Đảm bảo có biến name trong body)
         const response = await fetch("https://mocyen-web.onrender.com/api/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
