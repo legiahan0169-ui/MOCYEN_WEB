@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   
-  <!-- THƯ VIỆN BIỂU ĐỒ CHART.JS -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <link rel="stylesheet" href="../style.css">
@@ -51,9 +50,7 @@
 
     <div class="admin-content">
       
-      <!-- ============================================== -->
       <!-- TAB 1: TỔNG QUAN (DASHBOARD) -->
-      <!-- ============================================== -->
       <div class="admin-tab-panel active" id="tab-dashboard">
         <div class="stats-grid">
           <div class="stat-card">
@@ -86,14 +83,12 @@
         </div>
       </div>
 
-      <!-- ============================================== -->
       <!-- TAB 2: QUẢN LÝ ĐƠN HÀNG -->
-      <!-- ============================================== -->
       <div class="admin-tab-panel" id="tab-orders">
         <div class="table-card">
           <div class="table-header">
             <h2>Tất cả Đơn hàng Đa kênh</h2>
-            <div class="channel-filters">
+            <div class="channel-filters" id="order-channel-filters">
               <button class="btn-filter active" data-channel="all">Tất cả</button>
               <button class="btn-filter" data-channel="Website">Website</button>
               <button class="btn-filter" data-channel="Shopee">Shopee</button>
@@ -122,14 +117,11 @@
         </div>
       </div>
 
-      <!-- ============================================== -->
       <!-- TAB 3: QUẢN LÝ SẢN PHẨM -->
-      <!-- ============================================== -->
       <div class="admin-tab-panel" id="tab-products">
         <div class="table-card">
           <div class="table-header">
             <h2>Danh sách Sản phẩm</h2>
-            <button class="btn-filter active" style="background:#264F40; color:white;">+ Thêm sản phẩm</button>
           </div>
           <div class="table-responsive">
             <table class="admin-table">
@@ -151,9 +143,7 @@
         </div>
       </div>
 
-      <!-- ============================================== -->
       <!-- TAB 4: QUẢN LÝ KHÁCH HÀNG -->
-      <!-- ============================================== -->
       <div class="admin-tab-panel" id="tab-customers">
         <div class="table-card">
           <div class="table-header">
@@ -178,27 +168,18 @@
         </div>
       </div>
 
-      <!-- ============================================== -->
       <!-- TAB 5: HỖ TRỢ CHAT -->
-      <!-- ============================================== -->
       <div class="admin-tab-panel" id="tab-messages">
         <div class="chat-layout">
-          <!-- Cột trái: Danh sách khách -->
           <div class="chat-sidebar">
             <h3>Hộp thư đến</h3>
             <div id="admin-chat-list">
               <p style="padding: 20px; color: #7C877D; font-size: 13px;">Đang tải...</p>
             </div>
           </div>
-          
-          <!-- Cột phải: Khung chat -->
           <div class="chat-main">
             <div class="chat-main-header" id="admin-chat-header">Chọn một khách hàng để xem tin nhắn</div>
-            
-            <div class="chat-main-body" id="admin-chat-body">
-              <!-- Tin nhắn hiển thị ở đây -->
-            </div>
-            
+            <div class="chat-main-body" id="admin-chat-body"></div>
             <div class="chat-main-footer">
               <input type="text" id="admin-chat-input" placeholder="Nhập tin nhắn trả lời...">
               <button id="admin-chat-send">Gửi</button>
@@ -209,6 +190,29 @@
 
     </div>
   </main>
+
+  <!-- MODAL CHI TIẾT ĐƠN HÀNG -->
+  <div class="modal-overlay" id="order-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-order-title">Chi tiết đơn hàng</h2>
+        <button class="modal-close" id="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-order-body">
+        <!-- Nội dung render từ JS -->
+      </div>
+      <div class="modal-footer">
+        <label style="font-weight:600; font-size:14px; color:#243A30;">Cập nhật trạng thái: </label>
+        <select id="modal-status-select">
+          <option value="pending">Chờ xử lý</option>
+          <option value="shipping">Đang giao hàng</option>
+          <option value="completed">Hoàn thành</option>
+          <option value="cancelled">Đã hủy</option>
+        </select>
+        <button class="btn-save-status" id="modal-save-btn">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
 
   <script src="admin.js"></script>
 </body>
