@@ -1,0 +1,231 @@
+/* =========================================================
+   MOCYEN - PROMOTION DETAIL CSS
+========================================================= */
+.promo-detail-page {
+  background: #F7F4EB; /* Nền kem theo brief */
+  padding-bottom: 80px;
+  color: #344232;
+}
+
+/* 1. Breadcrumb */
+.promo-breadcrumb {
+  padding: 25px 0;
+  font-size: 12px;
+  color: #7C877D;
+  display: flex;
+  gap: 8px;
+}
+.promo-breadcrumb a { 
+  color: #56635D; 
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.promo-breadcrumb a:hover { 
+  color: #658354; 
+}
+
+/* 2. Layout 2 cột */
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 50px;
+  align-items: start;
+  margin-top: 10px;
+}
+
+/* ==========================================
+   CỘT TRÁI: NỘI DUNG CHÍNH
+========================================== */
+.detail-content {
+  background: #FFFDF8;
+  padding: 50px;
+  border-radius: 20px;
+  border: 1px solid #E4E2D7;
+  box-shadow: 0 10px 30px rgba(68, 79, 36, 0.03);
+}
+
+.detail-title {
+  font-family: "Playfair Display", serif;
+  font-size: 46px;
+  color: #444F24;
+  margin: 10px 0 20px;
+  line-height: 1.1;
+  font-weight: 500;
+}
+
+.detail-message {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 22px;
+  font-style: italic;
+  color: #658354;
+  margin-bottom: 25px;
+  line-height: 1.4;
+}
+
+.detail-desc {
+  font-size: 15px;
+  line-height: 1.8;
+  color: #56635D;
+  margin-bottom: 40px;
+}
+
+/* Khối Quyền lợi & Điều kiện */
+.detail-box {
+  margin-bottom: 35px;
+}
+
+.detail-box h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 22px;
+  color: #444F24;
+  margin-bottom: 18px;
+  font-weight: 500;
+}
+
+.detail-benefits li, 
+.detail-conditions li {
+  font-size: 14px;
+  color: #344232;
+  margin-bottom: 14px;
+  padding-left: 22px;
+  position: relative;
+  line-height: 1.7;
+}
+
+/* Icon cho danh sách Quyền lợi */
+.detail-benefits li::before {
+  content: "✦";
+  position: absolute;
+  left: 0;
+  color: #658354;
+  font-size: 16px;
+  top: -1px;
+}
+
+/* Icon cho danh sách Điều kiện */
+.detail-conditions li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #658354;
+  font-size: 22px;
+  line-height: 1;
+  top: 0;
+}
+
+.detail-note {
+  margin-top: 25px;
+  font-size: 12px;
+  color: #7C877D;
+  font-style: italic;
+  line-height: 1.7;
+  padding: 15px 20px;
+  background: #F7F4EB;
+  border-radius: 8px;
+  border-left: 3px solid #D8DCCF;
+}
+
+/* ==========================================
+   CỘT PHẢI: SIDEBAR
+========================================== */
+.detail-sidebar {
+  position: sticky;
+  top: 100px;
+}
+
+.sidebar-card {
+  background: #FFFDF8;
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid #E4E2D7;
+  box-shadow: 0 10px 30px rgba(68, 79, 36, 0.03);
+}
+
+.sidebar-card .eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #7C877D;
+  margin-bottom: 10px;
+}
+
+.detail-time {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444F24;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.detail-time i { 
+  color: #658354; 
+  font-size: 16px;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: #E4E2D7;
+  margin: 20px 0;
+}
+
+/* Badge Trạng thái (Sẽ được JS kích hoạt class) */
+.status-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 25px;
+}
+.status-active { 
+  background: #E8F5E9; 
+  color: #2E7D32; 
+  border: 1px solid #C8E6C9;
+}
+.status-upcoming { 
+  background: #FFF3E0; 
+  color: #E65100; 
+  border: 1px solid #FFE0B2;
+}
+.status-ended { 
+  background: #ECEFF1; 
+  color: #546E7A; 
+  border: 1px solid #CFD8DC;
+}
+
+/* Nút bấm trong Sidebar */
+.sidebar-card .btn {
+  height: 46px;
+  font-size: 13px;
+}
+
+/* ==========================================
+   RESPONSIVE (Mobile & Tablet)
+========================================== */
+@media (max-width: 992px) {
+  .detail-layout {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  /* Đưa Sidebar lên trên nội dung ở Mobile để dễ thấy thời gian & trạng thái */
+  .detail-sidebar {
+    position: static;
+    order: -1; 
+  }
+  
+  .detail-content {
+    padding: 35px 25px;
+  }
+  
+  .detail-title {
+    font-size: 34px;
+  }
+  
+  .detail-message {
+    font-size: 18px;
+  }
+}

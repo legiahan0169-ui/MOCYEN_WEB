@@ -1,0 +1,208 @@
+/* =========================================================
+   MOCYEN - LOGIN / REGISTER PAGE CSS
+========================================================= */
+.auth-page {
+  padding: 60px 0 80px;
+  background: #F7F3E9;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+}
+
+.auth-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #FFFEFA;
+  border: 1px solid #E4E2D7;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(38, 79, 64, 0.05);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Cột Trái: Ảnh */
+.auth-banner {
+  position: relative;
+  height: 100%;
+  min-height: 500px;
+}
+.auth-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.auth-banner-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 40px;
+  background: linear-gradient(to top, rgba(24, 60, 49, 0.9), transparent);
+  color: white;
+}
+.auth-banner-content h2 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 32px;
+  color: #FFF;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.auth-banner-content p {
+  font-size: 13px;
+  color: #D4E0DB;
+  line-height: 1.6;
+}
+
+/* Cột Phải: Form */
+.auth-form-wrapper {
+  padding: 50px 60px;
+}
+
+/* Tabs */
+.auth-tabs {
+  display: flex;
+  gap: 30px;
+  border-bottom: 1px solid #E4E2D7;
+  margin-bottom: 30px;
+}
+.auth-tab {
+  background: none;
+  border: none;
+  padding: 10px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #8A9A83;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.3s;
+}
+.auth-tab:hover { color: #264F40; }
+.auth-tab.active {
+  color: #264F40;
+}
+.auth-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #264F40;
+}
+
+/* Form Content */
+.auth-form {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+.auth-form.active {
+  display: block;
+}
+.auth-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 28px;
+  color: #243A30;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.auth-subtitle {
+  font-size: 13px;
+  color: #7C877D;
+  margin-bottom: 25px;
+}
+
+/* Inputs */
+.form-group {
+  margin-bottom: 20px;
+}
+.form-group label {
+  display: block;
+  font-size: 12px;
+  color: #56635D;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #D8DCCF;
+  border-radius: 10px;
+  background: #F7F3E9;
+  font-family: inherit;
+  font-size: 14px;
+  color: #243A30;
+  transition: all 0.2s;
+}
+.form-group input:focus {
+  outline: none;
+  border-color: #264F40;
+  background: #FFFEFA;
+  box-shadow: 0 0 0 3px rgba(38, 79, 64, 0.1);
+}
+
+/* Password toggle icon */
+.password-input-wrap {
+  position: relative;
+}
+.toggle-password {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #AAB9A5;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.toggle-password:hover {
+  color: #264F40;
+}
+
+/* Options */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  font-size: 12px;
+}
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #56635D;
+  cursor: pointer;
+}
+.forgot-password {
+  color: #658354;
+  text-decoration: none;
+}
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+/* Button */
+.btn-auth {
+  width: 100%;
+  height: 48px;
+  font-size: 14px;
+  border-radius: 100px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .auth-container {
+    grid-template-columns: 1fr;
+  }
+  .auth-banner {
+    display: none; /* Ẩn ảnh trên mobile */
+  }
+  .auth-form-wrapper {
+    padding: 40px 30px;
+  }
+}

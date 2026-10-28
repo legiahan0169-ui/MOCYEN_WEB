@@ -1,0 +1,264 @@
+/* =========================================================
+   MOCYEN - PROMOTIONS PAGE CSS (SIDEBAR LAYOUT)
+========================================================= */
+.promo-page {
+  background: #F7F4EB;
+  color: #344232;
+}
+
+/* Utilities */
+.eyebrow {
+  color: #658354; font-size: 11px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px;
+}
+.section { padding: 60px 0; }
+.section-title { font-family: "Playfair Display", serif; font-size: 42px; color: #444F24; line-height: 1.2; font-weight: 500; }
+.center-head { text-align: center; max-width: 700px; margin: 0 auto 50px; }
+
+/* 1. Breadcrumb */
+.promo-breadcrumb { padding: 20px 0; font-size: 12px; color: #7C877D; display: flex; gap: 8px; }
+.promo-breadcrumb a { color: #56635D; text-decoration: none; }
+.promo-breadcrumb a:hover { color: #658354; }
+
+/* 2. Hero Campaign */
+.promo-hero { background: linear-gradient(135deg, #F7F4EB 50%, #E8EEDF 50%); padding: 60px 0 80px; margin-bottom: 40px; }
+.promo-hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.promo-hero-title { font-family: "Cormorant Garamond", serif; font-size: 56px; color: #444F24; line-height: 1.1; font-weight: 600; margin-bottom: 10px; }
+.promo-hero-subtitle { font-family: "Playfair Display", serif; font-size: 36px; color: #658354; line-height: 1.2; margin-bottom: 25px; font-weight: 400; }
+.promo-hero-desc { font-size: 15px; line-height: 1.8; color: #56635D; margin-bottom: 25px; max-width: 90%; }
+.promo-hero-time { font-size: 14px; font-weight: 500; color: #444F24; margin-bottom: 35px; }
+.promo-hero-time i { margin-right: 8px; }
+.promo-hero-actions { display: flex; gap: 15px; }
+.promo-hero-image img { width: 100%; border-radius: 20px 100px 20px 20px; box-shadow: 0 20px 40px rgba(68, 79, 36, 0.1); object-fit: cover; aspect-ratio: 4/5; }
+
+/* =========================================================
+   3. LAYOUT 2 CỘT: SIDEBAR VÀ NỘI DUNG
+========================================================= */
+.promo-layout-wrap {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 50px;
+  align-items: start;
+  margin-bottom: 80px;
+}
+
+/* 3.1. Sidebar Menu (Dọc) */
+.promo-sidebar-nav {
+  position: sticky;
+  top: 100px;
+  background: #FFFDF8;
+  padding: 25px 20px;
+  border-radius: 16px;
+  border: 1px solid #E4E2D7;
+  box-shadow: 0 10px 30px rgba(68, 79, 36, 0.03);
+}
+.promo-quick-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.nav-chip {
+  display: block;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #7C877D;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+.nav-chip:hover {
+  background: #F7F4EB;
+  color: #658354;
+}
+.nav-chip.active {
+  background: #F7F4EB;
+  color: #444F24;
+  border-left-color: #658354;
+  font-weight: 600;
+}
+
+/* 3.2. Nội dung chính */
+.promo-main-content {
+  min-width: 0; /* Tránh tràn grid */
+}
+
+/* 4. Featured Offer (Nổi bật) */
+.featured-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Ảnh và nội dung xếp dọc để vừa cột */
+  background: #FFFDF8;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid #E4E2D7;
+}
+.featured-image { position: relative; height: 350px; }
+.featured-image img { width: 100%; height: 100%; object-fit: cover; }
+.featured-badge {
+  position: absolute; top: 20px; left: 20px; background: #658354; color: white;
+  padding: 8px 16px; border-radius: 30px; font-size: 11px; font-weight: 600; text-transform: uppercase;
+}
+.featured-content { padding: 40px; }
+.featured-message { font-family: "Cormorant Garamond", serif; font-size: 22px; font-style: italic; color: #658354; margin: 15px 0; }
+.featured-desc { font-size: 15px; line-height: 1.8; color: #56635D; margin-bottom: 25px; }
+.featured-benefits { margin-bottom: 30px; }
+.featured-benefits li { font-size: 14px; color: #344232; margin-bottom: 12px; display: flex; gap: 10px; align-items: center; }
+.featured-benefits i { color: #658354; }
+.featured-meta {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  padding: 15px 0; 
+  border-top: 1px dashed #E4E2D7; 
+  border-bottom: 1px dashed #E4E2D7; /* Thêm viền dưới cho đẹp */
+  margin-top: 20px;
+  margin-bottom: 20px; /* Khoảng cách với 2 nút bên dưới */
+}
+
+/* 5. Campaign Grid */
+.campaign-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px;
+}
+.campaign-card {
+  background: #FFFDF8; border: 1px solid #E4E2D7; border-radius: 20px;
+  overflow: hidden; display: flex; flex-direction: column;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.campaign-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(68, 79, 36, 0.05); }
+.camp-img { height: 200px; }
+.camp-img img { width: 100%; height: 100%; object-fit: cover; }
+.camp-content { padding: 25px; display: flex; flex-direction: column; flex: 1; }
+.camp-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+.camp-title { font-family: "Playfair Display", serif; font-size: 24px; color: #444F24; margin-bottom: 8px; }
+.camp-message { font-family: "Cormorant Garamond", serif; font-size: 17px; font-style: italic; color: #658354; margin-bottom: 15px; }
+.camp-desc { font-size: 14px; line-height: 1.8; color: #56635D; margin-bottom: 20px; flex: 1; }
+.camp-footer { padding-top: 15px; margin-top: auto; border-top: 1px dashed #E4E2D7; }
+.btn-text { font-size: 13px; font-weight: 600; color: #658354; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; }
+.btn-text:hover { color: #444F24; }
+
+/* Badges */
+.status-badge { padding: 5px 10px; border-radius: 20px; font-size: 10px; font-weight: 600; text-transform: uppercase; }
+.status-active { background: #E8F5E9; color: #2E7D32; }
+.status-upcoming { background: #FFF3E0; color: #E65100; }
+.status-ended { background: #ECEFF1; color: #546E7A; }
+
+/* 6. Vòng Đời Xanh */
+.promo-green-life { background: #E8EEDF; border-radius: 24px; padding: 40px; margin-top: 60px; }
+.green-life-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+.green-life-image img { width: 100%; border-radius: 16px; box-shadow: 0 10px 20px rgba(68, 79, 36, 0.1); }
+.green-life-slogan { font-family: "Cormorant Garamond", serif; font-size: 22px; font-style: italic; color: #658354; margin-bottom: 15px; }
+.green-life-desc { font-size: 15px; line-height: 1.8; color: #344232; margin-bottom: 20px; }
+.green-life-list { margin-bottom: 25px; }
+.green-life-list li { font-size: 14px; line-height: 1.7; color: #344232; margin-bottom: 10px; position: relative; padding-left: 20px; }
+.green-life-list li::before { content: "✦"; position: absolute; left: 0; color: #658354; }
+
+/* 7. How To */
+.steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 30px; }
+.step-item { text-align: center; background: #FFFDF8; padding: 30px 20px; border-radius: 16px; border: 1px solid #E4E2D7;}
+.step-number { width: 45px; height: 45px; background: #658354; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; margin: 0 auto 15px; }
+.step-item h3 { font-family: "Playfair Display", serif; font-size: 20px; color: #444F24; margin-bottom: 10px; }
+.step-item p { font-size: 13px; line-height: 1.7; color: #56635D; }
+
+/* 8. FAQ */
+.faq-list { display: flex; flex-direction: column; gap: 15px; }
+.faq-item { background: #FFFDF8; border: 1px solid #E4E2D7; border-radius: 10px; overflow: hidden; }
+.faq-item summary { padding: 20px; font-weight: 500; font-size: 15px; color: #444F24; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after { content: '+'; font-size: 20px; color: #658354; transition: 0.3s; }
+.faq-item[open] summary::after { content: '-'; transform: rotate(180deg); }
+.faq-answer { padding: 0 20px 20px; font-size: 14px; line-height: 1.8; color: #56635D; border-top: 1px dashed #E4E2D7; padding-top: 15px; }
+
+/* 9. CTA Cuối */
+.promo-cta { background: #444F24; color: white; }
+.promo-cta .cta-title { font-family: "Playfair Display", serif; font-size: 36px; color: #FFFDF8; margin-bottom: 15px; }
+.promo-cta .cta-desc { font-size: 15px; color: #D4E0DB; margin-bottom: 30px; margin-left: auto; margin-right: auto; }
+.promo-cta .cta-actions { display: flex; justify-content: center; gap: 15px; }
+.promo-cta .btn-primary { background: #FFFDF8; color: #444F24; border-color: #FFFDF8; }
+.promo-cta .btn-primary:hover { background: #E8EEDF; }
+.promo-cta .btn-outline { border-color: #FFFDF8; color: #FFFDF8; }
+.promo-cta .btn-outline:hover { background: rgba(255,255,255,0.1); }
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 1024px) {
+  .promo-layout-wrap { grid-template-columns: 1fr; } /* Bỏ sidebar 2 cột */
+  .promo-sidebar-nav {
+    position: static; padding: 0; border: none; background: transparent; box-shadow: none; margin-bottom: 20px;
+  }
+  .promo-quick-nav {
+    flex-direction: row; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none;
+  }
+  .promo-quick-nav::-webkit-scrollbar { display: none; }
+  .nav-chip {
+    white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; border-radius: 0; padding: 10px 15px;
+  }
+  .nav-chip.active { border-left-color: transparent; border-bottom-color: #658354; background: transparent; }
+  
+  .campaign-grid { grid-template-columns: 1fr; }
+  .green-life-grid { grid-template-columns: 1fr; gap: 30px; }
+  .steps-grid { grid-template-columns: 1fr; gap: 20px; }
+}
+@media (max-width: 768px) {
+  .promo-hero { background: #F7F4EB; }
+  .promo-hero-inner { grid-template-columns: 1fr; gap: 40px; }
+  .promo-hero-image { order: -1; }
+  .promo-hero-image img { aspect-ratio: 16/9; border-radius: 20px; }
+  .featured-grid { grid-template-columns: 1fr; }
+  .featured-content { padding: 25px; }
+  .promo-cta .cta-actions { flex-direction: column; }
+}
+
+/* ==========================================
+   NÚT HÀNH ĐỘNG (CTA + VOUCHER)
+========================================== */
+.featured-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 0; /* Xóa margin-top cũ vì đã có margin-bottom của featured-meta */
+  flex-wrap: wrap;
+}
+
+/* Nút Khám phá (Đã có sẵn class btn-primary) */
+.featured-actions .btn-primary {
+  padding: 0 24px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Nút Voucher nhỏ gọn */
+.btn-copy-coupon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #F5E8A7; /* Nền vàng nhạt */
+  color: #183C31; /* Chữ xanh đậm */
+  border: 1px dashed #E0D08E; /* Viền nét đứt */
+  padding: 0 20px;
+  height: 46px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.btn-copy-coupon:hover {
+  background: #EFDF94;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(224, 208, 142, 0.3);
+}
+
+.btn-copy-coupon i {
+  font-size: 16px;
+}
+
+.btn-copy-coupon.copied {
+  background: #E8F5E9;
+  color: #2E7D32;
+  border-color: #2E7D32;
+}

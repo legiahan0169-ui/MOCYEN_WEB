@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thanh toán | Mộc Yên</title>
+  <meta name="description" content="Hoàn tất đơn hàng của bạn tại Mộc Yên.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../components/components.css">
+  <link rel="stylesheet" href="checkout.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div id="site-header"></div>
+
+  <main class="checkout-page">
+    <div class="container">
+      
+      <!-- Breadcrumb -->
+      <div class="checkout-breadcrumb">
+        <a href="../index.html">Trang chủ</a>
+        <span>/</span>
+        <a href="cart.html">Giỏ hàng</a>
+        <span>/</span>
+        <span>Thanh toán</span>
+      </div>
+
+      <h1 class="checkout-title">Thanh toán đơn hàng</h1>
+
+      <form id="checkout-form" class="checkout-layout">
+        
+        <!-- CỘT TRÁI: THÔNG TIN GIAO HÀNG & THANH TOÁN -->
+        <div class="checkout-main">
+          
+          <!-- 1. Thông tin giao hàng -->
+          <section class="checkout-section">
+            <h2 class="section-title"><i class="fa-solid fa-location-dot"></i> Thông tin giao hàng</h2>
+            
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="fullname">Họ và tên <span>*</span></label>
+                <input type="text" id="fullname" name="fullname" placeholder="Ví dụ: Nguyễn Thị A" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="phone">Số điện thoại <span>*</span></label>
+                <input type="tel" id="phone" name="phone" placeholder="0912345678" pattern="[0-9]{10,11}" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email (Không bắt buộc)</label>
+              <input type="email" id="email" name="email" placeholder="Email để nhận hóa đơn">
+            </div>
+
+            <div class="form-group">
+              <label for="address">Địa chỉ nhận hàng (Số nhà, tên đường) <span>*</span></label>
+              <input type="text" id="address" name="address" placeholder="Ví dụ: 43C, đường số 160" required>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="city">Tỉnh / Thành phố <span>*</span></label>
+                <select id="city" name="city" required>
+                  <option value="" disabled selected>-- Đang tải dữ liệu --</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="district">Phường / Xã <span>*</span></label>
+                <select id="district" name="district" required disabled>
+                  <option value="" disabled selected>-- Chọn Phường/Xã --</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="note">Ghi chú đơn hàng</label>
+              <textarea id="note" name="note" rows="3" placeholder="Giao hàng vào giờ hành chính..."></textarea>
+            </div>
+          </section>
+
+          <!-- 2. Phương thức thanh toán -->
+          <section class="checkout-section">
+            <h2 class="section-title"><i class="fa-solid fa-wallet"></i> Phương thức thanh toán</h2>
+            
+            <div class="payment-methods">
+              <!-- COD -->
+              <label class="payment-item active">
+                <input type="radio" name="payment_method" value="COD" checked>
+                <div class="payment-info">
+                  <strong>Thanh toán khi nhận hàng (COD)</strong>
+                  <span>Thanh toán bằng tiền mặt khi giao hàng.</span>
+                </div>
+                <i class="fa-solid fa-money-bill-wave payment-icon"></i>
+              </label>
+
+              <!-- Chuyển khoản -->
+              <label class="payment-item">
+                <input type="radio" name="payment_method" value="BANK_TRANSFER">
+                <div class="payment-info">
+                  <strong>Chuyển khoản ngân hàng</strong>
+                  <span>Chuyển khoản qua tài khoản ngân hàng của Mộc Yên.</span>
+                </div>
+                <i class="fa-solid fa-building-columns payment-icon"></i>
+              </label>
+            </div>
+
+            <!-- Khung hiển thị mã QR (Ẩn mặc định) -->
+            <div class="bank-transfer-info" id="bank-qr-box" hidden>
+              <p>Vui lòng chuyển khoản đến:</p>
+              <p><strong>Ngân hàng:</strong> Vietcombank - Chi nhánh TP.HCM</p>
+              <p><strong>Số tài khoản:</strong> 0123456789</p>
+              <p><strong>Chủ tài khoản:</strong> CONG TY MOC YEN</p>
+              <p><strong>Nội dung CK:</strong> Thanh toan don hang [SĐT của bạn]</p>
+              <div class="mock-qr">
+                <i class="fa-solid fa-qrcode"></i> (Mã QR Demo)
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- CỘT PHẢI: TÓM TẮT ĐƠN HÀNG -->
+        <aside class="checkout-sidebar">
+          <div class="order-summary-card">
+            <h2 class="summary-title">Đơn hàng của bạn</h2>
+            
+            <div class="summary-products" id="checkout-items">
+              <!-- JS render sản phẩm vào đây -->
+            </div>
+
+            <div class="coupon-box">
+              <label>Mã giảm giá</label>
+              <div class="coupon-input-group">
+                <input type="text" id="coupon-input" placeholder="Nhập mã...">
+                <button type="button" id="btn-apply-coupon">Áp dụng</button>
+              </div>
+              <p id="coupon-message"></p>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-row">
+              <span>Tạm tính</span>
+              <strong id="checkout-subtotal">0đ</strong>
+            </div>
+            <div class="summary-row">
+              <span>Phí vận chuyển</span>
+              <strong id="checkout-shipping">0đ</strong>
+            </div>
+
+             <!-- Dòng hiển thị giảm giá (Mặc định ẩn) -->
+            <div class="summary-row" id="discount-row" style="display: none;">
+              <span>Giảm giá (<span id="discount-code-display"></span>)</span>
+              <strong id="checkout-discount" style="color: #C4425B;">-0đ</strong>
+            </div>
+            
+            <div class="summary-divider"></div>
+            
+            <div class="summary-divider"></div>
+            
+            <div class="summary-row summary-total">
+              <span>Tổng cộng</span>
+              <strong id="checkout-total">0đ</strong>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-place-order" id="btn-place-order">
+              Hoàn tất đặt hàng
+            </button>
+            
+            <p class="secure-note"><i class="fa-solid fa-lock"></i> Thông tin thanh toán của bạn được bảo mật.</p>
+          </div>
+        </aside>
+
+      </form>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <div id="site-footer"></div>
+
+  <!-- JS -->
+  <script src="../components/components.js"></script>
+  <script src="checkout.js"></script>
+</body>
+</html>

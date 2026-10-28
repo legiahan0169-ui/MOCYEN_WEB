@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tài khoản của tôi | Mộc Yên</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../components/components.css">
+  <link rel="stylesheet" href="account.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div id="site-header"></div>
+
+  <main class="account-page">
+    <div class="container account-layout">
+      
+      <!-- CỘT TRÁI: SIDEBAR MENU -->
+      <aside class="account-sidebar">
+        <div class="user-profile-brief">
+          <!-- Avatar chữ cái -->
+          <div class="user-avatar" id="user-avatar">K</div>
+          <div class="user-info">
+            <h3 id="user-name">Khách hàng</h3>
+            <p id="user-email">email@example.com</p>
+          </div>
+        </div>
+
+        <nav class="account-nav">
+          <button class="acc-nav-btn active" data-target="tab-orders">
+            <i class="fa-solid fa-box"></i> Đơn hàng của tôi
+          </button>
+          <button class="acc-nav-btn" data-target="tab-profile">
+            <i class="fa-regular fa-user"></i> Thông tin cá nhân
+          </button>
+          <button class="acc-nav-btn" data-target="tab-address">
+            <i class="fa-solid fa-location-dot"></i> Sổ địa chỉ
+          </button>
+          <button class="acc-nav-btn btn-logout" id="btn-logout">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất
+          </button>
+        </nav>
+      </aside>
+
+      <!-- CỘT PHẢI: NỘI DUNG CHI TIẾT -->
+      <div class="account-content">
+        
+        <!-- TAB 1: LỊCH SỬ ĐƠN HÀNG -->
+        <section class="acc-tab-panel active" id="tab-orders">
+          <h2 class="acc-title">Lịch sử đơn hàng</h2>
+          
+          <div class="order-list" id="order-list-container">
+            <!-- JS sẽ render danh sách đơn hàng vào đây -->
+          </div>
+        </section>
+
+        <!-- TAB 2: THÔNG TIN CÁ NHÂN -->
+        <section class="acc-tab-panel" id="tab-profile">
+          <h2 class="acc-title">Thông tin cá nhân</h2>
+          <form class="acc-form">
+            <div class="form-group">
+              <label>Họ và tên</label>
+              <input type="text" id="profile-name" value="Khách hàng">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="profile-email" value="email@example.com" disabled style="background:#EAE7DE;">
+            </div>
+            <div class="form-group">
+              <label>Số điện thoại</label>
+              <input type="tel" placeholder="Chưa cập nhật">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="alert('Tính năng cập nhật sẽ được kết nối với Database sau!')">Lưu thay đổi</button>
+          </form>
+        </section>
+
+        <!-- TAB 3: SỔ ĐỊA CHỈ -->
+        <section class="acc-tab-panel" id="tab-address">
+          <h2 class="acc-title">Sổ địa chỉ</h2>
+          <div class="address-box">
+            <p>Bạn chưa lưu địa chỉ giao hàng nào.</p>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <div id="site-footer"></div>
+
+  <!-- JS -->
+  <script src="../components/components.js"></script>
+  <script src="account.js"></script>
+</body>
+</html>

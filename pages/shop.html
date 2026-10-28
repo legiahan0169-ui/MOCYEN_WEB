@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sản phẩm | Mộc Yên</title>
+  <meta name="description" content="Khám phá các sản phẩm chăm sóc da từ Mộc Yên.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../components/components.css">
+  <link rel="stylesheet" href="shop.css">
+</head>
+
+<body class="shop-page">
+  
+  <!-- HEADER (Inject từ component) -->
+  <div id="site-header"></div>
+
+  <main>
+    <!-- SHOP HERO -->
+    <section class="shop-hero">
+      <div class="container shop-hero-inner">
+        <p class="eyebrow">CHĂM DA THEO NHỊP RIÊNG</p>
+        <h1>Chăm sóc da, <em>dịu dàng hơn.</em></h1>
+        <p>Những công thức thuần nhiên được chọn lọc để đồng hành cùng làn da mỗi ngày.</p>
+        <div class="breadcrumbs">
+          <a href="../index.html">Trang chủ</a><span>/</span><span>Sản phẩm</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOP SECTION -->
+    <section class="shop-section">
+      <div class="container">
+        <div class="shop-heading">
+          <div>
+            <p class="eyebrow">KHÁM PHÁ MỘC YÊN</p>
+            <h2>Tất cả sản phẩm</h2>
+            <p id="result-count" class="result-count">Đang tải sản phẩm...</p>
+          </div>
+          <label class="sort-control">
+            <span>Sắp xếp</span>
+            <select id="sort-select">
+              <option value="featured">Đề xuất</option>
+              <option value="price-asc">Giá: thấp đến cao</option>
+              <option value="price-desc">Giá: cao đến thấp</option>
+              <option value="name">Tên A–Z</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="shop-layout">
+          <!-- FILTERS -->
+          <aside class="shop-filters" aria-label="Bộ lọc sản phẩm">
+            <div class="filter-header">
+              <h3><i class="fa-solid fa-sliders"></i> Bộ lọc</h3>
+              <button id="clear-filters" type="button">Xóa lọc</button>
+            </div>
+            <div class="filter-group">
+              <h4>Danh mục</h4>
+              <label><input type="radio" name="category" value="all" checked><span>Tất cả sản phẩm</span></label>
+              <label><input type="radio" name="category" value="Sữa rửa mặt"><span>Sữa rửa mặt</span></label>
+              <label><input type="radio" name="category" value="Tẩy trang"><span>Nước tẩy trang</span></label>
+              <label><input type="radio" name="category" value="Nước cân bằng da"><span>Nước cân bằng da</span></label>
+              <label><input type="radio" name="category" value="Tinh chất cô đặc"><span>Tinh chất cô đặc</span></label>
+              <label><input type="radio" name="category" value="Dưỡng ẩm & phục hồi"><span>Dưỡng ẩm &amp; phục hồi</span></label>
+              <label><input type="radio" name="category" value="Mặt nạ"><span>Mặt nạ</span></label>
+            </div>
+            <div class="filter-group">
+              <h4>Mức giá</h4>
+              <label><input type="radio" name="price" value="all" checked><span>Tất cả mức giá</span></label>
+              <label><input type="radio" name="price" value="under250"><span>Dưới 250.000đ</span></label>
+              <label><input type="radio" name="price" value="250to350"><span>250.000đ – 350.000đ</span></label>
+              <label><input type="radio" name="price" value="over350"><span>Trên 350.000đ</span></label>
+            </div>
+            <div class="filter-note">
+              <i class="fa-solid fa-leaf"></i>
+              <p>Công thức tinh gọn, lựa chọn dịu lành cho nghi thức chăm da mỗi ngày.</p>
+            </div>
+          </aside>
+
+          <!-- PRODUCTS AREA -->
+          <div class="products-area">
+            <p id="active-filters" class="active-filters" aria-live="polite"></p>
+            <div class="product-grid" id="product-grid">
+              <!-- JS sẽ render sản phẩm vào đây -->
+            </div>
+            <p id="no-products" class="no-products" hidden>Không tìm thấy sản phẩm phù hợp. Hãy thử thay đổi bộ lọc.</p>
+            <div class="pagination">
+              <button disabled aria-label="Trang trước">‹</button>
+              <button class="current" aria-current="page">1</button>
+              <button disabled aria-label="Trang sau">›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROMISES -->
+    <section class="shop-promises">
+      <div class="container promise-grid">
+        <div>
+          <i class="fa-solid fa-leaf"></i>
+          <span><strong>Thành phần chọn lọc</strong><small>Ưu tiên nguồn nguyên liệu có chọn lọc</small></span>
+        </div>
+        <div>
+          <i class="fa-solid fa-droplet"></i>
+          <span><strong>Chăm da tinh gọn</strong><small>Tập trung vào nhu cầu thiết yếu</small></span>
+        </div>
+        <div>
+          <i class="fa-solid fa-recycle"></i>
+          <span><strong>Quan tâm môi trường</strong><small>Hướng đến lựa chọn bền vững hơn</small></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER (Inject từ component) -->
+  <div id="site-footer"></div>
+
+  <!-- JAVASCRIPT -->
+  <script src="../components/components.js"></script>
+  <script src="shop.js"></script>
+</body>
+</html>

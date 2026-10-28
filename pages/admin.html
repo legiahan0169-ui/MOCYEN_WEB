@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản trị viên | Mộc Yên</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- SIDEBAR MENU -->
+  <aside class="admin-sidebar">
+    <div class="admin-logo">
+      <img src="../images/icon/logo.png" alt="Logo" style="filter: brightness(0) invert(1); width: 24px;">
+      <span>Mộc Yên Admin</span>
+    </div>
+    
+    <nav class="admin-nav">
+      <!-- Thêm class tab-btn và data-target -->
+       <a href="#" class="admin-nav-item tab-btn" data-target="tab-messages"><i class="fa-solid fa-comments"></i> Hỗ trợ Chat</a>
+      <a href="#" class="admin-nav-item tab-btn active" data-target="tab-dashboard"><i class="fa-solid fa-chart-pie"></i> Tổng quan</a>
+      <a href="#" class="admin-nav-item tab-btn" data-target="tab-orders"><i class="fa-solid fa-box"></i> Đơn hàng</a>
+      <a href="#" class="admin-nav-item tab-btn" data-target="tab-products"><i class="fa-solid fa-leaf"></i> Sản phẩm</a>
+      <a href="#" class="admin-nav-item tab-btn" data-target="tab-customers"><i class="fa-solid fa-users"></i> Khách hàng</a>
+    </nav>
+
+    <div class="admin-sidebar-bottom">
+      <a href="../index.html" class="admin-nav-item"><i class="fa-solid fa-globe"></i> Xem Website</a>
+      <a href="#" class="admin-nav-item" id="btn-logout" style="color: #ff8b8b;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Đăng xuất</a>
+    </div>
+  </aside>
+
+  <!-- NỘI DUNG CHÍNH -->
+  <main class="admin-main">
+    <header class="admin-topbar">
+      <h1 class="admin-page-title" id="page-title-text">Báo cáo Kinh doanh</h1>
+      <div class="admin-user-info">
+        <span>Chào, Quản trị viên</span>
+        <div class="admin-avatar">A</div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      
+      <!-- ============================================== -->
+      <!-- TAB 1: TỔNG QUAN (DASHBOARD) -->
+      <!-- ============================================== -->
+      <div class="admin-tab-panel active" id="tab-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background: #E3F2FD; color: #1565C0;"><i class="fa-solid fa-users"></i></div>
+            <div class="stat-info"><p>Traffic (Lượt truy cập)</p><h3>14,250</h3></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: #E8F5E9; color: #2E7D32;"><i class="fa-solid fa-money-bill-wave"></i></div>
+            <div class="stat-info"><p>Tổng doanh thu</p><h3 id="stat-revenue">0đ</h3></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: #FFF3E0; color: #E65100;"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="stat-info"><p>Tỷ lệ chuyển đổi (CR)</p><h3>3.2%</h3></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background: #F3E5F5; color: #8E24AA;"><i class="fa-solid fa-cart-shopping"></i></div>
+            <div class="stat-info"><p>AOV (Giá trị TB/Đơn)</p><h3 id="stat-aov">0đ</h3></div>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3>Traffic & Doanh thu 7 ngày qua</h3>
+            <div class="chart-wrapper"><canvas id="trafficChart"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <h3>Tỷ trọng Doanh thu theo Kênh</h3>
+            <div class="chart-wrapper"><canvas id="channelChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 2: QUẢN LÝ ĐƠN HÀNG -->
+      <!-- ============================================== -->
+      <div class="admin-tab-panel" id="tab-orders">
+        <div class="table-card">
+          <div class="table-header">
+            <h2>Tất cả Đơn hàng Đa kênh</h2>
+            <div class="channel-filters">
+              <button class="btn-filter active" data-channel="all">Tất cả</button>
+              <button class="btn-filter" data-channel="Website">Website</button>
+              <button class="btn-filter" data-channel="Shopee">Shopee</button>
+              <button class="btn-filter" data-channel="Facebook">Facebook</button>
+              <button class="btn-filter" data-channel="TikTok">TikTok</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Mã đơn</th>
+                  <th>Khách hàng</th>
+                  <th>Ngày đặt</th>
+                  <th>Kênh bán</th>
+                  <th>Tổng tiền</th>
+                  <th>Trạng thái</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="admin-orders-list"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 3: QUẢN LÝ SẢN PHẨM -->
+      <!-- ============================================== -->
+      <div class="admin-tab-panel" id="tab-products">
+        <div class="table-card">
+          <div class="table-header">
+            <h2>Danh sách Sản phẩm</h2>
+            <button class="btn-filter active" style="background:#264F40; color:white;">+ Thêm sản phẩm</button>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Hình ảnh</th>
+                  <th>Tên sản phẩm</th>
+                  <th>Danh mục</th>
+                  <th>Giá bán</th>
+                  <th>Kho hàng</th>
+                  <th>Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="admin-products-list"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB 4: QUẢN LÝ KHÁCH HÀNG -->
+      <!-- ============================================== -->
+      <div class="admin-tab-panel" id="tab-customers">
+        <div class="table-card">
+          <div class="table-header">
+            <h2>Danh sách Khách hàng</h2>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Họ tên</th>
+                  <th>Email</th>
+                  <th>Số điện thoại</th>
+                  <th>Ngày tham gia</th>
+                </tr>
+              </thead>
+              <tbody id="admin-customers-list"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+        <!-- ============================================== -->
+      <!-- TAB 5: HỖ TRỢ CHAT -->
+      <!-- ============================================== -->
+      <div class="admin-tab-panel" id="tab-messages">
+        <div class="table-card" style="display: flex; height: 650px; padding: 0;">
+          <!-- Cột trái: Danh sách khách hàng -->
+          <div style="width: 300px; border-right: 1px solid #EAEAEA; overflow-y: auto; background: #F9FAF8;">
+            <h3 style="padding: 20px; font-size: 16px; border-bottom: 1px solid #EAEAEA; margin: 0;">Hộp thư đến</h3>
+            <div id="admin-chat-list">
+              <p style="padding: 20px; color: #7C877D; font-size: 13px;">Đang tải...</p>
+            </div>
+          </div>
+          
+          <!-- Cột phải: Khung chat -->
+          <div style="flex: 1; display: flex; flex-direction: column;">
+            <div id="admin-chat-header" style="padding: 20px; border-bottom: 1px solid #EAEAEA; font-weight: 600; background: #FFF;">Chọn một khách hàng để xem tin nhắn</div>
+            
+            <div id="admin-chat-body" style="flex: 1; padding: 20px; overflow-y: auto; background: #F4F6F3; display: flex; flex-direction: column; gap: 10px;">
+              <!-- Tin nhắn hiển thị ở đây -->
+            </div>
+            
+            <div style="padding: 15px; background: white; border-top: 1px solid #EAEAEA; display: flex; gap: 10px;">
+              <input type="text" id="admin-chat-input" placeholder="Nhập tin nhắn trả lời..." style="flex: 1; padding: 12px; border: 1px solid #D8DCCF; border-radius: 8px; outline: none;">
+              <button id="admin-chat-send" style="background: #264F40; color: white; border: none; padding: 0 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">Gửi</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

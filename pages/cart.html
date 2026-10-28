@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giỏ hàng | Mộc Yên</title>
+  <meta name="description" content="Xem lại giỏ hàng của bạn tại Mộc Yên.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../components/components.css">
+  <link rel="stylesheet" href="cart.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div id="site-header"></div>
+
+  <main class="cart-page">
+    <div class="container">
+      
+      <!-- Breadcrumb -->
+      <div class="cart-breadcrumb">
+        <a href="../index.html">Trang chủ</a>
+        <span>/</span>
+        <span>Giỏ hàng</span>
+      </div>
+
+      <h1 class="cart-title">Giỏ hàng của bạn</h1>
+
+      <!-- TRẠNG THÁI GIỎ HÀNG TRỐNG -->
+      <div class="cart-empty" id="cart-empty" hidden>
+        <i class="fa-solid fa-basket-shopping"></i>
+        <p>Chưa có sản phẩm nào trong giỏ hàng của bạn.</p>
+        <a href="shop.html" class="btn btn-primary">Tiếp tục mua sắm</a>
+      </div>
+
+      <!-- NỘI DUNG GIỎ HÀNG (Có sản phẩm) -->
+      <div class="cart-layout" id="cart-content">
+        
+        <!-- Cột Trái: Danh sách sản phẩm -->
+        <div class="cart-items-wrap">
+          <div class="cart-items-header">
+            <span>Sản phẩm</span>
+            <span>Đơn giá</span>
+            <span>Số lượng</span>
+            <span>Thành tiền</span>
+          </div>
+          
+          <div class="cart-items" id="cart-items-container">
+            <!-- JS sẽ render sản phẩm vào đây -->
+          </div>
+
+          <div class="cart-actions-bottom">
+            <a href="shop.html" class="cart-back-link">
+              <i class="fa-solid fa-arrow-left"></i> Tiếp tục mua hàng
+            </a>
+          </div>
+        </div>
+
+        <!-- Cột Phải: Tóm tắt đơn hàng -->
+        <aside class="cart-summary">
+          <h2 class="summary-title">Tóm tắt đơn hàng</h2>
+          
+          <div class="summary-row">
+            <span>Tạm tính</span>
+            <strong id="cart-subtotal">0đ</strong>
+          </div>
+          
+          <div class="summary-row">
+            <span>Phí vận chuyển</span>
+            <span id="cart-shipping">Miễn phí</span>
+          </div>
+
+          <div class="summary-note" id="shipping-note">
+            <i class="fa-solid fa-truck-fast"></i> Miễn phí giao hàng cho đơn từ 499.000đ
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-row summary-total">
+            <span>Tổng cộng</span>
+            <strong id="cart-total">0đ</strong>
+          </div>
+
+          <a href="checkout.html" class="btn btn-primary btn-checkout" id="btn-checkout" style="display: flex; justify-content: center; align-items: center; text-decoration: none;">
+  Tiến hành thanh toán
+</a>
+          
+          <div class="summary-payments">
+            <i class="fa-brands fa-cc-visa"></i>
+            <i class="fa-brands fa-cc-paypal"></i>
+            <i class="fa-solid fa-money-bill-transfer"></i>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <div id="site-footer"></div>
+
+  <!-- JS -->
+  <script src="../components/components.js"></script>
+  <script src="cart.js"></script>
+</body>
+</html>

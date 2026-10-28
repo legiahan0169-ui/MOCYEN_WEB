@@ -1,0 +1,200 @@
+/* =========================================================
+   MOCYEN - POLICY PAGE CSS (SIDEBAR LAYOUT)
+========================================================= */
+.policy-page {
+  background: #F7F4EB;
+  padding: 40px 0 80px;
+  min-height: 80vh;
+}
+
+/* Breadcrumb */
+.policy-breadcrumb {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: #7C877D;
+  margin-bottom: 30px;
+}
+.policy-breadcrumb a { color: #56635D; text-decoration: none; }
+.policy-breadcrumb a:hover { color: #658354; }
+
+/* Layout 2 cột */
+.policy-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* ==========================================
+   CỘT TRÁI: SIDEBAR
+========================================== */
+.policy-sidebar {
+  background: #FFFDF8;
+  border: 1px solid #E4E2D7;
+  border-radius: 16px;
+  overflow: hidden;
+  position: sticky;
+  top: 100px;
+}
+.sidebar-header {
+  padding: 20px 25px;
+  background: #F7F4EB;
+  border-bottom: 1px solid #E4E2D7;
+}
+.sidebar-header h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #243A30;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.policy-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+}
+.policy-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 25px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #56635D;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+.policy-nav-item i {
+  color: #AAB9A5;
+  width: 16px;
+  text-align: center;
+  font-size: 14px;
+  transition: 0.2s;
+}
+.policy-nav-item:hover {
+  background: #F7F4EB;
+  color: #264F40;
+}
+.policy-nav-item:hover i { color: #658354; }
+.policy-nav-item.active {
+  background: #EBEFE5;
+  color: #264F40;
+  border-left-color: #264F40;
+  font-weight: 600;
+}
+.policy-nav-item.active i { color: #264F40; }
+
+/* ==========================================
+   CỘT PHẢI: NỘI DUNG CHÍNH
+========================================== */
+.policy-content-card {
+  background: #FFFDF8;
+  border: 1px solid #E4E2D7;
+  border-radius: 16px;
+  padding: 40px 50px;
+  box-shadow: 0 10px 30px rgba(68, 79, 36, 0.02);
+  min-height: 600px;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Typography cho nội dung render từ JS */
+.policy-content-card h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 32px;
+  color: #243A30;
+  margin-top: 0;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #E4E2D7;
+}
+.policy-content-card h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #444F24;
+  margin-top: 30px;
+  margin-bottom: 12px;
+}
+.policy-content-card p {
+  font-size: 14px;
+  color: #56635D;
+  line-height: 1.8;
+  margin-bottom: 15px;
+  text-align: justify;
+}
+.policy-content-card ul {
+  padding-left: 20px;
+  margin-bottom: 20px;
+}
+.policy-content-card li {
+  font-size: 14px;
+  color: #56635D;
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+.policy-content-card strong {
+  color: #34483D;
+  font-weight: 600;
+}
+
+/* Bảng (dành cho Vòng Đời Xanh) */
+.policy-content-card table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 14px;
+}
+.policy-content-card th, .policy-content-card td {
+  padding: 12px 15px;
+  border: 1px solid #E4E2D7;
+  text-align: left;
+  color: #56635D;
+}
+.policy-content-card th {
+  background: #F7F4EB;
+  color: #34483D;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .policy-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .policy-sidebar {
+    position: static;
+    border-radius: 12px;
+  }
+  .policy-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 0;
+    scrollbar-width: none;
+  }
+  .policy-nav::-webkit-scrollbar { display: none; }
+  .policy-nav-item {
+    white-space: nowrap;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    padding: 15px 20px;
+  }
+  .policy-nav-item.active {
+    border-left-color: transparent;
+    border-bottom-color: #264F40;
+  }
+  .policy-content-card {
+    padding: 30px 20px;
+    min-height: auto;
+  }
+  .policy-content-card h1 { font-size: 26px; }
+}

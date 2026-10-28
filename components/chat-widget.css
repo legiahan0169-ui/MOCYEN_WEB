@@ -1,0 +1,50 @@
+/* =========================================================
+   CHAT WIDGET
+========================================================= */
+#chat-widget-btn {
+  position: fixed; bottom: 30px; right: 30px;
+  width: 60px; height: 60px;
+  background: #264F40; color: white;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 24px; cursor: pointer; z-index: 9999;
+  box-shadow: 0 10px 20px rgba(38,79,64,0.3);
+  transition: transform 0.3s;
+}
+#chat-widget-btn:hover { transform: scale(1.1); }
+
+#chat-widget-box {
+  position: fixed; bottom: 100px; right: 30px;
+  width: 350px; height: 450px;
+  background: #FFFDF8; border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  display: flex; flex-direction: column; z-index: 9999;
+  border: 1px solid #E4E2D7; overflow: hidden;
+  transition: all 0.3s ease;
+}
+#chat-widget-box.hidden { opacity: 0; pointer-events: none; transform: translateY(20px); }
+
+.chat-header {
+  background: #264F40; color: white; padding: 15px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.chat-header strong { font-size: 15px; display: block; }
+.chat-header small { font-size: 11px; color: #A8BDB4; }
+.chat-header button { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
+
+.chat-body {
+  flex: 1; padding: 20px; overflow-y: auto; background: #F7F4EB;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.chat-msg { max-width: 80%; padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; }
+.chat-msg.customer { background: #264F40; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+.chat-msg.admin { background: #FFFDF8; color: #243A30; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #E4E2D7; }
+
+.chat-footer {
+  display: flex; padding: 10px; background: #FFFDF8; border-top: 1px solid #E4E2D7;
+}
+.chat-footer input {
+  flex: 1; border: none; outline: none; padding: 10px; font-size: 13px; font-family: inherit; background: transparent;
+}
+.chat-footer button {
+  background: #264F40; color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+}

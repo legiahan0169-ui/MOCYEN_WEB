@@ -1,0 +1,375 @@
+/* =========================================================
+   MOCYEN - CHECKOUT PAGE CSS
+========================================================= */
+.checkout-page {
+  padding: 40px 0 80px;
+  background: #F7F3E9;
+  min-height: 60vh;
+}
+
+/* Breadcrumb & Title */
+.checkout-breadcrumb {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: #7C877D;
+  margin-bottom: 25px;
+}
+.checkout-breadcrumb a { color: #56635D; }
+.checkout-breadcrumb a:hover { color: #264F40; }
+
+.checkout-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 38px;
+  color: #243A30;
+  margin-bottom: 35px;
+  font-weight: 500;
+}
+
+/* Layout 2 cột */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* Cột trái: Sections */
+.checkout-section {
+  background: #FFFEFA;
+  border: 1px solid #E4E2D7;
+  border-radius: 20px;
+  padding: 30px;
+  margin-bottom: 25px;
+}
+.section-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 22px;
+  color: #243A30;
+  margin-bottom: 25px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title i { color: #658354; font-size: 18px; }
+
+/* Form Groups & Inputs */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.form-group {
+  margin-bottom: 20px;
+}
+.form-group label {
+  display: block;
+  font-size: 12px;
+  color: #56635D;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.form-group label span { color: #C4425B; }
+
+/* Style chung cho Input và Select */
+.form-group input, 
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #D8DCCF;
+  border-radius: 10px;
+  background: #F7F3E9;
+  font-family: inherit;
+  font-size: 13px;
+  color: #243A30;
+  transition: border-color 0.2s;
+}
+
+/* Style riêng cho thẻ Select để hiện mũi tên đẹp */
+.form-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23264F40' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 15px;
+  cursor: pointer;
+}
+.form-group select:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-group input:focus, 
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #264F40;
+  background: #FFFEFA;
+}
+
+/* Phương thức thanh toán */
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.payment-item {
+  display: flex;
+  align-items: center;
+  padding: 18px 20px;
+  border: 1px solid #D8DCCF;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #F7F3E9;
+  position: relative;
+}
+.payment-item input[type="radio"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #AAB9A5;
+  border-radius: 50%;
+  margin-right: 15px;
+  display: grid;
+  place-content: center;
+}
+.payment-item input[type="radio"]::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #264F40;
+  transform: scale(0);
+  transition: 0.2s transform ease-in-out;
+}
+.payment-item input[type="radio"]:checked {
+  border-color: #264F40;
+}
+.payment-item input[type="radio"]:checked::before {
+  transform: scale(1);
+}
+.payment-item.active {
+  border-color: #264F40;
+  background: #F4F7F1;
+}
+.payment-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.payment-info strong {
+  font-size: 14px;
+  color: #243A30;
+  margin-bottom: 4px;
+}
+.payment-info span {
+  font-size: 11px;
+  color: #7C877D;
+}
+.payment-icon {
+  font-size: 24px;
+  color: #C6D1BD;
+}
+
+/* QR Box */
+.bank-transfer-info {
+  margin-top: 20px;
+  padding: 20px;
+  background: #FBF8F0;
+  border: 1px dashed #C6D1BD;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #56635D;
+}
+.bank-transfer-info p { margin-bottom: 8px; }
+.mock-qr {
+  margin-top: 15px;
+  padding: 30px;
+  background: #FFFEFA;
+  border: 1px solid #E4E2D7;
+  text-align: center;
+  font-weight: bold;
+  color: #264F40;
+  border-radius: 8px;
+}
+.mock-qr i { font-size: 40px; display: block; margin-bottom: 10px;}
+
+/* Cột phải: Sidebar */
+.checkout-sidebar {
+  position: sticky;
+  top: 100px;
+}
+.order-summary-card {
+  background: #FFFEFA;
+  border: 1px solid #E4E2D7;
+  border-radius: 20px;
+  padding: 25px;
+}
+.summary-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 24px;
+  color: #243A30;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+/* Danh sách sản phẩm thu gọn */
+.summary-products {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.summary-item-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  border: 1px solid #E4E2D7;
+  background: #F7F3E9;
+  object-fit: contain;
+  padding: 5px;
+}
+.summary-item-info {
+  flex: 1;
+}
+.summary-item-name {
+  font-size: 12px;
+  color: #243A30;
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.summary-item-qty {
+  font-size: 11px;
+  color: #7C877D;
+}
+.summary-item-price {
+  font-size: 12px;
+  font-weight: 600;
+  color: #264F40;
+}
+
+/* Rows & Total */
+.summary-divider {
+  height: 1px;
+  background: #E4E2D7;
+  margin: 20px 0;
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-size: 13px;
+  color: #56635D;
+}
+.summary-row strong { color: #243A30; }
+.summary-total {
+  font-size: 16px;
+  align-items: baseline;
+  margin-bottom: 25px;
+}
+.summary-total strong {
+  font-size: 24px;
+  color: #264F40;
+}
+
+/* Button */
+.btn-place-order {
+  width: 100%;
+  height: 50px;
+  font-size: 14px;
+  border-radius: 100px;
+  font-weight: 600;
+}
+.secure-note {
+  text-align: center;
+  font-size: 11px;
+  color: #8A9A83;
+  margin-top: 15px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+  .checkout-sidebar {
+    position: static;
+    grid-row: 1;
+    margin-bottom: 25px;
+  }
+}
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .checkout-section {
+    padding: 20px;
+  }
+}
+
+/* === COUPON BOX === */
+.coupon-box {
+  margin-bottom: 20px;
+}
+.coupon-box label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #34483D;
+  margin-bottom: 8px;
+}
+.coupon-input-group {
+  display: flex;
+  gap: 8px;
+}
+.coupon-input-group input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #D8DCCF;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  text-transform: uppercase;
+}
+.coupon-input-group input:focus {
+  outline: none;
+  border-color: #264F40;
+}
+.coupon-input-group button {
+  padding: 0 15px;
+  background: #264F40;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.coupon-input-group button:hover {
+  background: #183C31;
+}
+#coupon-message {
+  font-size: 11px;
+  margin-top: 8px;
+  margin-bottom: 0;
+  min-height: 16px;
+}

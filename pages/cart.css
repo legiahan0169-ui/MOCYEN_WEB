@@ -1,0 +1,293 @@
+/* =========================================================
+   MOCYEN - CART PAGE CSS
+========================================================= */
+.cart-page {
+  padding: 40px 0 80px;
+  background: #F7F3E9;
+  min-height: 60vh;
+}
+
+/* Breadcrumb & Title */
+.cart-breadcrumb {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: #7C877D;
+  margin-bottom: 25px;
+}
+.cart-breadcrumb a { color: #56635D; }
+.cart-breadcrumb a:hover { color: #264F40; }
+
+.cart-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 38px;
+  color: #243A30;
+  margin-bottom: 35px;
+  font-weight: 500;
+}
+
+/* Trạng thái trống */
+.cart-empty {
+  text-align: center;
+  padding: 60px 20px;
+  background: #FFFEFA;
+  border: 1px solid #E4E2D7;
+  border-radius: 20px;
+}
+.cart-empty i {
+  font-size: 50px;
+  color: #C6D1BD;
+  margin-bottom: 20px;
+}
+.cart-empty p {
+  color: #7C877D;
+  margin-bottom: 25px;
+}
+
+/* Layout 2 cột */
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 40px;
+  align-items: start;
+}
+
+/* Cột Trái: Danh sách sản phẩm */
+.cart-items-wrap {
+  background: #FFFEFA;
+  border: 1px solid #E4E2D7;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.cart-items-header {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1.2fr 1fr;
+  padding: 18px 25px;
+  background: #FBF8F0;
+  border-bottom: 1px solid #E4E2D7;
+  font-size: 12px;
+  font-weight: 600;
+  color: #56635D;
+  text-transform: uppercase;
+}
+
+/* Từng item */
+.cart-item {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1.2fr 1fr;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid #F0EBDD;
+  transition: background 0.2s;
+}
+.cart-item:hover {
+  background: #FCFAF5;
+}
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+/* Cột thông tin sản phẩm */
+.cart-item-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.cart-item-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  background: #F7F3E9;
+  object-fit: contain;
+  padding: 10px;
+  border: 1px solid #E4E2D7;
+}
+.cart-item-details {
+  display: flex;
+  flex-direction: column;
+}
+.cart-item-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #243A30;
+  margin-bottom: 5px;
+  text-decoration: none;
+}
+.cart-item-name:hover { color: #264F40; }
+.cart-item-sku {
+  font-size: 10px;
+  color: #8A9A83;
+}
+
+/* Cột giá */
+.cart-item-price {
+  font-size: 13px;
+  color: #56635D;
+}
+
+/* Cột số lượng */
+.cart-qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #D8DCCF;
+  border-radius: 100px;
+  overflow: hidden;
+  width: fit-content;
+}
+.cart-qty-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  color: #264F40;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.cart-qty-btn:hover { background: #F0EBDD; }
+.cart-qty input {
+  width: 35px;
+  text-align: center;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  color: #264F40;
+  pointer-events: none;
+}
+
+/* Cột thành tiền + nút xóa */
+.cart-item-subtotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cart-item-subtotal strong {
+  font-size: 14px;
+  color: #264F40;
+}
+.cart-remove-btn {
+  border: none;
+  background: transparent;
+  color: #C4425B;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+  transition: transform 0.2s;
+}
+.cart-remove-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Nút quay lại */
+.cart-actions-bottom {
+  padding: 20px 25px;
+  background: #FFFEFA;
+  border-top: 1px solid #E4E2D7;
+}
+.cart-back-link {
+  font-size: 13px;
+  color: #56635D;
+  text-decoration: none;
+}
+.cart-back-link:hover { color: #264F40; }
+.cart-back-link i { margin-right: 5px; }
+
+/* Cột Phải: Tóm tắt */
+.cart-summary {
+  background: #FFFEFA;
+  border: 1px solid #E4E2D7;
+  border-radius: 20px;
+  padding: 25px;
+  position: sticky;
+  top: 100px;
+}
+.summary-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 24px;
+  color: #243A30;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-size: 13px;
+  color: #56635D;
+}
+.summary-row strong {
+  color: #243A30;
+  font-weight: 500;
+}
+.summary-note {
+  font-size: 11px;
+  color: #658354;
+  background: #F4F7F1;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+.summary-divider {
+  height: 1px;
+  background: #E4E2D7;
+  margin: 20px 0;
+}
+.summary-total {
+  font-size: 16px;
+  align-items: baseline;
+  margin-bottom: 25px;
+}
+.summary-total strong {
+  font-size: 22px;
+  color: #264F40;
+}
+.btn-checkout {
+  width: 100%;
+  height: 48px;
+  font-size: 14px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+}
+.summary-payments {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  font-size: 24px;
+  color: #C6D1BD;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+  .cart-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .cart-items-header {
+    display: none; /* Ẩn tiêu đề cột trên mobile */
+  }
+  .cart-item {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 20px;
+    position: relative;
+  }
+  .cart-item-subtotal {
+    justify-content: flex-start;
+    gap: 20px;
+  }
+  .cart-remove-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+  .cart-item-img {
+    width: 70px;
+    height: 70px;
+  }
+}

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi tiết ưu đãi | Mộc Yên</title>
+  <meta name="description" content="Chi tiết điều kiện và thể lệ các chương trình ưu đãi Mộc Yên.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <!-- CHÚ Ý ĐƯỜNG DẪN CSS Ở ĐÂY -->
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../components/components.css">
+  <link rel="stylesheet" href="promotion-detail.css">
+</head>
+<body class="promo-detail-page">
+
+  <div id="site-header"></div>
+
+  <main class="promo-detail-main">
+    <div class="container">
+      
+      <div class="promo-breadcrumb">
+        <a href="../index.html">Trang chủ</a><span>/</span>
+        <a href="promotions.html">Ưu đãi & Khuyến mãi</a><span>/</span>
+        <span id="breadcrumb-current">Chi tiết</span>
+      </div>
+
+      <div class="detail-layout">
+        <!-- Cột trái: Nội dung -->
+        <div class="detail-content">
+          <p class="eyebrow" id="camp-eyebrow">CAMPAIGN</p>
+          <h1 class="detail-title" id="camp-title">Đang tải...</h1>
+          <p class="detail-message" id="camp-message">Đang tải...</p>
+          <p class="detail-desc" id="camp-desc">Đang tải...</p>
+
+          <div class="detail-box">
+            <h3>Quyền lợi của bạn</h3>
+            <ul class="detail-benefits" id="camp-benefits">
+              <!-- Render bằng JS -->
+            </ul>
+          </div>
+
+          <div class="detail-box">
+            <h3>Điều kiện áp dụng</h3>
+            <ul class="detail-conditions" id="camp-conditions">
+              <!-- Render bằng JS -->
+            </ul>
+            <p class="detail-note">* Lưu ý: Các chương trình không cộng dồn với nhau trừ khi có quy định riêng. Voucher không quy đổi thành tiền mặt.</p>
+          </div>
+        </div>
+
+        <!-- Cột phải: Sidebar -->
+        <aside class="detail-sidebar">
+          <div class="sidebar-card">
+            <p class="eyebrow">THỜI GIAN ÁP DỤNG</p>
+            <p class="detail-time"><i class="fa-regular fa-calendar"></i> <span id="camp-time">Đang cập nhật</span></p>
+            
+            <div class="sidebar-divider"></div>
+            
+            <p class="eyebrow">TRẠNG THÁI</p>
+            <p id="camp-status" class="status-badge">Đang tải...</p>
+            
+            <div class="sidebar-divider"></div>
+            
+            <a href="shop.html" class="btn btn-primary" style="width: 100%;">Mua sắm ngay</a>
+            <a href="promotions.html" class="btn btn-outline" style="width: 100%; margin-top: 10px;">Xem ưu đãi khác</a>
+          </div>
+        </aside>
+      </div>
+
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="../components/components.js"></script>
+  <script src="promotion-detail.js"></script>
+</body>
+</html>

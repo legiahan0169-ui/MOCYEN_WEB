@@ -1,0 +1,591 @@
+/* CSS riêng cho trang shop Mộc Yên. style.css được nạp trước để dùng lại header/footer. */
+.shop-page {
+    background: var(--cream, #F7F3E9);
+    color: #56635D
+}
+
+.shop-page a {
+    text-decoration: none
+}
+
+.shop-hero {
+    padding: 64px 0 36px;
+    background: linear-gradient(115deg, #E8EEDF 0%, #F3EFE4 70%, #F7F3E9 100%)
+}
+
+.shop-hero-inner {
+    text-align: center
+}
+
+.shop-page .eyebrow {
+    margin: 0 0 12px;
+    color: #658354;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase
+}
+
+.shop-hero h1 {
+    margin: 0;
+    color: #243A30;
+    font: 500 clamp(42px, 5vw, 64px)/1.05 "Cormorant Garamond", Georgia, serif
+}
+
+.shop-hero h1 em {
+    color: #658354;
+    font-weight: 400
+}
+
+.shop-hero-inner>p:not(.eyebrow) {
+    max-width: 560px;
+    margin: 18px auto 0;
+    font-size: 13px;
+    line-height: 1.9;
+    color: #68756D
+}
+
+.breadcrumbs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 24px;
+    font-size: 11px;
+    color: #7D887F
+}
+
+.breadcrumbs a {
+    color: #56635D
+}
+
+.shop-section {
+    padding: 52px 0 78px
+}
+
+.shop-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 28px
+}
+
+.shop-heading .eyebrow {
+    margin-bottom: 8px
+}
+
+.shop-heading h2 {
+    margin: 0;
+    color: #243A30;
+    font: 500 clamp(34px, 4vw, 44px)/1.05 "Cormorant Garamond", Georgia, serif
+}
+
+.result-count {
+    margin: 10px 0 0;
+    color: #89938A;
+    font-size: 12px
+}
+
+.sort-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    white-space: nowrap
+}
+
+.sort-control select {
+    min-width: 175px;
+    padding: 12px;
+    border: 1px solid #D8DCCF;
+    border-radius: 8px;
+    background: #FFFEFA;
+    color: #34483D;
+    font: inherit
+}
+
+.shop-layout {
+    display: grid;
+    grid-template-columns: 225px minmax(0, 1fr);
+    gap: 28px;
+    align-items: start
+}
+
+.shop-filters {
+    padding: 21px 18px;
+    border: 1px solid #E5E1D6;
+    border-radius: 14px;
+    background: #FFFEFA;
+    box-shadow: 0 8px 25px rgba(42, 62, 48, .04)
+}
+
+.filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 17px;
+    border-bottom: 1px solid #EAE7DE
+}
+
+.filter-header h3 {
+    margin: 0;
+    color: #264F40;
+    font-size: 14px
+}
+
+.filter-header h3 i {
+    margin-right: 7px
+}
+
+.filter-header button {
+    border: 0;
+    background: none;
+    color: #658354;
+    font: inherit;
+    font-size: 11px;
+    cursor: pointer
+}
+
+.filter-group {
+    padding: 19px 0 15px;
+    border-bottom: 1px solid #EAE7DE
+}
+
+.filter-group h4 {
+    margin: 0 0 13px;
+    color: #34483D;
+    font-size: 12px
+}
+
+.filter-group label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 11px 0;
+    color: #69756C;
+    font-size: 11px;
+    line-height: 1.5;
+    cursor: pointer
+}
+
+.filter-group input {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+    accent-color: #264F40;
+    flex-shrink: 0
+}
+
+.filter-group label span {
+    flex: 1
+}
+
+.filter-group label:hover {
+    color: #264F40
+}
+
+.filter-note {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    padding: 13px 11px;
+    border-radius: 9px;
+    background: #EDF1E8
+}
+
+.filter-note i {
+    color: #658354
+}
+
+.filter-note p {
+    margin: 0;
+    color: #657366;
+    font-size: 10px;
+    line-height: 1.8
+}
+
+.products-area {
+    min-width: 0
+}
+
+.active-filters {
+    min-height: 14px;
+    margin: 0 0 12px;
+    color: #658354;
+    font-size: 11px
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px 16px
+}
+
+.product-card {
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 7px 24px rgba(40, 56, 43, .05);
+    transition: transform .25s, box-shadow .25s
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(40, 56, 43, .1)
+}
+
+.product-card[hidden] {
+    display: none !important
+}
+
+.product-image {
+    position: relative;
+    height: 265px;
+    overflow: hidden;
+    background: #F3EFE4
+}
+
+.product-image>a {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center
+}
+
+.product-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0; /* Xóa khoảng trắng xung quanh ảnh */
+    box-sizing: border-box;
+    object-fit: cover; /* Đổi thành cover để ảnh phủ kín khung */
+    object-position: center;
+    transition: transform .35s;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.035)
+}
+
+.badge {
+    position: absolute;
+    z-index: 2;
+    top: 12px;
+    left: 12px;
+    padding: 7px 10px;
+    border-radius: 30px;
+    background: #264F40;
+    color: white;
+    font-size: 9px;
+    letter-spacing: .04em;
+    text-transform: uppercase
+}
+
+.badge.pale {
+    background: #fff;
+    color: #52735C
+}
+
+.wish {
+    position: absolute;
+    z-index: 3;
+    top: 11px;
+    right: 11px;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .94);
+    color: #56635D;
+    font-size: 18px;
+    cursor: pointer
+}
+
+.wish:hover,
+.wish.is-active {
+    background: #264F40;
+    color: white
+}
+
+.product-info {
+    padding: 22px 20px; /* Tăng padding cho thoáng */
+    display: flex;
+    flex-direction: column;
+    height: 160px; /* Cố định chiều cao để các thẻ đều tăm tắp */
+    justify-content: space-between; /* Đẩy giá tiền xuống đáy */
+}
+
+
+.category-label {
+    margin: 0 0 10px;
+    color: #8A9A83;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+}
+
+
+.product-info h3 {
+    margin: 0;
+    color: #34483D;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    
+    /* Giới hạn tên sản phẩm tối đa 2 dòng (nếu tên quá dài) */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 42px; /* Giữ khoảng trống cho 2 dòng chữ */
+}
+
+.product-info h3 a {
+    color: inherit;
+    transition: color 0.2s ease;
+}
+
+.product-info h3 a:hover {
+    color: #658354; /* Đổi màu khi rê chuột vào tên */
+}
+
+/* Phần đáy: Giá và nút (+) */
+.product-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.product-bottom strong {
+    color: #264F40; /* Màu xanh thương hiệu cho giá tiền */
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.product-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px
+}
+
+.product-bottom strong {
+    color: #34483D;
+    font-size: 12px
+}
+
+.add-cart {
+    display: grid;
+    place-items: center;
+    width: 33px;
+    height: 33px;
+    border: 0;
+    border-radius: 50%;
+    background: #264F40;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer
+}
+
+.add-cart:hover {
+    background: #658354
+}
+
+.no-products {
+    padding: 45px 18px;
+    border: 1px dashed #D7DDCF;
+    border-radius: 12px;
+    color: #758174;
+    font-size: 13px;
+    text-align: center
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 36px
+}
+
+.pagination button {
+    width: 34px;
+    height: 34px;
+    border: 1px solid #DDE1D6;
+    border-radius: 50%;
+    background: transparent;
+    color: #56635D;
+    font-size: 14px
+}
+
+.pagination .current {
+    border-color: #264F40;
+    background: #264F40;
+    color: #fff
+}
+
+.pagination button:disabled {
+    opacity: .4
+}
+
+.shop-promises {
+    padding: 26px 0;
+    background: #E8EEDF
+}
+
+.promise-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px
+}
+
+.promise-grid>div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px
+}
+
+.promise-grid i {
+    color: #658354;
+    font-size: 19px
+}
+
+.promise-grid span {
+    display: flex;
+    flex-direction: column;
+    gap: 5px
+}
+
+.promise-grid strong {
+    color: #34483D;
+    font-size: 11px
+}
+
+.promise-grid small {
+    color: #7D887F;
+    font-size: 9px;
+    line-height: 1.5
+}
+
+@media(max-width:1100px) {
+    .shop-layout {
+        grid-template-columns: 205px minmax(0, 1fr);
+        gap: 20px
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+    }
+
+    .product-image {
+        height: 285px
+    }
+}
+
+@media(max-width:768px) {
+    .shop-hero {
+        padding: 45px 0 29px
+    }
+
+    .shop-section {
+        padding: 36px 0 52px
+    }
+
+    .shop-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 17px
+    }
+
+    .sort-control {
+        width: 100%;
+        justify-content: space-between
+    }
+
+    .sort-control select {
+        flex: 1;
+        max-width: 250px
+    }
+
+    .shop-layout {
+        grid-template-columns: 1fr;
+        gap: 23px
+    }
+
+    .shop-filters {
+        padding: 17px
+    }
+
+    .filter-group {
+        padding: 14px 0 9px
+    }
+
+    .filter-note {
+        display: none
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px 10px
+    }
+
+    .product-image {
+        height: clamp(175px, 52vw, 255px)
+    }
+
+    .product-image img {
+        padding: 0px
+    }
+
+    .product-info {
+        padding: 12px 11px
+    }
+
+    .product-info h3 {
+        font-size: 11px
+    }
+
+    .product-desc {
+        font-size: 9px
+    }
+
+    .promise-grid {
+        grid-template-columns: 1fr;
+        gap: 16px
+    }
+
+    .promise-grid>div {
+        justify-content: flex-start
+    }
+}
+
+@media(max-width:390px) {
+    .product-grid {
+        gap: 11px 8px
+    }
+
+    .product-image {
+        height: 165px
+    }
+
+    .product-info {
+        padding: 10px
+    }
+
+    .product-bottom strong {
+        font-size: 11px
+    }
+
+    .add-cart {
+        width: 29px;
+        height: 29px
+    }
+}

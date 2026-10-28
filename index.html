@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mộc Yên - Chăm sóc da thuần nhiên</title>
+  <meta name="description" content="Mộc Yên - Chăm sóc da dịu lành từ thiên nhiên.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="components/components.css">
+</head>
+
+<body>
+
+  <!-- HEADER (Inject từ component) -->
+  <div id="site-header"></div>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">⸺ Mỹ phẩm từ thiên nhiên</p>
+          <h1 class="hero-title">
+            <span class="hero-title-line1">Làn da an yên,</span>
+            <span class="hero-title-line2">rạng ngời tự nhiên.</span>
+          </h1>
+          <p class="hero-desc">
+            Những công thức thực vật thuần Việt, được chắt lọc vừa đủ để
+            nuôi dưỡng làn da nhạy cảm mỗi ngày — dịu lành, minh bạch và
+            bền vững.
+          </p>
+          <div class="hero-actions">
+            <a href="pages/shop.html" class="btn btn-primary">Khám phá sản phẩm</a>
+            <a href="pages/about.html" class="btn btn-outline">Câu chuyện Mộc Yên</a>
+          </div>
+          <div class="hero-note">
+            <span>✓ Không thử nghiệm trên động vật</span>
+            <span>✓ Thành phần thuần chay</span>
+            <span>✓ Nguyên liệu an toàn cho da</span>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <img src="images/banner/hero.png" alt="Thiên nhiên Việt Nam">
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BEST SELLER (Lấy từ Database) ============ -->
+    <section class="section section-soft" id="best-seller">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">SẢN PHẨM ĐƯỢC YÊU THÍCH</p>
+            <h2>Những món làn da luôn muốn trở về</h2>
+          </div>
+          <a href="pages/shop.html" class="text-link">Xem tất cả →</a>
+        </div>
+
+        <!-- Vùng chứa sản phẩm (Sẽ được JS tự động điền) -->
+        <div class="product-grid" id="home-best-sellers">
+          <p style="width: 100%; text-align: center; color: #7C877D;">Đang tải sản phẩm...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BRAND STORY ============ -->
+    <section class="story" id="story">
+      <div class="container story-grid">
+        <div class="story-image">
+          <img src="images/banner/moc-yen-story.png" alt="Người phụ nữ thu hoạch thảo mộc">
+          <div class="story-tag">Từ thiên nhiên Việt Nam</div>
+        </div>
+        <div class="story-copy">
+          <p class="eyebrow light">TỪ VƯỜN LÀNH ĐẾN LÀN DA</p>
+          <h2>Hiểu từng chiếc lá,<br>cũng như hiểu làn da.</h2>
+          <p>
+            Mộc Yên tin rằng chăm sóc da không cần phức tạp.
+            Chúng tôi chọn những thành phần gần gũi, phối hợp vừa đủ
+            và đặt sự an toàn của làn da lên trước.
+          </p>
+          <ul class="story-list">
+            <li><span>01</span> Thành phần chọn lọc</li>
+            <li><span>02</span> Công thức tinh gọn</li>
+            <li><span>03</span> Dịu nhẹ cho làn da</li>
+          </ul>
+          <a href="pages/about.html" class="btn btn-light">Về Mộc Yên</a>
+        </div>
+      </div>
+    </section>
+
+        <!-- ============ ROUTINE ============ -->
+    <section class="section">
+      <div class="container">
+        <div class="center-head">
+          <p class="eyebrow">CHĂM DA THEO NHỊP RIÊNG</p>
+          <h2>Bộ bước để da trở về trạng thái an yên</h2>
+          <p>Routine tối giản, đủ dùng và dễ duy trì mỗi ngày.</p>
+        </div>
+
+        <div class="routine-grid">
+          <div class="routine-visual">
+            <!-- Sửa lại đường dẫn ảnh cho đúng với file thực tế của bạn -->
+            <img src="/images/banner/routine.png" alt="Bộ sản phẩm skincare Mộc Yên">
+            <div class="routine-note">
+              <strong>Routine 3 bước cơ bản</strong>
+              <small>Phù hợp với làn da cần phục hồi</small>
+            </div>
+          </div>
+
+          <div class="routine-box" id="routine-box-container">
+            <!-- Nội dung sẽ được JS tự động điền vào -->
+            <p style="text-align: center; color: #7C877D;">Đang tải combo...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BENEFITS ============ -->
+    <section class="benefits">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">VÌ SAO CHỌN MỘC YÊN</p>
+            <h2>Lành cho da.<br>Nhẹ cho đời.</h2>
+          </div>
+        </div>
+        <div class="benefit-grid">
+          <article>
+            <span>✦</span>
+            <h3>Thành phần chọn lọc</h3>
+            <p>Ưu tiên nguyên liệu lành tính, rõ nguồn gốc.</p>
+          </article>
+          <article>
+            <span>♧</span>
+            <h3>Công thức tinh gọn</h3>
+            <p>Chỉ giữ lại những gì làn da thực sự cần.</p>
+          </article>
+          <article>
+            <span>♡</span>
+            <h3>Dịu nhẹ cho da</h3>
+            <p>Hướng đến trải nghiệm chăm da nhẹ nhàng mỗi ngày.</p>
+          </article>
+          <article>
+            <span>♻</span>
+            <h3>Ý thức hơn với môi trường</h3>
+            <p>Ưu tiên bao bì tối giản và sử dụng hợp lý.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ REVIEWS ============ -->
+    <section class="section section-soft">
+      <div class="container">
+        <div class="center-head">
+          <p class="eyebrow">LỜI TỪ LÀN DA</p>
+          <h2>Được tin yêu,<br>theo cách thật tự nhiên</h2>
+        </div>
+        <div class="review-grid">
+          <article class="review-card">
+            <div class="stars">★★★★★</div>
+            <p>“Da mình nhạy cảm nhưng dùng khá êm. Kết cấu nhẹ, thấm nhanh và buổi sáng da không bị bí.”</p>
+            <div class="review-user">
+              <span class="avatar">A</span>
+              <div><strong>An Nhiên</strong><small>Khách hàng đã mua</small></div>
+            </div>
+          </article>
+          <article class="review-card">
+            <div class="stars">★★★★★</div>
+            <p>“Mình thích nhất là routine đơn giản. Không phải layer quá nhiều bước mà da vẫn đủ ẩm.”</p>
+            <div class="review-user">
+              <span class="avatar">T</span>
+              <div><strong>Thu Hà</strong><small>Khách hàng đã mua</small></div>
+            </div>
+          </article>
+          <article class="review-card">
+            <div class="stars">★★★★★</div>
+            <p>“Bao bì đẹp, mùi nhẹ và cảm giác rất thư giãn. Serum phục hồi khá hợp với da mình.”</p>
+            <div class="review-user">
+              <span class="avatar">M</span>
+              <div><strong>Minh Anh</strong><small>Khách hàng đã mua</small></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ JOURNAL ============ -->
+    <section class="section" id="journal">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">NHẬT KÝ MỘC YÊN</p>
+            <h2>Hiểu da hơn,<br>thương mình hơn</h2>
+          </div>
+          <a href="pages/blog.html" class="text-link">Xem tất cả →</a>
+        </div>
+        <div class="journal-grid">
+          <article class="journal-card">
+            <img src="images/blog/blog-1.jpg" alt="Làn da khô">
+            <small>CHĂM DA CƠ BẢN</small>
+            <h3>5 dấu hiệu cho thấy làn da đang thiếu ẩm</h3>
+            <a href="pages/blog.html">Đọc bài viết →</a>
+          </article>
+          <article class="journal-card">
+            <img src="images/blog/blog-2.jpg" alt="Thu hoạch nguyên liệu">
+            <small>THÀNH PHẦN</small>
+            <h3>Vì sao làn da nhạy cảm cần một routine tối giản?</h3>
+            <a href="pages/blog.html">Đọc bài viết →</a>
+          </article>
+          <article class="journal-card">
+            <img src="images/blog/blog-3.jpg" alt="Không gian chăm sóc da">
+            <small>LỐI SỐNG</small>
+            <h3>Chậm lại một chút với nghi thức chăm da buổi tối</h3>
+            <a href="pages/blog.html">Đọc bài viết →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ NEWSLETTER ============ -->
+    <section class="newsletter">
+      <div class="container newsletter-grid">
+        <div>
+          <p class="eyebrow">MỘC YÊN LETTER</p>
+          <h2>Chạm một nhịp,<br>nhận thêm nhiều dịu lành.</h2>
+          <p>Nhận câu chuyện chăm da, ưu đãi và sản phẩm mới từ Mộc Yên.</p>
+          <form class="newsletter-form" id="newsletter-form">
+            <input type="email" name="email" placeholder="Email của bạn" required>
+            <button type="submit">Đăng ký</button>
+          </form>
+        </div>
+        <div class="newsletter-image">
+          <img src="images/banner/newsletter.jpg" alt="Sản phẩm Mộc Yên trên nền lá xanh">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER (Inject từ component) -->
+  <div id="site-footer"></div>
+
+  <!-- JAVASCRIPT -->
+  <script src="components/components.js"></script>
+  <script src="mocyen.js"></script>
+</body>
+</html>
