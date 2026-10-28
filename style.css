@@ -709,7 +709,7 @@ p { font-size: 14px; }
 }
 
 /* =========================================================
-   RESPONSIVE HEADER & MENU MOBILE (FIXED LẦN 2)
+   RESPONSIVE HEADER & MENU MOBILE (FIXED TRIỆT ĐỂ)
 ========================================================= */
 @media (max-width: 900px) {
     .menu-toggle {
@@ -721,25 +721,22 @@ p { font-size: 14px; }
         order: -1;
         margin-right: 15px;
         padding: 0;
+        cursor: pointer;
     }
 
-    /* 1. ÉP LẠI KHUNG MENU */
+    /* 1. ÉP MENU THÀNH KHỐI (BLOCK) ĐỂ KHÔNG BỊ GIÃN */
     .main-nav {
         position: fixed !important;
         top: 0 !important;
-        left: -100% !important; /* Ẩn mặc định */
+        left: -100% !important;
         width: 280px !important;
         height: 100vh !important;
-        background: #FFFEFA !important; /* Ép màu nền trắng */
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: stretch !important; /* Ép các mục giãn đều sang 2 bên */
-        justify-content: flex-start !important; /* Ép dồn lên trên, không bị giãn cách */
-        gap: 0 !important;
+        background: #FFFEFA !important;
+        display: block !important; /* Cấm dùng flex để không bị giãn */
         padding: 60px 0 20px !important;
         box-shadow: 4px 0 15px rgba(0,0,0,0.1) !important;
         transition: left 0.3s ease !important;
-        z-index: 99999 !important;
+        z-index: 9999999 !important; /* Luôn nổi lên trên cùng */
         overflow-y: auto !important;
     }
 
@@ -751,32 +748,38 @@ p { font-size: 14px; }
     .menu-close-btn {
         position: absolute !important;
         top: 15px !important;
-        right: 20px !important;
+        right: 15px !important;
         font-size: 26px !important;
         color: #243A30 !important;
         background: transparent !important;
         border: none !important;
         cursor: pointer !important;
-        z-index: 10;
+        z-index: 10000000 !important;
+        padding: 5px 15px;
     }
 
-    /* 2. ÉP CÁC LINK KHÔNG BỊ GIÃN */
+    /* 2. CÁC MỤC MENU HIỂN THỊ DẠNG KHỐI, CÁCH ĐỀU NHAU */
     .main-nav > a, 
     .main-nav .nav-dropdown > a {
+        display: block !important;
         width: 100% !important;
         padding: 16px 25px !important;
         border-bottom: 1px solid #F0EBDD !important;
-        font-size: 14px !important;
+        font-size: 15px !important;
         font-weight: 500 !important;
         color: #243A30 !important;
-        display: flex !important;
-        justify-content: space-between; /* Để mũi tên nằm bên phải */
-        align-items: center;
-        flex: none !important; /* Chống giãn chiều cao */
-        height: auto !important;
+        text-decoration: none !important;
+        position: relative;
+        z-index: 10000000 !important; /* Đảm bảo click được */
     }
 
-    /* Mũi tên chỉ xuống */
+    /* Mũi tên chỉ xuống (dùng flex nhỏ cho mỗi thẻ a để đẩy mũi tên sang phải) */
+    .nav-dropdown > a {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+
     .nav-dropdown-toggle::after {
         content: "\f107";
         font-family: "Font Awesome 6 Free";
@@ -790,7 +793,7 @@ p { font-size: 14px; }
     /* 3. MENU CON XỔ XUỐNG */
     .dropdown-menu {
         position: static !important;
-        display: none !important; /* Ẩn mặc định */
+        display: none !important;
         box-shadow: none !important;
         border: none !important;
         background: #F9F6EE !important;
@@ -798,18 +801,31 @@ p { font-size: 14px; }
         width: 100% !important;
     }
 
-    /* Khi bấm vào sẽ xổ xuống */
     .nav-dropdown.is-open .dropdown-menu {
-        display: flex !important;
-        flex-direction: column !important;
+        display: block !important;
     }
 
     .dropdown-menu a {
-        padding: 14px 25px 14px 40px !important;
-        font-size: 13px !important;
+        display: block !important;
+        padding: 12px 25px 12px 40px !important;
+        font-size: 14px !important;
         color: #56635D !important;
         border-bottom: 1px solid #EAEAEA !important;
-        display: block !important;
+        text-decoration: none !important;
+        position: relative;
+        z-index: 10000000 !important;
+    }
+
+    /* Lớp nền mờ nằm DƯỚI menu một bậc */
+    .menu-overlay {
+        position: fixed !important;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        background: rgba(0,0,0,0.5) !important;
+        z-index: 9999998 !important; /* Thấp hơn menu 1 bậc */
+        opacity: 0; pointer-events: none; transition: 0.3s;
+    }
+    .menu-overlay.is-active {
+        opacity: 1; pointer-events: auto;
     }
 
     /* Ẩn Giỏ hàng & Chat khi mở Menu */
@@ -817,18 +833,6 @@ p { font-size: 14px; }
     body.menu-active #chat-widget-container, 
     body.menu-active .chat-widget-btn {
         display: none !important;
-    }
-
-    /* Lớp nền mờ */
-    .menu-overlay {
-        position: fixed !important;
-        top: 0; left: 0; width: 100vw; height: 100vh;
-        background: rgba(0,0,0,0.5) !important;
-        z-index: 99998 !important;
-        opacity: 0; pointer-events: none; transition: 0.3s;
-    }
-    .menu-overlay.is-active {
-        opacity: 1; pointer-events: auto;
     }
 }
 

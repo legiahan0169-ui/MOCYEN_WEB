@@ -130,15 +130,15 @@
   }
 
   /* ---------- Header behaviors ---------- */
-   function initHeader() {
+     function initHeader() {
     var toggle = document.querySelector('.menu-toggle');
     var nav = document.querySelector('.main-nav');
 
     if (toggle && nav) {
-      // 1. Tự động tạo nút X (Close) chèn vào trong Menu
+      // 1. Tạo nút X
       var closeBtn = document.createElement('button');
       closeBtn.className = 'menu-close-btn';
-      closeBtn.innerHTML = '&times;'; // Dấu X
+      closeBtn.innerHTML = '&times;';
       nav.insertBefore(closeBtn, nav.firstChild);
 
       // 2. Tạo lớp nền mờ
@@ -160,17 +160,24 @@
         toggle.setAttribute('aria-expanded', 'true');
       }
 
-      // Sự kiện click
+      // Bắt sự kiện click
       toggle.addEventListener('click', openMenu);
       closeBtn.addEventListener('click', closeMenu);
       overlay.addEventListener('click', closeMenu);
 
-      // 3. XỬ LÝ MENU CON (Sản phẩm) TRÊN MOBILE
-      document.querySelectorAll('.nav-dropdown-toggle').forEach(function (link) {
+      // 3. XỬ LÝ MENU CON VÀ TỰ ĐỘNG ĐÓNG KHI BẤM LINK
+      var navLinks = nav.querySelectorAll('a');
+      navLinks.forEach(function(link) {
         link.addEventListener('click', function (e) {
+          // Nếu là nút "Sản phẩm" thì xổ xuống
+          if (link.classList.contains('nav-dropdown-toggle') && window.matchMedia('(max-width: 900px)').matches) {
+            e.preventDefault();
+            link.parentElement.classList.toggle('is-open');
+            return;
+          }
+          // Nếu là link chuyển trang bình thường -> Đóng menu
           if (window.matchMedia('(max-width: 900px)').matches) {
-            e.preventDefault(); // Ngăn chặn chuyển trang
-            link.parentElement.classList.toggle('is-open'); // Bật/tắt xổ xuống
+            closeMenu();
           }
         });
       });
