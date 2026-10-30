@@ -2,15 +2,14 @@
    MOCYEN · components.js
    - Load header.html & footer.html vào mọi trang
    - Tự xử lý đường dẫn __BASE__ theo vị trí trang hiện tại
-   - Các hành vi dùng chung: menu mobile, cart, toast,
-     newsletter, wishlist, quick-add, add-routine
-   - [NEW] Floating Cart: nút giỏ hàng nổi LUÔN HIỂN THỊ
+   - Các hành vi dùng chung: menu mobile, cart, toast, newsletter...
+   - [NEW] Floating Cart: nút giỏ hàng nổi góc trái dưới
    ========================================================= */
 (function () {
   'use strict';
 
-    /* ==========================================
-     HIỆU ỨNG CHUYỂN TRANG (PAGE TRANSITION)
+  /* ==========================================
+     1. HIỆU ỨNG CHUYỂN TRANG (PAGE TRANSITION)
   ========================================== */
   var pageTransition = document.createElement('div');
   pageTransition.id = 'page-transition';
@@ -23,7 +22,7 @@
       });
   }
 
-  window.addEventListener('pageshow', function (event) {
+  window.addEventListener('pageshow', function () {
       pageTransition.classList.remove('is-active');
   });
 
@@ -32,14 +31,7 @@
       if (!link) return;
 
       var href = link.getAttribute('href');
-      
-      if (!href || 
-          href.startsWith('#') || 
-          href.startsWith('javascript') || 
-          link.getAttribute('target') === '_blank' ||
-          href.startsWith('http') || 
-          href.startsWith('mailto') || 
-          href.startsWith('tel')) {
+      if (!href || href.startsWith('#') || href.startsWith('javascript') || link.getAttribute('target') === '_blank' || href.startsWith('http') || href.startsWith('mailto') || href.startsWith('tel')) {
           return;
       }
 
@@ -51,9 +43,12 @@
       }, 400);
   });
 
+  /* Xác định base path: trang trong /pages/ → '..', trang root → '.' */
   var basePath = window.location.pathname.indexOf('/pages/') !== -1 ? '..' : '.';
 
-  /* ---------- Load component ---------- */
+  /* ==========================================
+     2. LOAD COMPONENTS
+  ========================================== */
   async function loadComponent(mountId, fileName) {
     var mount = document.getElementById(mountId);
     if (!mount) return;
@@ -72,7 +67,9 @@
     }
   }
 
-  /* ---------- Cart (localStorage) ---------- */
+  /* ==========================================
+     3. GIỎ HÀNG (LOCAL STORAGE)
+  ========================================== */
   function getCartKey() {
     const userJson = localStorage.getItem("mocyen_user");
     if (userJson) {
@@ -102,23 +99,6 @@
     document.querySelectorAll('.cart-count').forEach(function (el) { el.textContent = total; });
   }
 
-  /* ---------- Toast ---------- */
-  function toast(msg) {
-    var el = document.querySelector('.toast');
-    if (!el) {
-      el = document.createElement('div');
-      el.className = 'toast';
-      document.body.appendChild(el);
-    }
-    el.textContent = msg;
-    el.classList.add('is-visible');
-    clearTimeout(el._t);
-    el._t = setTimeout(function () { 
-        el.classList.remove('is-visible'); 
-    }, 2500);
-  }
-
-  /* ---------- Thêm vào giỏ hàng ---------- */
   function addToCart(id, qty) {
     qty = qty || 1;
     var cart = getCart();
@@ -129,16 +109,31 @@
     toast('Đã thêm sản phẩm vào giỏ hàng!');
   }
 
-  /* ---------- Header behaviors ---------- */
-       function initHeader() {
+  /* ==========================================
+     4. TOAST (THÔNG BÁO)
+  ========================================== */
+  function toast(msg) {
+    var el = document.querySelector('.toast');
+    if (!el) {
+      el = document.createElement('div');
+      el.className = 'toast';
+      document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    el.classList.add('is-visible');
+    clearTimeout(el._t);
+    el._t = setTimeout(function () { el.classList.remove('is-visible'); }, 2500);
+  }
+
+  /* ==========================================
+     5. HEADER & MENU MOBILE
+  ========================================== */
+  function initHeader() {
     var toggle = document.querySelector('.menu-toggle');
     var nav = document.querySelector('.main-nav');
 
     if (toggle && nav) {
-      // [QUAN TRỌNG] Bốc thẻ nav ra khỏi header và gắn vào body để không bị CSS cha đè
-      document.body.appendChild(nav);
-
-      // 1. Tạo nút X
+      // Tạo nút X (Đóng menu)
       var closeBtn = document.createElement('button');
       closeBtn.className = 'menu-close-btn';
       closeBtn.innerHTML = '&times;';
@@ -156,21 +151,21 @@
         toggle.setAttribute('aria-expanded', 'true');
       }
 
-      // Bắt sự kiện click
+      // Sự kiện click
       toggle.addEventListener('click', openMenu);
       closeBtn.addEventListener('click', closeMenu);
 
-      // 3. XỬ LÝ MENU CON VÀ ĐÓNG MENU KHI BẤM LINK
+      // Xử lý click link (Đóng menu hoặc xổ dropdown)
       var navLinks = nav.querySelectorAll('a');
       navLinks.forEach(function(link) {
         link.addEventListener('click', function (e) {
-          // Nếu là nút "Sản phẩm" thì xổ xuống
+          // Nếu bấm vào "Sản phẩm" trên mobile -> Xổ xuống
           if (link.classList.contains('nav-dropdown-toggle') && window.matchMedia('(max-width: 900px)').matches) {
             e.preventDefault();
             link.parentElement.classList.toggle('is-open');
             return;
           }
-          // Nếu là link chuyển trang bình thường -> Đóng menu
+          // Bấm link chuyển trang -> Đóng menu
           if (window.matchMedia('(max-width: 900px)').matches) {
             closeMenu();
           }
@@ -190,7 +185,9 @@
     updateCartCount();
   }
 
-  /* ---------- Page behaviors ---------- */
+  /* ==========================================
+     6. CÁC TÍNH NĂNG PHỤ
+  ========================================== */
   function initWishlist() {
     document.querySelectorAll('.wish').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
@@ -233,111 +230,64 @@
     });
   }
 
-  /* =======================================================
-     [UPDATED] FLOATING CART — Luôn hiển thị 100% thời gian
-  ======================================================= */
+  /* ==========================================
+     7. FLOATING CART (GIỎ HÀNG NỔI)
+  ========================================== */
   function initFloatingCart() {
+    // Không hiển thị trên trang admin
     if (window.location.pathname.indexOf('admin') !== -1) return;
     if (document.querySelector('.floating-cart')) return;
 
-    /* --- INJECT CSS --- */
+    // Chèn CSS
     if (!document.getElementById('mocyen-floating-cart-style')) {
       var style = document.createElement('style');
       style.id = 'mocyen-floating-cart-style';
       style.textContent = `
         .floating-cart {
-          position: fixed;
-          left: 24px;
-          bottom: 24px;
-          z-index: 99999;
-          width: 56px;
-          height: 56px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: #264F40;
-          color: #fff;
-          border-radius: 50%;
-          box-shadow: 0 8px 24px rgba(38, 79, 64, 0.28),
-                      0 2px 6px rgba(38, 79, 64, 0.15);
-          transition: background 0.2s ease,
-                      box-shadow 0.2s ease,
-                      transform 0.2s ease;
+          position: fixed; left: 24px; bottom: 24px; z-index: 99999;
+          width: 56px; height: 56px; display: flex; align-items: center; justify-content: center;
+          background: #264F40; color: #fff; border-radius: 50%;
+          box-shadow: 0 8px 24px rgba(38, 79, 64, 0.28), 0 2px 6px rgba(38, 79, 64, 0.15);
+          transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
           text-decoration: none;
-          /* Bỏ opacity/transform ẩn, luôn hiện */
         }
         .floating-cart:hover {
-          background: #183C31;
-          box-shadow: 0 12px 30px rgba(38, 79, 64, 0.35);
+          background: #183C31; box-shadow: 0 12px 30px rgba(38, 79, 64, 0.35);
           transform: translateY(-3px) scale(1.05);
         }
-        .floating-cart:focus-visible {
-          outline: 2px solid #264F40;
-          outline-offset: 3px;
-        }
-        .floating-cart i {
-          font-size: 20px;
-          transition: transform 0.2s ease;
-        }
-        .floating-cart:hover i {
-          transform: rotate(-8deg) scale(1.05);
-        }
+        .floating-cart i { font-size: 20px; transition: transform 0.2s ease; }
+        .floating-cart:hover i { transform: rotate(-8deg) scale(1.05); }
         .floating-cart-count {
-          position: absolute;
-          top: -4px;
-          right: -4px;
-          min-width: 22px;
-          height: 22px;
-          padding: 0 6px;
-          display: none;
-          align-items: center;
-          justify-content: center;
-          background: #C4425B;
-          color: #fff;
-          border-radius: 100px;
-          font-family: "Montserrat", sans-serif;
-          font-size: 11px;
-          font-weight: 600;
-          line-height: 1;
-          border: 2px solid #F7F3E9;
-          animation: mocyenCartBump 0.4s ease;
+          position: absolute; top: -4px; right: -4px; min-width: 22px; height: 22px;
+          padding: 0 6px; display: none; align-items: center; justify-content: center;
+          background: #C4425B; color: #fff; border-radius: 100px;
+          font-family: "Montserrat", sans-serif; font-size: 11px; font-weight: 600;
+          line-height: 1; border: 2px solid #F7F3E9; animation: cartBump 0.4s ease;
         }
-        @keyframes mocyenCartBump {
-          0%   { transform: scale(0.6); }
-          60%  { transform: scale(1.15); }
+        @keyframes cartBump {
+          0% { transform: scale(0.6); }
+          60% { transform: scale(1.15); }
           100% { transform: scale(1); }
         }
         @media (max-width: 768px) {
-          .floating-cart {
-            width: 50px;
-            height: 50px;
-            left: 16px;
-            bottom: 20px;
-          }
+          .floating-cart { width: 50px; height: 50px; left: 16px; bottom: 20px; }
           .floating-cart i { font-size: 18px; }
-          .floating-cart-count {
-            min-width: 20px;
-            height: 20px;
-            font-size: 10px;
-          }
+          .floating-cart-count { min-width: 20px; height: 20px; font-size: 10px; }
         }
       `;
       document.head.appendChild(style);
     }
 
-    /* --- INJECT HTML NÚT (Không có class is-visible, CSS đã luôn hiện) --- */
+    // Chèn HTML
     var btn = document.createElement('a');
     btn.href = basePath + '/pages/cart.html';
     btn.className = 'floating-cart';
     btn.setAttribute('aria-label', 'Đi đến giỏ hàng');
-    btn.innerHTML =
-      '<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>' +
-      '<span class="floating-cart-count" aria-live="polite"></span>';
+    btn.innerHTML = '<i class="fa-solid fa-bag-shopping" aria-hidden="true"></i><span class="floating-cart-count" aria-live="polite"></span>';
     document.body.appendChild(btn);
 
     var countEl = btn.querySelector('.floating-cart-count');
 
-    /* --- UPDATE BADGE --- */
     function updateFloatCount() {
       var total = getCart().reduce(function (s, i) { return s + (i.qty || 1); }, 0);
       countEl.textContent = total > 99 ? '99+' : total;
@@ -348,10 +298,12 @@
     window.addEventListener('pageshow', updateFloatCount);
   }
 
+  /* ==========================================
+     8. EXPORT & BOOT
+  ========================================== */
   window.addToCart = addToCart;
   window.showToast = toast;
 
-   /* ---------- Boot ---------- */
   document.addEventListener('DOMContentLoaded', async function () {
     await Promise.all([
       loadComponent('site-header', 'header.html'),
@@ -363,18 +315,15 @@
     initQuickAdd();
     initAddRoutine();
     initNewsletter();
-    initFloatingCart();   // Luôn chạy
+    initFloatingCart();
 
-        // =======================================================
-    // CẬP NHẬT TÊN USER VÀ NÚT ADMIN TRÊN HEADER
-    // =======================================================
+    // Cập nhật thông tin User & Nút Admin trên Header
     const userJson = localStorage.getItem("mocyen_user");
     if (userJson) {
       try {
         const user = JSON.parse(userJson);
         const accountLink = document.querySelector(".account-link");
         
-        // 1. Cập nhật Avatar chữ cái
         if (accountLink && user.name) {
           const nameParts = user.name.trim().split(" ");
           const mainName = nameParts[nameParts.length - 1];
@@ -388,41 +337,36 @@
           accountLink.title = `Xin chào, ${user.name}`;
         }
 
-        // 2. [MỚI] Tự động thêm nút "Quản trị viên" nếu là Admin
+        // Thêm nút Admin nếu có quyền
         if (user.role === "admin") {
           const headerActions = document.querySelector(".header-actions");
           if (headerActions) {
-            // Tạo nút Admin (Dùng icon bánh răng hoặc biểu đồ)
             const adminLink = document.createElement("a");
             adminLink.href = basePath + "/pages/admin.html";
             adminLink.title = "Trang Quản Trị Viên";
             adminLink.innerHTML = '<i class="fa-solid fa-gear"></i>';
             adminLink.style.cssText = "display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; background: #264F40; color: white; margin-right: 15px; transition: 0.2s;";
-            
-            // Hiệu ứng hover
             adminLink.onmouseover = () => adminLink.style.background = "#183C31";
             adminLink.onmouseout = () => adminLink.style.background = "#264F40";
-            
-            // Chèn vào đầu cụm action (bên trái icon Tìm kiếm)
             headerActions.insertBefore(adminLink, headerActions.firstChild);
           }
         }
-
       } catch (e) {
         console.error("Lỗi đọc thông tin user", e);
       }
     }
   });
 
-  /* Đồng bộ cart khi mở nhiều tab */
+  // Đồng bộ giỏ hàng khi mở nhiều tab
   window.addEventListener('storage', function (e) {
     if (e.key && e.key.indexOf('mocyen_cart_') === 0) updateCartCount();
   });
 
 })();
-        // Tự động load Chat Widget
-    if (window.location.pathname.indexOf('admin') === -1) {
-      const chatScript = document.createElement('script');
-      chatScript.src = (window.location.pathname.indexOf('/pages/') !== -1 ? '..' : '.') + '/components/chat-widget.js';
-      document.body.appendChild(chatScript);
-    }
+
+// Tự động load Chat Widget (Nằm ngoài IIFE)
+if (window.location.pathname.indexOf('admin') === -1) {
+  const chatScript = document.createElement('script');
+  chatScript.src = (window.location.pathname.indexOf('/pages/') !== -1 ? '..' : '.') + '/components/chat-widget.js';
+  document.body.appendChild(chatScript);
+}
