@@ -7,7 +7,7 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-    cors: { origin: "*", methods: ["GET", "POST"] }
+    cors: { origin: "*", methods: ["GET", "POST", "PUT"] } // Thêm PUT cho API cập nhật trạng thái
 });
 
 app.use(cors());
@@ -95,7 +95,8 @@ app.post('/api/login', (req, res) => {
         
         res.json({ 
             message: 'Đăng nhập thành công',
-            user: { id: user.id, name: user.name, email: user.email, role: user.role }
+            // Bổ sung thêm phone để trang Account có thể hiển thị
+            user: { id: user.id, name: user.name, email: user.email, phone: user.phone, role: user.role }
         });
     });
 });
@@ -256,13 +257,84 @@ app.get('/api/posts/:id', (req, res) => {
 // 7. API ADMIN (QUẢN TRỊ)
 // ==========================================
 
+// Lấy danh sách đơn hàng của 1 User (Kèm chi tiết sản phẩm)
 app.get('/api/orders/user/:user_id', (req, res) => {
-    db.query('SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC', [req.params.user_id], (err, results) => {
+    const userId = req.params.user_id;
+    db.query('SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC', [userId], (err, orders) => {
         if (err) return res.status(500).json({ error: err.message });
-        res.json(results);
+        if (orders.length === 0) return res.json([]);
+
+        const orderIds = orders.map(o => o.id);
+        const sqlItems = `
+            SELECT oi.*, p.image 
+            FROM order_items oi
+            LEFT JOIN products p ON oi.product_id = p.id
+            WHERE oi.order_id IN (?)
+        `;
+        
+        db.query(sqlItems, [orderIds], (err, items) => {
+            if (err) return res.status(500).json({ error: err.message });
+
+            const ordersWithItems = orders.map(order => {
+                const orderItems = items.filter(item => item.order_id === order.id);
+                return { ...order, items: orderItems };
+            });
+            res.json(ordersWithItems);
+        });
     });
 });
 
+// [THÊM MỚI] API Admin: Lấy chi tiết 1 đơn hàng (kèm sản phẩm)
+app.get('/api/admin/orders/:id', (req, res) => {
+    const orderId = req.params.id;
+    db.query('SELECT * FROM orders WHERE id = ?', [orderId], (err, orders) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (orders.length === 0) return res.status(404).json({ error: 'Không tìm thấy đơn hàng' });
+        
+        db.query('SELECT * FROM order_items WHERE order_id = ?', [orderId], (err, items) => {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ ...orders[0], items: items });
+        });
+    });
+});
+
+// [THÊM MỚI] API Admin: Cập nhật trạng thái đơn (Tự động hoàn kho nếu Hủy)
+app.put('/api/admin/orders/:id/status', (req, res) => {
+    const orderId = req.params.id;
+    const { status } = req.body;
+    
+    db.query('SELECT status FROM orders WHERE id = ?', [orderId], (err, orders) => {
+        if (err) return res.status(500).json({ error: err.message });
+        if (orders.length === 0) return res.status(404).json({ error: 'Không tìm thấy đơn' });
+        
+        const currentStatus = orders[0].status;
+        if (currentStatus === status) return res.json({ message: 'Trạng thái không thay đổi' });
+        
+        db.query('UPDATE orders SET status = ? WHERE id = ?', [status, orderId], (err) => {
+            if (err) return res.status(500).json({ error: err.message });
+            
+            if (status === 'cancelled' && currentStatus !== 'cancelled') {
+                db.query('SELECT * FROM order_items WHERE order_id = ?', [orderId], (err, items) => {
+                    if (!err && items.length > 0) {
+                        let processed = 0;
+                        items.forEach(item => {
+                            db.query('UPDATE products SET stock = stock + ? WHERE id = ?', [item.quantity, item.product_id], () => {
+                                processed++;
+                                if (processed === items.length) res.json({ message: 'Đã hủy đơn & hoàn kho' });
+                            });
+                        });
+                    } else {
+                        res.json({ message: 'Đã hủy đơn hàng' });
+                    }
+                });
+            } else {
+                res.json({ message: 'Cập nhật trạng thái thành công' });
+            }
+        });
+    });
+});
+
+// Lấy danh sách toàn bộ đơn hàng
 app.get('/api/admin/orders', (req, res) => {
     db.query('SELECT * FROM orders ORDER BY created_at DESC', (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -270,6 +342,7 @@ app.get('/api/admin/orders', (req, res) => {
     });
 });
 
+// Lấy danh sách toàn bộ sản phẩm
 app.get('/api/admin/products', (req, res) => {
     db.query('SELECT * FROM products ORDER BY id ASC', (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -277,6 +350,7 @@ app.get('/api/admin/products', (req, res) => {
     });
 });
 
+// Lấy danh sách toàn bộ khách hàng
 app.get('/api/admin/users', (req, res) => {
     db.query("SELECT id, name, email, phone, created_at FROM users WHERE role = 'customer'", (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
